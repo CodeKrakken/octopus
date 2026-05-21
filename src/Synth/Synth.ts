@@ -1,7 +1,7 @@
 import { VoiceType }                        from '../components/Voice/Voice.types'
 import { waveforms }                        from '../content/data'
-import { RunningRef, VoicesRef, Waveform }  from '../App.types'
 import { firstInterval, stopOne }           from '../App.functions'
+import { RunningRef, VoicesRef, Waveform } from './types'
 
 let context: AudioContext
 
