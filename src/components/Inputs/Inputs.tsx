@@ -1,5 +1,5 @@
 import { checkboxGroups, fields }  from "../../content/data";
-import { InputsProps, InputsType } from "./Inputs.types";
+import { InputsProps } from "./Inputs.types";
 import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
 import Field                       from "../Field/Field"
 
