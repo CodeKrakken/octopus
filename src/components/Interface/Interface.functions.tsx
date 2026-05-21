@@ -1,4 +1,4 @@
-import { VoiceType }                                    from "../Voice/Voice.types"
+import { VoiceType } from "../Voice/Voice.types"
 
 const setUpVoice = (template: VoiceType | null = null) => {
   return {
