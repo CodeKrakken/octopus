@@ -9,7 +9,7 @@ type Atom =
 | `min${Range}`
 | `max${Range}`
 
-type CheckboxGroup = 
+type CheckboxGroupType = 
   'Notes' 
 | 'Octaves' 
 | 'Intervals'
@@ -17,5 +17,5 @@ type CheckboxGroup =
 
 export type {
   Atom,
-  CheckboxGroup
+  CheckboxGroupType
 }

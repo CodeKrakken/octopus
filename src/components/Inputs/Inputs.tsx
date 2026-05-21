@@ -1,12 +1,7 @@
 import { checkboxGroups, fields }  from "../../content/data";
-import { InputsProps, InputsType }          from "./Inputs.types";
-import { CheckboxGroup }              from "../shared.types";
-import Input                                from "../Input/Input";
-import { updateCheckbox }      from "./Inputs.functions";
-import { InputProps }                       from "../Input/Input.types";
-import Field                                from "../Field/Field"
-
-const input = ((props: InputProps) => <Input {...props} />)
+import { InputsProps, InputsType } from "./Inputs.types";
+import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
+import Field                       from "../Field/Field"
 
 export default function Inputs(
   { 
@@ -14,8 +9,6 @@ export default function Inputs(
     voices,
     setVoices
   }: InputsProps) {
-
-  const voice = voices[i]
 
   const inputs: InputsType = {
     fields: <>
@@ -36,29 +29,12 @@ export default function Inputs(
       <div className="column">
         {
           Object.keys(checkboxGroups).map(checkboxGroup =>
-            <>
-              <div className="row">
-                <div className="label">{checkboxGroup}</div>
-                {
-                  checkboxGroups[checkboxGroup as CheckboxGroup].map((checkbox: string) => {
-
-                    console.log(checkboxGroup)
-
-                    const props: InputProps = {
-                      className: 'checkbox',
-                      'data-attribute': checkboxGroup,
-                      'data-voice': i,
-                      type: "checkbox",
-                      value: checkbox,
-                      checked: voice[`active${checkboxGroup as CheckboxGroup}`].includes(checkbox),
-                      onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateCheckbox(e, `active${checkboxGroup as CheckboxGroup}`, voices, i, setVoices)
-                    };
-
-                    return input(props)
-                  })
-                }
-              </div>
-            </>
+            <CheckboxGroup 
+              groupName={checkboxGroup}
+              voices={voices}
+              i={i}
+              setVoices={setVoices}
+            />
           )
         }
       </div>
