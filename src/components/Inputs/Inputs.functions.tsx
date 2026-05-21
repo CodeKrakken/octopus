@@ -1,3 +1,4 @@
+import { Synth } from "../../Synth/Synth"
 import { Atom }                 from "../shared.types"
 import { Compound, VoiceType }  from "../Voice/Voice.types"
 
@@ -9,6 +10,7 @@ const updateField = (
   i: number,
   setVoices: Function
 ) => {
+
   voices[i][attribute] = +e.target!.value
   updateVoice(voices, i, setVoices)
 } 
@@ -33,8 +35,15 @@ const updateCheckbox = (
 
 // private
 
-const updateVoice = (array: VoiceType[], i: number, setVoices: Function) => {
-  setVoices([array.slice(0,i), array[i], array.slice(i+1)].flat())
+const updateVoice = (voices: VoiceType[], i: number, setVoices: Function) => {
+
+  const voice = voices[i]
+
+  // react component
+  setVoices([voices.slice(0,i), voice, voices.slice(i+1)].flat())
+
+  // synth
+  Synth.update(voice, i)
 }
 
 

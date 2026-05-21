@@ -6,6 +6,7 @@ import { VoiceType }                          from './components/Voice/Voice.typ
 import Header                                 from './components/Header/Header';
 import { setUpVoice, firstInterval, stopOne } from './App.functions';
 import { Waveform }                           from './App.types';
+import { Synth } from './Synth/Synth';
 
 
 function App() {
@@ -33,34 +34,48 @@ function App() {
   // functions
 
   const handleAddVoice = () => {
-    
+
+    // react component
+
     const newVoice = setUpVoice(voices[voices.length - 1])
-    const nextInterval = newVoice.nextInterval
-    if (running) firstInterval(newVoice, nextInterval, runningRef, voicesRef, waveforms as Waveform[], context)
     setVoices(voices => [voices, newVoice].flat())
+    
+
+    // synth
+
+    Synth.add(newVoice, running, runningRef, voicesRef)
+    
   }
 
   const handleDelete = (i: number) => {
 
+    // react component
     const voice = voices[i]
-
     voice.isActive = false
+    setVoices(voices => voices.filter((voice, j) => j !== i))
 
-    setVoices(voices =>
-      voices.filter((voice, j) => j !== i)
-    )
+    // synth
+    Synth.delete(i)
   }
 
   const handleStartStop = () => runningRef.current ? stopAll(voices) : start()
 
   const start = async () => {
+    
+    // react component
     toggleRunning(true)
-    voices.forEach(voice => firstInterval(voice, context.currentTime, runningRef, voicesRef, waveforms as Waveform[], context))
+    
+    // synth
+    Synth.start(runningRef, voicesRef)
   }
 
   const stopAll = (voices: VoiceType[]) => {
+
+    // react component
     toggleRunning(false)
-    voices.forEach(voice => stopOne(voice))
+
+    //synth
+    Synth.stop()
   }
 
   const toggleRunning = (state: boolean) => {
