@@ -1,4 +1,5 @@
 import { HeaderProps } from "./Header.types"
+import { title, addLabel } from '../../content/data'
 
 export default function Header(props: HeaderProps) {
 
@@ -10,22 +11,19 @@ export default function Header(props: HeaderProps) {
   } = props
 
   return <>
-    octopus{" "}
+    {title}{" "}
     <br />
     <br />
     <button 
-      value="Add Voice"
+      value={addLabel}
       onClick={handleAddVoice}
     >
-      Add Voice
+      {addLabel}
     </button>
     
     {
       showStart &&
-      <button 
-        value="Start/Stop" 
-        onClick={handleStartStop}
-      >
+      <button onClick={handleStartStop}>
         {running ? 'Stop' : 'Start'}
       </button>
     }
