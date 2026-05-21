@@ -4,6 +4,7 @@ import { Atom, CheckboxGroup }              from "../shared.types";
 import Input                                from "../Input/Input";
 import { updateCheckbox, updateField }      from "./Inputs.functions";
 import { InputProps }                       from "../Input/Input.types";
+import Field                                from "../Field/Field"
 
 const input = ((props: InputProps) => <Input {...props} />)
 
@@ -20,50 +21,14 @@ export default function Inputs(
     fields: <>
       <div className="column">
         {
-          Object.keys(fields).map(field => {
-
-            const f = fields[field as keyof typeof fields]
-
-            const props: InputProps = {
-              className: 'textbox',
-              'data-voice': i,
-              'data-attribute': `${f.value}`,
-              type: 'number',
-              value: voice[`${f.value}` as Atom],
-              onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, f.value as Atom, voices, i, setVoices)
-            }
-
-            return <>
-              <div 
-                className="row" 
-                key={field}
-              >
-                <div className="label">{f.label}</div>
-                {
-                  f.input === 'range' ? <>
-                    {
-                      extrema.map((ex) => {
-
-                        props['data-attribute'] = `${ex}${f.value}`;
-                        props.value = voice[`${ex}${f.value}` as Atom] // populates field
-                        props.onChange = (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, `${ex}${f.value}` as Atom, voices, i, setVoices) // updates field
-                        
-                        return <>
-                          <div key={ex}>
-                            {input(props)}
-                          </div>
-                        </>
-                      })
-                    }
-                  </> : <>
-                    {
-                      input(props)
-                    }
-                  </>
-                }
-              </div>
-            </>
-          })
+          Object.keys(fields).map(field => 
+            <Field
+              fieldName={field}
+              i={i}
+              voices={voices}
+              setVoices={setVoices}
+            />            
+          )
         }
       </div>
     </>,
