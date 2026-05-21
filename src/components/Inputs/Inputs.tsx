@@ -1,8 +1,8 @@
-import { checkboxGroups, extrema, fields }  from "../../content/data";
+import { checkboxGroups, fields }  from "../../content/data";
 import { InputsProps, InputsType }          from "./Inputs.types";
-import { Atom, CheckboxGroup }              from "../shared.types";
+import { CheckboxGroup }              from "../shared.types";
 import Input                                from "../Input/Input";
-import { updateCheckbox, updateField }      from "./Inputs.functions";
+import { updateCheckbox }      from "./Inputs.functions";
 import { InputProps }                       from "../Input/Input.types";
 import Field                                from "../Field/Field"
 
