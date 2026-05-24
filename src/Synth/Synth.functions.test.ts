@@ -1,4 +1,4 @@
-import { getContext, firstInterval, stopOne } from './Synth.functions';
+import { getContext, firstInterval, stopOne, nextInterval } from './Synth.functions';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
 
@@ -545,5 +545,27 @@ describe('branch coverage', () => {
     jest.runAllTimers();  
   
     expect(mockContext.createOscillator).toHaveBeenCalled();  
+  });  
+});
+
+  
+describe('nextInterval', () => {  
+  beforeEach(() => {  
+    jest.useFakeTimers();  
+  });  
+  
+  afterEach(() => {  
+    jest.useRealTimers();  
+  });  
+  
+  it('returns early without scheduling a timer when voice.isActive is false', () => {  
+    const voice = { ...setUpVoice(), isActive: false };  
+    const runningRef = { current: true };  
+    const voicesRef = { current: [voice] };  
+    const mockContext = { currentTime: 0 } as any;  
+  
+    nextInterval(voice, mockContext, runningRef, voicesRef, ['sine'] as any);  
+  
+    expect(jest.getTimerCount()).toBe(0);  
   });  
 });

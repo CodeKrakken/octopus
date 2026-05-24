@@ -303,5 +303,6 @@ const getRangeValue = (key: string, voice: VoiceType) => {
 export {
   getContext,
   firstInterval,
+  nextInterval,
   stopOne
 }
