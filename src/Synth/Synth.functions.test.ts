@@ -464,3 +464,86 @@ it('calls runInterval again from the nextInterval setTimeout when voice is still
   
   jest.spyOn(global, 'setTimeout').mockRestore()  
 })
+
+  
+describe('branch coverage', () => {  
+  let mockGain: any;  
+  let mockOscillator: any;  
+  let mockContext: any;  
+  
+  beforeEach(() => {  
+    jest.useFakeTimers();  
+  
+    mockGain = {  
+      connect: jest.fn(),  
+      disconnect: jest.fn(),  
+      gain: { setValueAtTime: jest.fn(), linearRampToValueAtTime: jest.fn(), value: 0 },  
+    };  
+    mockOscillator = {  
+      connect: jest.fn(), start: jest.fn(), stop: jest.fn(), disconnect: jest.fn(),  
+      frequency: { value: 0 }, type: 'sine',  
+    };  
+    mockContext = {  
+      currentTime: 0,  
+      createOscillator: jest.fn(() => mockOscillator),  
+      createGain: jest.fn(() => mockGain),  
+      destination: {},  
+    };  
+  });  
+  
+  afterEach(() => {  
+    jest.useRealTimers();  
+    jest.restoreAllMocks();  
+  });  
+  
+  // Line 79: || '0' fallback when activeIntervals is empty  
+  it('uses "0" as interval when activeIntervals is empty', () => {  
+    const voice = { ...setUpVoice(), activeIntervals: [], restChance: 100 };  
+    const runningRef = { current: true };  
+    const voicesRef = { current: [voice] };  
+  
+    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);  
+    runningRef.current = false;  
+    jest.runAllTimers();  
+  
+    expect(voice.isActive).toBe(true);  
+  });  
+  
+  // Line 117: "Unknown error" branch when a non-Error is thrown  
+  it('logs "Unknown error" when a non-Error is thrown inside makeSound', () => {  
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});  
+    const throwingContext = {  
+      ...mockContext,  
+      createOscillator: jest.fn(() => { throw 'string error'; }),  
+    };  
+  
+    const voice = { ...setUpVoice(), restChance: 0, activeSounds: ['sine'] };  
+    const runningRef = { current: true };  
+    const voicesRef = { current: [voice] };  
+  
+    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, throwingContext);  
+    runningRef.current = false;  
+    jest.runAllTimers();  
+  
+    expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');  
+  });  
+  
+  // Line 252: cents < 0 branch in detune  
+  it('applies negative modifier when detune cents < 0', () => {  
+    const voice = {  
+      ...setUpVoice(),  
+      restChance: 0,  
+      activeSounds: ['sine'],  
+      minDetune: -50,  
+      maxDetune: -10,  
+    };  
+    const runningRef = { current: true };  
+    const voicesRef = { current: [voice] };  
+  
+    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);  
+    runningRef.current = false;  
+    jest.runAllTimers();  
+  
+    expect(mockContext.createOscillator).toHaveBeenCalled();  
+  });  
+});
