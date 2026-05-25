@@ -197,39 +197,7 @@ describe('Synth', () => {
     });
   });
 
-  describe('start', () => {
-    it('calls firstInterval for each voice', () => {
-      const voice1 = setUpVoice();
-      const voice2 = setUpVoice();
-      Synth.voices = [voice1, voice2];
-      const runningRef = { current: true };
-      const voicesRef = { current: [voice1, voice2] };
-
-      // The start method uses a module-level context variable
-      // We can't fully test it without refactoring Synth.ts
-      // But we can verify the voices are set up correctly
-      expect(Synth.voices.length).toBe(2);
-    });
-
-    it('does nothing when no voices', () => {
-      Synth.voices = [];
-      const runningRef = { current: true };
-      const voicesRef = { current: [] };
-
-      // Calling start with no voices should not throw
-      // In practice, the forEach on an empty array does nothing
-      expect(Synth.voices.length).toBe(0);
-    });
-
-    it('processes all voices', () => {
-      const voice1 = setUpVoice();
-      const voice2 = setUpVoice();
-      const voice3 = setUpVoice();
-      Synth.voices = [voice1, voice2, voice3];
-
-      expect(Synth.voices.length).toBe(3);
-    });
-  });
+  
 
   describe('stop', () => {
     it('calls stopOne for each voice', () => {
