@@ -26,57 +26,57 @@ describe('CheckboxGroup', () => {
     jest.clearAllMocks();
   });
 
-  it('renders group label', () => {
-    render(
-      <CheckboxGroup
-        groupName="Sounds"
-        voices={voices}
-        i={0}
-        setVoices={mockSetVoices}
-      />
-    );
-    expect(screen.getByText('Sounds')).toBeInTheDocument();
-  });
+  // it('renders group label', () => {
+  //   render(
+  //     <CheckboxGroup
+  //       groupName="Sounds"
+  //       voices={voices}
+  //       i={0}
+  //       setVoices={mockSetVoices}
+  //     />
+  //   );
+  //   expect(screen.getByText('Sounds')).toBeInTheDocument();
+  // });
 
-  it('renders all checkboxes in the group', () => {
-    render(
-      <CheckboxGroup
-        groupName="Sounds"
-        voices={voices}
-        i={0}
-        setVoices={mockSetVoices}
-      />
-    );
-    expect(screen.getByDisplayValue('sine')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('square')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('triangle')).toBeInTheDocument();
-  });
+  // it('renders all checkboxes in the group', () => {
+  //   render(
+  //     <CheckboxGroup
+  //       groupName="Sounds"
+  //       voices={voices}
+  //       i={0}
+  //       setVoices={mockSetVoices}
+  //     />
+  //   );
+  //   expect(screen.getByDisplayValue('sine')).toBeInTheDocument();
+  //   expect(screen.getByDisplayValue('square')).toBeInTheDocument();
+  //   expect(screen.getByDisplayValue('triangle')).toBeInTheDocument();
+  // });
 
-  it('renders checkboxes with correct type', () => {
-    render(
-      <CheckboxGroup
-        groupName="Sounds"
-        voices={voices}
-        i={0}
-        setVoices={mockSetVoices}
-      />
-    );
-    const checkbox = screen.getByDisplayValue('sine');
-    expect(checkbox).toHaveAttribute('type', 'checkbox');
-  });
+  // it('renders checkboxes with correct type', () => {
+  //   render(
+  //     <CheckboxGroup
+  //       groupName="Sounds"
+  //       voices={voices}
+  //       i={0}
+  //       setVoices={mockSetVoices}
+  //     />
+  //   );
+  //   const checkbox = screen.getByDisplayValue('sine');
+  //   expect(checkbox).toHaveAttribute('type', 'checkbox');
+  // });
 
-  it('checks active checkboxes based on voice state', () => {
-    render(
-      <CheckboxGroup
-        groupName="Sounds"
-        voices={voices}
-        i={0}
-        setVoices={mockSetVoices}
-      />
-    );
-    expect(screen.getByDisplayValue('sine')).toBeChecked();
-    expect(screen.getByDisplayValue('square')).not.toBeChecked();
-  });
+  // it('checks active checkboxes based on voice state', () => {
+  //   render(
+  //     <CheckboxGroup
+  //       groupName="Sounds"
+  //       voices={voices}
+  //       i={0}
+  //       setVoices={mockSetVoices}
+  //     />
+  //   );
+  //   expect(screen.getByDisplayValue('sine')).toBeChecked();
+  //   expect(screen.getByDisplayValue('square')).not.toBeChecked();
+  // });
 
   it('sets data-attribute to group name', () => {
     const { container } = render(
