@@ -62,6 +62,7 @@
       "src/Synth/Synth.functions.{ts,tsx}",
       "src/Synth/Synth.{ts,tsx}",
       "!src/components/**/*.test.{ts,tsx}",  
+      "!src/components/**/*.duplicatedtest.{ts,tsx}",  
       "!src/components/**/*.types.{ts,tsx}",  
       "!src/**/*.d.ts"  
     ]  

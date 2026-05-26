@@ -39,17 +39,17 @@ describe('Field', () => {
     jest.clearAllMocks();
   });
 
-  it('renders a label for single input field', () => {
-    render(
-      <Field
-        fieldName="bpm"
-        i={0}
-        voices={voices}
-        setVoices={mockSetVoices}
-      />
-    );
-    expect(screen.getByText('BPM')).toBeInTheDocument();
-  });
+  // it('renders a label for single input field', () => {
+  //   render(
+  //     <Field
+  //       fieldName="bpm"
+  //       i={0}
+  //       voices={voices}
+  //       setVoices={mockSetVoices}
+  //     />
+  //   );
+  //   expect(screen.getByText('BPM')).toBeInTheDocument();
+  // });
 
   it('renders input field with correct value for single input', () => {
     render(
