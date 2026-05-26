@@ -230,31 +230,31 @@ describe('Synth', () => {
   });
 
   describe('integration', () => {
-    // it('adds, updates, and deletes voices', () => {
-    //   const voice1 = setUpVoice();
-    //   const voice2 = setUpVoice();
-    //   const runningRef = { current: false };
-    //   const voicesRef = { current: [] };
+    it('adds, updates, and deletes voices', () => {
+      const voice1 = setUpVoice();
+      const voice2 = setUpVoice();
+      const runningRef = { current: false };
+      const voicesRef = { current: [] };
 
-    //   // Add voices
-    //   Synth.add(voice1, false, runningRef, voicesRef);
-    //   Synth.add(voice2, false, runningRef, voicesRef);
-    //   expect(Synth.voices.length).toBe(2);
+      // Add voices
+      Synth.add(voice1, false, runningRef, voicesRef);
+      Synth.add(voice2, false, runningRef, voicesRef);
+      expect(Synth.voices.length).toBe(2);
 
-    //   // Update
-    //   voice1.bpm = 200;
-    //   Synth.update(voice1, 0);
-    //   expect(Synth.voices[0].bpm).toBe(200);
+      // Update
+      voice1.bpm = 200;
+      Synth.update(voice1, 0);
+      expect(Synth.voices[0].bpm).toBe(200);
 
-    //   // Delete
-    //   Synth.delete(0);
-    //   expect(Synth.voices.length).toBe(1);
-    //   expect(Synth.voices[0]).toBe(voice2);
+      // Delete
+      Synth.delete(0);
+      expect(Synth.voices.length).toBe(1);
+      expect(Synth.voices[0]).toBe(voice2);
 
-    //   // Stop remaining
-    //   Synth.stop();
-    //   expect(synthFunctions.stopOne).toHaveBeenCalled();
-    // });
+      // Stop remaining
+      Synth.stop();
+      expect(synthFunctions.stopOne).toHaveBeenCalled();
+    });
   });
 });
 
