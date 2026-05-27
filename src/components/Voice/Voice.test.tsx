@@ -13,7 +13,7 @@ describe('Voice', () => {
   const mockSetVoices = jest.fn();
 
   const voice = (i: number, voices: VoiceType[]) => <Voice
-    i={0}
+    i={i}
     voices={voices}
     handleDelete={mockHandleDelete}
     setVoices={mockSetVoices}
@@ -28,12 +28,10 @@ describe('Voice', () => {
     voices[0].bpm = 100;
     voices[1].bpm = 150;
 
-    const { rerender } = render(voice(0, voices));
+    render(voice(0, voices));
+    render(voice(1, voices));
 
     expect(screen.getByDisplayValue('100')).toBeInTheDocument();
-
-    rerender(voice(1, voices));
-
     expect(screen.getByDisplayValue('150')).toBeInTheDocument();
   });
 });
