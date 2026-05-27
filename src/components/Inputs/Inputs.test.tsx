@@ -5,32 +5,10 @@ import { setUpVoice }                   from '../../components/Interface/Interfa
 import { VoiceType }                    from '../Voice/Voice.types';
 
 
-// set up mocks
-
-jest.mock('../../content/data', () => ({
-  fields: {
-    bpm: {
-      label: 'BPM',
-      value: 'bpm',
-      input: 'number'
-    },
-    level: {
-      label: 'Level',
-      value: 'Level',
-      input: 'range'
-    }
-  },
-  extrema: ['min', 'max'],
-  checkboxGroups: { 
-    Sounds: ['sine', 'square']
-  }
-}));
-
 jest.mock('./Inputs.functions', () => ({
   updateField: jest.fn(),
   updateCheckbox: jest.fn()
 }));
-
 
 
 describe('Inputs', () => {
