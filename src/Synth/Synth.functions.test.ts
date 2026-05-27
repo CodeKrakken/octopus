@@ -2,34 +2,19 @@ import { getContext, firstInterval, stopOne, nextInterval } from './Synth.functi
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
 
-// Mock Web Audio API
-const mockAudioContext = {
-  state: 'running',
-  currentTime: 0,
-  createOscillator: jest.fn(),
-  createGain: jest.fn(),
-  createMediaElementSource: jest.fn(),
-  resume: jest.fn(),
-  destination: {}
-} as any;
 
-global.AudioContext = jest.fn(() => mockAudioContext) as any;
-
-
-// Deepwiki
-  
 jest.mock('../content/data', () => ({  
   allFrequencies: [  
-    [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25,  
-     587.33, 659.25, 698.46, 783.99, 880.00],  
+    [
+      261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88,
+      523.25, 587.33, 659.25, 698.46, 783.99, 880.00
+    ],  
   ],  
   extrema  : ['min', 'max'],  
   oneMinute: 60,  
-  samples  : { snare: 'snare.wav', kick: 'kick.wav' }  
+  samples  : { snare: 'snare.wav' }  
 }))  
-  
-// ── Web Audio API mocks ──────────────────────────────────────────────────────  
-  
+    
 const mockResume = jest.fn().mockResolvedValue(undefined)  
   
 const mockGain = {  
@@ -59,8 +44,7 @@ const createMockContext = (state = 'running', currentTime = 0) => ({
   resume                  : mockResume,  
   createOscillator        : jest.fn().mockReturnValue(mockOscillator),  
   createGain              : jest.fn().mockReturnValue(mockGain),  
-  createMediaElementSource: jest.fn().mockReturnValue(mockMediaElementSource),  
-  destination             : {}  
+  createMediaElementSource: jest.fn().mockReturnValue(mockMediaElementSource)
 })  
   
 const MockAudioContext = jest.fn().mockImplementation(() => createMockContext())  

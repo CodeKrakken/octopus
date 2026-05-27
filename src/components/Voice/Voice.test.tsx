@@ -25,6 +25,7 @@ describe('Voice', () => {
   it('handles multiple voices with different indices', () => {
     
     const voices = [setUpVoice(), setUpVoice()];
+    
     voices[0].bpm = 100;
     voices[1].bpm = 150;
 
