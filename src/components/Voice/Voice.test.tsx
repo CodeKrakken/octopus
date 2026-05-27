@@ -12,33 +12,28 @@ describe('Voice', () => {
   const mockHandleDelete = jest.fn();
   const mockSetVoices = jest.fn();
 
+  const voice = (i: number, voices: VoiceType[]) => <Voice
+    i={0}
+    voices={voices}
+    handleDelete={mockHandleDelete}
+    setVoices={mockSetVoices}
+    dataAttribute="Voices"
+  />
+
   beforeEach(() => { jest.clearAllMocks(); });
 
   it('handles multiple voices with different indices', () => {
-    const multipleVoices = [setUpVoice(), setUpVoice()];
-    multipleVoices[0].bpm = 100;
-    multipleVoices[1].bpm = 150;
+    
+    const voices = [setUpVoice(), setUpVoice()];
+    voices[0].bpm = 100;
+    voices[1].bpm = 150;
 
-    const { rerender } = render(
-      <Voice
-        i={0}
-        voices={multipleVoices}
-        handleDelete={mockHandleDelete}
-        setVoices={mockSetVoices}
-        dataAttribute="Voices"
-      />
-    );
+    const { rerender } = render(voice(0, voices));
+
     expect(screen.getByDisplayValue('100')).toBeInTheDocument();
 
-    rerender(
-      <Voice
-        i={1}
-        voices={multipleVoices}
-        handleDelete={mockHandleDelete}
-        setVoices={mockSetVoices}
-        dataAttribute="Voices"
-      />
-    );
+    rerender(voice(1, voices));
+
     expect(screen.getByDisplayValue('150')).toBeInTheDocument();
   });
 });
