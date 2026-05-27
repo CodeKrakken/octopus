@@ -11,12 +11,8 @@ jest.mock('../../content/data', () => ({
 describe('Voice', () => {
   const mockHandleDelete = jest.fn();
   const mockSetVoices = jest.fn();
-  const voices: VoiceType[] = [setUpVoice()];
-  voices[0].bpm = 120;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(() => { jest.clearAllMocks(); });
 
   it('handles multiple voices with different indices', () => {
     const multipleVoices = [setUpVoice(), setUpVoice()];
