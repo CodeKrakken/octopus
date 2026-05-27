@@ -1,51 +1,28 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Header from './Header';
 
-// jest.mock('../../content/data', () => ({
-//   title: 'Test Title',
-//   addLabel: 'Test Add'
-// }));
 
 describe('Header', () => {
   const mockHandleAddVoice = jest.fn();
   const mockHandleStartStop = jest.fn();
 
-  const renderHeader = (props = {}) => {
-    return render(
-      <Header
-        handleAddVoice={mockHandleAddVoice}
-        handleStartStop={mockHandleStartStop}
-        showStart={true}
-        running={false}
-        {...props}
-      />
-    );
-  };
+  const header = (state: Boolean) => <Header
+    handleAddVoice={mockHandleAddVoice}
+    handleStartStop={mockHandleStartStop}
+    showStart={true}
+    running={state}
+  />
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(() => { jest.clearAllMocks(); });
 
   it('displays correct button text based on running state', () => {
-    const { rerender } = render(
-      <Header
-        handleAddVoice={mockHandleAddVoice}
-        handleStartStop={mockHandleStartStop}
-        showStart={true}
-        running={false}
-      />
-    );
+  
+    const { rerender } = render(header(false));
 
     expect(screen.getByRole('button', { name: 'Start' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Stop' })).not.toBeInTheDocument();
 
-    rerender(
-      <Header
-        handleAddVoice={mockHandleAddVoice}
-        handleStartStop={mockHandleStartStop}
-        showStart={true}
-        running={true}
-      />
-    );
+    rerender(header(true));
 
     expect(screen.queryByRole('button', { name: 'Start' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Stop' })).toBeInTheDocument();
