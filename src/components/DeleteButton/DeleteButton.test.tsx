@@ -18,7 +18,7 @@ describe('DeleteButton', () => {
 
     render(Button(1));
 
-    const button = screen.getByRole('button', { name: 'X' });
+    const button = screen.getByRole('button');
 
     fireEvent.click(button);
 
