@@ -51,9 +51,7 @@ const createMockContext = (state = 'running', currentTime = 0) => ({
 const MockAudioContext = jest.fn().mockImplementation(() => createMockContext())  
 global.AudioContext = MockAudioContext as typeof AudioContext  
 global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as typeof Audio 
-  
-// ── Voice factory ────────────────────────────────────────────────────────────  
-  
+    
 const bespokeVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({  
   isActive        : false,  
   label           : 1,  
@@ -78,26 +76,31 @@ const bespokeVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({
   maxFadeOut      : 100,  
   ...overrides  
 })  
-  
-// Helper: call firstInterval with running=true, then immediately deactivate the  
-// voice so the recurring nextInterval setTimeout exits on its first fire rather  
-// than looping forever, then flush all pending timers.  
+
 const runOneInterval = (  
   voice: VoiceType,  
   context: ReturnType<typeof createMockContext>,  
   overrides: { nextInterval?: number; waveforms?: string[] } = {}  
 ) => {  
+
   const runningRef = { current: true }  
   const voicesRef  = { current: [voice] }  
   const waveforms  = (overrides.waveforms ?? ['sine']) as Waveform[]
   
-  firstInterval(voice, overrides.nextInterval ?? 0, runningRef, voicesRef, waveforms, context as unknown as AudioContext)  
-  voice.isActive = false   // prevents infinite timer recursion  
+  firstInterval(
+    voice, 
+    overrides.nextInterval ?? 0, 
+    runningRef, 
+    voicesRef, 
+    waveforms, 
+    context as unknown as AudioContext
+  )
+
+  voice.isActive = false
   jest.runAllTimers()  
 }  
   
-// ── getContext ───────────────────────────────────────────────────────────────  
-  
+
 describe('getContext', () => {  
   beforeEach(() => jest.clearAllMocks())  
   
