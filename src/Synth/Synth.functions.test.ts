@@ -1,6 +1,7 @@
 import { getContext, firstInterval, stopOne, nextInterval } from './Synth.functions';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
+import { Waveform } from './Synth.types';
 
 
 jest.mock('../content/data', () => ({  
@@ -54,7 +55,7 @@ global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as type
 // ── Voice factory ────────────────────────────────────────────────────────────  
   
 const bespokeVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({  
-  // isActive        : false,  
+  isActive        : false,  
   label           : 1,  
   nextInterval    : 0,  
   bpm             : 60,  
@@ -81,14 +82,14 @@ const bespokeVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({
 // Helper: call firstInterval with running=true, then immediately deactivate the  
 // voice so the recurring nextInterval setTimeout exits on its first fire rather  
 // than looping forever, then flush all pending timers.  
-const runAndFlush = (  
+const runOneInterval = (  
   voice: VoiceType,  
   context: ReturnType<typeof createMockContext>,  
   overrides: { nextInterval?: number; waveforms?: string[] } = {}  
 ) => {  
   const runningRef = { current: true }  
   const voicesRef  = { current: [voice] }  
-  const waveforms  = (overrides.waveforms ?? ['sine']) as any  
+  const waveforms  = (overrides.waveforms ?? ['sine']) as Waveform[]
   
   firstInterval(voice, overrides.nextInterval ?? 0, runningRef, voicesRef, waveforms, context as unknown as AudioContext)  
   voice.isActive = false   // prevents infinite timer recursion  
@@ -146,7 +147,7 @@ describe('firstInterval', () => {
   it('plays a sample when the sound is not a waveform', () => {  
     const voice = bespokeVoice({ activeSounds: ['snare'] })  
     const ctx   = createMockContext('running', 10)  
-    runAndFlush(voice, ctx, { waveforms: ['sine'] })  
+    runOneInterval(voice, ctx, { waveforms: ['sine'] })  
     expect(global.Audio).toHaveBeenCalledWith('snare.wav')  
   })  
     
@@ -154,7 +155,7 @@ describe('firstInterval', () => {
     // minLength=50 → noteLength = intervalLength * 0.5 < intervalLength  
     const voice = bespokeVoice({ minLength: 50, maxLength: 50 })  
     const ctx   = createMockContext('running', 10)  
-    runAndFlush(voice, ctx)  
+    runOneInterval(voice, ctx)  
     // scheduleNoteEnd calls gain.setValueAtTime inside a setTimeout;  
     // after runAllTimers it should have been called at least twice  
     // (once from oscillate setup, once from scheduleNoteEnd)  
@@ -164,7 +165,7 @@ describe('firstInterval', () => {
   it('applies detune when cents are non-zero', () => {  
     const voice = bespokeVoice({ minDetune: 50, maxDetune: 50 })  
     const ctx   = createMockContext('running', 10)  
-    runAndFlush(voice, ctx)  
+    runOneInterval(voice, ctx)  
     // detuned frequency differs from the base 261.63  
     const assignedFreq = mockOscillator.frequency.value  
     expect(assignedFreq).not.toBe(261.63)  
@@ -174,7 +175,7 @@ describe('firstInterval', () => {
     // fadeIn=20%, fadeOut=20% → endOfFadeIn < startOfFadeOut → overlap=false  
     const voice = bespokeVoice({ minFadeIn: 20, maxFadeIn: 20, minFadeOut: 20, maxFadeOut: 20 })  
     const ctx   = createMockContext('running', 10)  
-    runAndFlush(voice, ctx)  
+    runOneInterval(voice, ctx)  
     // linearRampToValueAtTime is called in both overlap and non-overlap paths  
     expect(mockGain.gain.linearRampToValueAtTime).toHaveBeenCalled()  
   })  
