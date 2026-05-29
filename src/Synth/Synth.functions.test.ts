@@ -53,8 +53,8 @@ global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as type
   
 // ── Voice factory ────────────────────────────────────────────────────────────  
   
-const makeVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({  
-  isActive        : false,  
+const bespokeVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({  
+  // isActive        : false,  
   label           : 1,  
   nextInterval    : 0,  
   bpm             : 60,  
@@ -144,7 +144,7 @@ describe('firstInterval', () => {
   afterEach(() => jest.useRealTimers())  
     
   it('plays a sample when the sound is not a waveform', () => {  
-    const voice = makeVoice({ activeSounds: ['snare'] })  
+    const voice = bespokeVoice({ activeSounds: ['snare'] })  
     const ctx   = createMockContext('running', 10)  
     runAndFlush(voice, ctx, { waveforms: ['sine'] })  
     expect(global.Audio).toHaveBeenCalledWith('snare.wav')  
@@ -152,7 +152,7 @@ describe('firstInterval', () => {
     
   it('schedules note end when noteLength is shorter than intervalLength', () => {  
     // minLength=50 → noteLength = intervalLength * 0.5 < intervalLength  
-    const voice = makeVoice({ minLength: 50, maxLength: 50 })  
+    const voice = bespokeVoice({ minLength: 50, maxLength: 50 })  
     const ctx   = createMockContext('running', 10)  
     runAndFlush(voice, ctx)  
     // scheduleNoteEnd calls gain.setValueAtTime inside a setTimeout;  
@@ -162,7 +162,7 @@ describe('firstInterval', () => {
   })  
   
   it('applies detune when cents are non-zero', () => {  
-    const voice = makeVoice({ minDetune: 50, maxDetune: 50 })  
+    const voice = bespokeVoice({ minDetune: 50, maxDetune: 50 })  
     const ctx   = createMockContext('running', 10)  
     runAndFlush(voice, ctx)  
     // detuned frequency differs from the base 261.63  
@@ -172,7 +172,7 @@ describe('firstInterval', () => {
   
   it('uses non-overlapping fade envelope when fade percentages are small', () => {  
     // fadeIn=20%, fadeOut=20% → endOfFadeIn < startOfFadeOut → overlap=false  
-    const voice = makeVoice({ minFadeIn: 20, maxFadeIn: 20, minFadeOut: 20, maxFadeOut: 20 })  
+    const voice = bespokeVoice({ minFadeIn: 20, maxFadeIn: 20, minFadeOut: 20, maxFadeOut: 20 })  
     const ctx   = createMockContext('running', 10)  
     runAndFlush(voice, ctx)  
     // linearRampToValueAtTime is called in both overlap and non-overlap paths  
@@ -181,7 +181,7 @@ describe('firstInterval', () => {
 })
 
 it('logs the error message when an exception is thrown inside runInterval', () => {  
-  const voice = makeVoice()  
+  const voice = bespokeVoice()  
   const ctx   = createMockContext('running', 10)  
   Object.defineProperty(ctx, 'currentTime', {  
     get: () => { throw new Error('simulated context error') }  
@@ -203,7 +203,7 @@ it('calls runInterval again from the nextInterval setTimeout when voice is still
     return 0 as any  
   })  
   
-  const voice = makeVoice()  
+  const voice = bespokeVoice()  
   const ctx   = createMockContext('running', 0)  
   
   firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, ctx as unknown as AudioContext)  
