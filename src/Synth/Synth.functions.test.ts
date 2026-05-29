@@ -101,7 +101,8 @@ const runOneInterval = (
 }  
   
 
-describe('getContext', () => {  
+describe('getContext', () => {
+    
   beforeEach(() => jest.clearAllMocks())  
   
   it('creates a new AudioContext when passed null', () => {  
@@ -116,15 +117,12 @@ describe('getContext', () => {
   })  
 })  
   
-// ── stopOne ──────────────────────────────────────────────────────────────────  
   
 describe('stopOne', () => {  
 
   it('stops multiple voices independently', () => {
-    const voice1 = setUpVoice();
-    const voice2 = setUpVoice();
-    voice1.isActive = true;
-    voice2.isActive = true;
+    const voice1 = bespokeVoice({isActive: true});
+    const voice2 = bespokeVoice({isActive: true});
 
     stopOne(voice1);
 
