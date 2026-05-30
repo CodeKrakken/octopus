@@ -122,8 +122,8 @@ describe('stopOne', () => {
 
   it('stops multiple voices independently', () => {
 
-    const voice1 = customVoice({ isActive: true });
-    const voice2 = customVoice({ isActive: true });
+    const voice1 = { ...setUpVoice(), isActive: true };
+    const voice2 = { ...setUpVoice(), isActive: true };
 
     stopOne(voice1);
 
@@ -328,16 +328,12 @@ describe('branch coverage', () => {
 
 
 describe('nextInterval', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
 
-  afterEach(() => {
-    jest.useRealTimers();
-  });
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
 
   it('returns early without scheduling a timer when voice.isActive is false', () => {
-    const voice = { ...setUpVoice(), isActive: false };
+    const voice = customVoice({ isActive: false });
     const runningRef = { current: true };
     const voicesRef = { current: [voice] };
     const mockContext = { currentTime: 0 } as any;
