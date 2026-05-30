@@ -221,6 +221,22 @@ it('calls runInterval again from the nextInterval setTimeout when voice is still
   jest.spyOn(global, 'setTimeout').mockRestore()
 })
 
+describe('nextInterval', () => {
+
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
+
+  it('returns early without scheduling a timer when voice.isActive is false', () => {
+    const voice = { ...setUpVoice(), isActive: false };
+    const runningRef = { current: true };
+    const voicesRef = { current: [voice] };
+    const mockContext = { currentTime: 0 } as Partial<AudioContext>;
+
+    nextInterval(voice, mockContext as AudioContext, runningRef, voicesRef, ['sine'] as Waveform[]);
+
+    expect(jest.getTimerCount()).toBe(0);
+  });
+});
 
 describe('branch coverage', () => {
   let mockGain: any;
@@ -301,23 +317,5 @@ describe('branch coverage', () => {
     jest.runAllTimers();
 
     expect(mockContext.createOscillator).toHaveBeenCalled();
-  });
-});
-
-
-describe('nextInterval', () => {
-
-  beforeEach(() => jest.useFakeTimers());
-  afterEach(() => jest.useRealTimers());
-
-  it('returns early without scheduling a timer when voice.isActive is false', () => {
-    const voice = { ...setUpVoice(), isActive: false };
-    const runningRef = { current: true };
-    const voicesRef = { current: [voice] };
-    const mockContext = { currentTime: 0 } as any;
-
-    nextInterval(voice, mockContext, runningRef, voicesRef, ['sine'] as any);
-
-    expect(jest.getTimerCount()).toBe(0);
   });
 });
