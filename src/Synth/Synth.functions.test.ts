@@ -242,7 +242,7 @@ it('calls runInterval again from the nextInterval setTimeout when voice is still
     return 0 as unknown as NodeJS.Timeout
   })
 
-  const voice = customVoice()
+  const voice = setUpVoice()
   const context = createMockContext('running', 0)
 
   firstInterval(
