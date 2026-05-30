@@ -145,7 +145,7 @@ describe('firstInterval', () => {
 
   it('plays a sample', () => {
 
-    const voice = customVoice({ activeSounds: ['snare'] })
+    const voice = {...setUpVoice(), activeSounds: ['snare'] }
     const context = createMockContext('running', 10)
 
     runOneInterval(voice, context)
