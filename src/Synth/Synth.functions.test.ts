@@ -109,8 +109,8 @@ describe('getContext', () => {
   })  
   
   it('resumes a suspended context', () => {  
-    const ctx = createMockContext('suspended') as unknown as AudioContext  
-    getContext(ctx)  
+    const context = createMockContext('suspended') as unknown as AudioContext  
+    getContext(context)  
     expect(mockResume).toHaveBeenCalledTimes(1)  
   })  
 })  
@@ -142,16 +142,16 @@ describe('firstInterval', () => {
     
   it('plays a sample when the sound is not a waveform', () => {  
     const voice = bespokeVoice({ activeSounds: ['snare'] })  
-    const ctx   = createMockContext('running', 10)  
-    runOneInterval(voice, ctx, { waveforms: ['sine'] })  
+    const context   = createMockContext('running', 10)  
+    runOneInterval(voice, context, { waveforms: ['sine'] })  
     expect(global.Audio).toHaveBeenCalledWith('snare.wav')  
   })  
     
   it('schedules note end when noteLength is shorter than intervalLength', () => {  
     // minLength=50 → noteLength = intervalLength * 0.5 < intervalLength  
     const voice = bespokeVoice({ minLength: 50, maxLength: 50 })  
-    const ctx   = createMockContext('running', 10)  
-    runOneInterval(voice, ctx)  
+    const context   = createMockContext('running', 10)  
+    runOneInterval(voice, context)  
     // scheduleNoteEnd calls gain.setValueAtTime inside a setTimeout;  
     // after runAllTimers it should have been called at least twice  
     // (once from oscillate setup, once from scheduleNoteEnd)  
@@ -160,8 +160,8 @@ describe('firstInterval', () => {
   
   it('applies detune when cents are non-zero', () => {  
     const voice = bespokeVoice({ minDetune: 50, maxDetune: 50 })  
-    const ctx   = createMockContext('running', 10)  
-    runOneInterval(voice, ctx)  
+    const context   = createMockContext('running', 10)  
+    runOneInterval(voice, context)  
     // detuned frequency differs from the base 261.63  
     const assignedFreq = mockOscillator.frequency.value  
     expect(assignedFreq).not.toBe(261.63)  
@@ -170,8 +170,8 @@ describe('firstInterval', () => {
   it('uses non-overlapping fade envelope when fade percentages are small', () => {  
     // fadeIn=20%, fadeOut=20% → endOfFadeIn < startOfFadeOut → overlap=false  
     const voice = bespokeVoice({ minFadeIn: 20, maxFadeIn: 20, minFadeOut: 20, maxFadeOut: 20 })  
-    const ctx   = createMockContext('running', 10)  
-    runOneInterval(voice, ctx)  
+    const context   = createMockContext('running', 10)  
+    runOneInterval(voice, context)  
     // linearRampToValueAtTime is called in both overlap and non-overlap paths  
     expect(mockGain.gain.linearRampToValueAtTime).toHaveBeenCalled()  
   })  
@@ -179,13 +179,13 @@ describe('firstInterval', () => {
 
 it('logs the error message when an exception is thrown inside runInterval', () => {  
   const voice = bespokeVoice()  
-  const ctx   = createMockContext('running', 10)  
-  Object.defineProperty(ctx, 'currentTime', {  
+  const context   = createMockContext('running', 10)  
+  Object.defineProperty(context, 'currentTime', {  
     get: () => { throw new Error('simulated context error') }  
   })  
   const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})  
   
-  firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, ctx as unknown as AudioContext)  
+  firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, context as unknown as AudioContext)  
   
   expect(consoleSpy).toHaveBeenCalledWith('simulated context error')  
   consoleSpy.mockRestore()  
@@ -201,9 +201,9 @@ it('calls runInterval again from the nextInterval setTimeout when voice is still
   })  
   
   const voice = bespokeVoice()  
-  const ctx   = createMockContext('running', 0)  
+  const context   = createMockContext('running', 0)  
   
-  firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, ctx as unknown as AudioContext)  
+  firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, context as unknown as AudioContext)  
   // callbacks[0] = makeSound callback  (scheduled inside makeSound)  
   // callbacks[1] = nextInterval callback (scheduled inside nextInterval function)  
   // voice.isActive is still true  
