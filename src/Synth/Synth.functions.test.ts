@@ -179,12 +179,30 @@ describe('firstInterval', () => {
 
     const context = createMockContext('running', 10)
 
-    const voice = customVoice({ 
-      minFadeIn: 20, 
-      maxFadeIn: 20, 
-      minFadeOut: 20, 
-      maxFadeOut: 20 
-    })
+    const voice = {
+      ...setUpVoice(), 
+      isActive: false,
+      label: 1,
+      nextInterval: 0,
+      bpm: 60,
+      minLevel: 100,
+      maxLevel: 100,
+      activeNotes: ['1'],
+      activeOctaves: ['0'],
+      activeIntervals: ['1'],
+      activeSounds: ['sine'],
+      restChance: 0,
+      minLength: 100,
+      maxLength: 100,
+      minOffset: 0,
+      maxOffset: 0,
+      minDetune: 0,
+      maxDetune: 0,
+      minFadeIn: 20,
+      maxFadeIn: 20,
+      minFadeOut: 20,
+      maxFadeOut: 20,
+    }
 
     runOneInterval(voice, context)
 
@@ -333,7 +351,7 @@ describe('nextInterval', () => {
   afterEach(() => jest.useRealTimers());
 
   it('returns early without scheduling a timer when voice.isActive is false', () => {
-    const voice = customVoice({ isActive: false });
+    const voice = { ...setUpVoice(), isActive: false };
     const runningRef = { current: true };
     const voicesRef = { current: [voice] };
     const mockContext = { currentTime: 0 } as any;
