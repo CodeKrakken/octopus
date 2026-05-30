@@ -164,59 +164,81 @@ describe('firstInterval', () => {
   })
 
   it('applies detune when cents are non-zero', () => {
+
     const voice = customVoice({ minDetune: 50, maxDetune: 50 })
     const context = createMockContext('running', 10)
+
     runOneInterval(voice, context)
-    // detuned frequency differs from the base 261.63
+
     const assignedFreq = mockOscillator.frequency.value
+
     expect(assignedFreq).not.toBe(261.63)
   })
 
   it('uses non-overlapping fade envelope when fade percentages are small', () => {
-    // fadeIn=20%, fadeOut=20% → endOfFadeIn < startOfFadeOut → overlap=false
-    const voice = customVoice({ minFadeIn: 20, maxFadeIn: 20, minFadeOut: 20, maxFadeOut: 20 })
+
     const context = createMockContext('running', 10)
+
+    const voice = customVoice({ 
+      minFadeIn: 20, 
+      maxFadeIn: 20, 
+      minFadeOut: 20, 
+      maxFadeOut: 20 
+    })
+
     runOneInterval(voice, context)
-    // linearRampToValueAtTime is called in both overlap and non-overlap paths
+
     expect(mockGain.gain.linearRampToValueAtTime).toHaveBeenCalled()
   })
 })
 
 it('logs the error message when an exception is thrown inside runInterval', () => {
+
   const voice = customVoice()
   const context = createMockContext('running', 10)
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
+
   Object.defineProperty(context, 'currentTime', {
     get: () => { throw new Error('simulated context error') }
   })
-  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
-
-  firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, context as unknown as AudioContext)
+  
+  firstInterval(
+    voice, 
+    0, 
+    { current: true }, 
+    { current: [voice] }, 
+    ['sine'] as Waveform[], 
+    context as unknown as AudioContext
+  )
 
   expect(consoleSpy).toHaveBeenCalledWith('simulated context error')
+
   consoleSpy.mockRestore()
 })
 
 it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {
-  const callbacks: Function[] = []
+  const calledFunctions: Function[] = []
 
-  // Replace setTimeout (fake or real) with a simple capture mock
-  jest.spyOn(global, 'setTimeout').mockImplementation((cb: any) => {
-    callbacks.push(cb)
-    return 0 as any
+  jest.spyOn(global, 'setTimeout').mockImplementation((calledFunction: Function) => {
+    calledFunctions.push(calledFunction)
+    return 0 as unknown as NodeJS.Timeout
   })
 
   const voice = customVoice()
   const context = createMockContext('running', 0)
 
-  firstInterval(voice, 0, { current: true }, { current: [voice] }, ['sine'] as any, context as unknown as AudioContext)
-  // callbacks[0] = makeSound callback(scheduled inside makeSound)
-  // callbacks[1] = nextInterval callback (scheduled inside nextInterval function)
-  // voice.isActive is still true
+  firstInterval(
+    voice, 
+    0, 
+    { current: true }, 
+    { current: [voice] }, 
+    ['sine'] as Waveform[], 
+    context as unknown as AudioContext
+  )
 
-  callbacks[1]()// fires the nextInterval callback: line 68 guard passes → line 69 executes
+  calledFunctions[1]()
 
-  // runInterval ran again → called nextInterval again → pushed a third callback
-  expect(callbacks.length).toBeGreaterThan(2)
+  expect(calledFunctions.length).toBeGreaterThan(2)
 
   jest.spyOn(global, 'setTimeout').mockRestore()
 })
