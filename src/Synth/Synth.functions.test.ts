@@ -165,7 +165,7 @@ describe('firstInterval', () => {
 
   it('applies detune when cents are non-zero', () => {
 
-    const voice = customVoice({ minDetune: 50, maxDetune: 50 })
+    const voice = {...setUpVoice(), minDetune: 50, maxDetune: 50 }
     const context = createMockContext('running', 10)
 
     runOneInterval(voice, context)
