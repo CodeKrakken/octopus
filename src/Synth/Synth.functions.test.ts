@@ -52,30 +52,6 @@ const MockAudioContext = jest.fn().mockImplementation(() => createMockContext())
 global.AudioContext = MockAudioContext as typeof AudioContext
 global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as typeof Audio
 
-const customVoice = (overrides: Partial<VoiceType> = {}): VoiceType => ({
-  isActive: false,
-  label: 1,
-  nextInterval: 0,
-  bpm: 60,
-  minLevel: 100,
-  maxLevel: 100,
-  activeNotes: ['1'],
-  activeOctaves: ['0'],
-  activeIntervals: ['1'],
-  activeSounds: ['sine'],
-  restChance: 0,
-  minLength: 100,
-  maxLength: 100,
-  minOffset: 0,
-  maxOffset: 0,
-  minDetune: 0,
-  maxDetune: 0,
-  minFadeIn: 100,
-  maxFadeIn: 100,
-  minFadeOut: 100,
-  maxFadeOut: 100,
-  ...overrides
-})
 
 const runOneInterval = (
   voice: VoiceType,
@@ -212,7 +188,7 @@ describe('firstInterval', () => {
 
 it('logs the error message when an exception is thrown inside runInterval', () => {
 
-  const voice = customVoice()
+  const voice = setUpVoice()
   const context = createMockContext('running', 10)
   const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
 
