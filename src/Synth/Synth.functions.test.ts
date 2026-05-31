@@ -158,8 +158,8 @@ describe('firstInterval', () => {
     const voice = {
       ...setUpVoice(), 
       activeOctaves: ['0'],
-      minFadeIn: 20,
-      maxFadeIn: 20,
+      minFadeIn : 20,
+      maxFadeIn : 20,
       minFadeOut: 20,
       maxFadeOut: 20,
     }
@@ -168,58 +168,110 @@ describe('firstInterval', () => {
 
     expect(mockGain.gain.linearRampToValueAtTime).toHaveBeenCalled()
   })
-})
 
-it('logs the error message when an exception is thrown inside runInterval', () => {
+  it('uses "0" as interval when activeIntervals is empty', () => {
 
-  const voice = setUpVoice()
-  const context = createMockContext('running', 10)
-  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
+    const voice = { ...setUpVoice(), activeIntervals: [], restChance: 100 };
+    const runningRef = { current: true };
+    const voicesRef = { current: [voice] };
+    const mockContext = createMockContext() as unknown as AudioContext;
+    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);
+    runningRef.current = false;
+    jest.runAllTimers();
 
-  Object.defineProperty(context, 'currentTime', {
-    get: () => { throw new Error('simulated context error') }
+    expect(voice.isActive).toBe(true);
+  });
+
+  it('logs "Unknown error" when a non-Error is thrown inside makeSound', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+    const throwingContext = {
+      ...createMockContext(),
+      createOscillator: jest.fn(() => { throw 'string error'; }),
+    } as unknown as AudioContext;
+
+    const voice = { ...setUpVoice(), restChance: 0, activeSounds: ['sine'] };
+    const runningRef = { current: true };
+    const voicesRef = { current: [voice] };
+
+    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, throwingContext);
+    runningRef.current = false;
+    jest.runAllTimers();
+
+    expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
+  });
+
+  it('applies negative modifier when detune cents < 0', () => {
+    const voice = {
+      ...setUpVoice(),
+      restChance: 0,
+      activeSounds: ['sine'],
+      minDetune: -50,
+      maxDetune: -10,
+    };
+    const runningRef = { current: true };
+    const voicesRef = { current: [voice] };
+    const mockContext = createMockContext() as unknown as AudioContext;
+
+    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);
+    runningRef.current = false;
+    jest.runAllTimers();
+
+    expect(mockContext.createOscillator).toHaveBeenCalled();
+  });
+
+
+  it('logs the error message when an exception is thrown inside runInterval', () => {
+
+    const voice = setUpVoice()
+    const context = createMockContext('running', 10)
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
+
+    Object.defineProperty(context, 'currentTime', {
+      get: () => { throw new Error('simulated context error') }
+    })
+    
+    firstInterval(
+      voice, 
+      0, 
+      { current: true }, 
+      { current: [voice] }, 
+      ['sine'] as Waveform[], 
+      context as unknown as AudioContext
+    )
+
+    expect(consoleSpy).toHaveBeenCalledWith('simulated context error')
+
+    consoleSpy.mockRestore()
   })
-  
-  firstInterval(
-    voice, 
-    0, 
-    { current: true }, 
-    { current: [voice] }, 
-    ['sine'] as Waveform[], 
-    context as unknown as AudioContext
-  )
 
-  expect(consoleSpy).toHaveBeenCalledWith('simulated context error')
+  it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {
+    const calledFunctions: Function[] = []
 
-  consoleSpy.mockRestore()
-})
+    jest.spyOn(global, 'setTimeout').mockImplementation((calledFunction: Function) => {
+      calledFunctions.push(calledFunction)
+      return 0 as unknown as NodeJS.Timeout
+    })
 
-it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {
-  const calledFunctions: Function[] = []
+    const voice = setUpVoice()
+    const context = createMockContext('running', 0)
 
-  jest.spyOn(global, 'setTimeout').mockImplementation((calledFunction: Function) => {
-    calledFunctions.push(calledFunction)
-    return 0 as unknown as NodeJS.Timeout
+    firstInterval(
+      voice, 
+      0, 
+      { current: true }, 
+      { current: [voice] }, 
+      ['sine'] as Waveform[], 
+      context as unknown as AudioContext
+    )
+
+    calledFunctions[1]()
+
+    expect(calledFunctions.length).toBeGreaterThan(2)
+
+    jest.spyOn(global, 'setTimeout').mockRestore()
   })
+});
 
-  const voice = setUpVoice()
-  const context = createMockContext('running', 0)
-
-  firstInterval(
-    voice, 
-    0, 
-    { current: true }, 
-    { current: [voice] }, 
-    ['sine'] as Waveform[], 
-    context as unknown as AudioContext
-  )
-
-  calledFunctions[1]()
-
-  expect(calledFunctions.length).toBeGreaterThan(2)
-
-  jest.spyOn(global, 'setTimeout').mockRestore()
-})
 
 describe('nextInterval', () => {
 
@@ -244,87 +296,5 @@ describe('nextInterval', () => {
 
     expect(setTimeoutSpy).not.toHaveBeenCalled();
     expect(jest.getTimerCount()).toBe(0);
-  });
-});
-
-describe('branch coverage', () => {
-  let mockGain: any;
-  let mockOscillator: any;
-  let mockContext: any;
-
-  beforeEach(() => {
-    jest.useFakeTimers();
-
-    mockGain = {
-      connect: jest.fn(),
-      disconnect: jest.fn(),
-      gain: { setValueAtTime: jest.fn(), linearRampToValueAtTime: jest.fn(), value: 0 },
-    };
-    mockOscillator = {
-      connect: jest.fn(), start: jest.fn(), stop: jest.fn(), disconnect: jest.fn(),
-      frequency: { value: 0 }, type: 'sine',
-    };
-    mockContext = {
-      currentTime: 0,
-      createOscillator: jest.fn(() => mockOscillator),
-      createGain: jest.fn(() => mockGain),
-      destination: {},
-    };
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-    jest.restoreAllMocks();
-  });
-
-  // Line 79: || '0' fallback when activeIntervals is empty
-  it('uses "0" as interval when activeIntervals is empty', () => {
-    const voice = { ...setUpVoice(), activeIntervals: [], restChance: 100 };
-    const runningRef = { current: true };
-    const voicesRef = { current: [voice] };
-
-    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);
-    runningRef.current = false;
-    jest.runAllTimers();
-
-    expect(voice.isActive).toBe(true);
-  });
-
-  // Line 117: "Unknown error" branch when a non-Error is thrown
-  it('logs "Unknown error" when a non-Error is thrown inside makeSound', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-    const throwingContext = {
-      ...mockContext,
-      createOscillator: jest.fn(() => { throw 'string error'; }),
-    };
-
-    const voice = { ...setUpVoice(), restChance: 0, activeSounds: ['sine'] };
-    const runningRef = { current: true };
-    const voicesRef = { current: [voice] };
-
-    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, throwingContext);
-    runningRef.current = false;
-    jest.runAllTimers();
-
-    expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
-  });
-
-  // Line 252: cents < 0 branch in detune
-  it('applies negative modifier when detune cents < 0', () => {
-    const voice = {
-      ...setUpVoice(),
-      restChance: 0,
-      activeSounds: ['sine'],
-      minDetune: -50,
-      maxDetune: -10,
-    };
-    const runningRef = { current: true };
-    const voicesRef = { current: [voice] };
-
-    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);
-    runningRef.current = false;
-    jest.runAllTimers();
-
-    expect(mockContext.createOscillator).toHaveBeenCalled();
   });
 });
