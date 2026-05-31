@@ -16,7 +16,14 @@ jest.mock('../content/data', () => ({
   samples: { snare: 'snare.wav' }
 }))
 
-const mockResume = jest.fn().mockResolvedValue(undefined)
+const mockOscillator = {
+  connect: jest.fn(),
+  start: jest.fn(),
+  stop: jest.fn(),
+  disconnect: jest.fn(),
+  frequency: { value: 0 },
+  type: 'sine' as OscillatorType
+}
 
 const mockGain = {
   gain: {
@@ -28,16 +35,9 @@ const mockGain = {
   disconnect: jest.fn()
 }
 
-const mockOscillator = {
-  connect: jest.fn(),
-  start: jest.fn(),
-  stop: jest.fn(),
-  disconnect: jest.fn(),
-  frequency: { value: 0 },
-  type: 'sine' as OscillatorType
-}
-
 const mockMediaElementSource = { connect: jest.fn() }
+
+const mockResume = jest.fn().mockResolvedValue(undefined)
 
 const createMockContext = (state = 'running', currentTime = 0) => ({
   state,
@@ -49,42 +49,23 @@ const createMockContext = (state = 'running', currentTime = 0) => ({
 })
 
 const MockAudioContext = jest.fn().mockImplementation(() => createMockContext())
+
 global.AudioContext = MockAudioContext as typeof AudioContext
+
 global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as typeof Audio
-
-
-const runOneInterval = (
-  voice: VoiceType,
-  context: ReturnType<typeof createMockContext>,
-  overrides: { nextInterval?: number; waveforms?: string[] } = {}
-) => {
-
-  const runningRef = { current: true }
-  const voicesRef = { current: [voice] }
-  const waveforms = (overrides.waveforms ?? ['sine']) as Waveform[]
-
-  firstInterval(
-    voice,
-    overrides.nextInterval ?? 0,
-    runningRef,
-    voicesRef,
-    waveforms,
-    context as unknown as AudioContext
-  )
-
-  voice.isActive = false
-  jest.runAllTimers()
-}
 
 
 describe('getContext', () => {
 
   it('creates a new AudioContext when passed null', () => {
+
     getContext(null)
+    
     expect(MockAudioContext).toHaveBeenCalledTimes(1)
   })
 
   it('resumes a suspended context', () => {
+    
     const context = createMockContext('suspended') as unknown as AudioContext
 
     getContext(context)
@@ -115,6 +96,29 @@ describe('stopOne', () => {
 
 
 describe('firstInterval', () => {
+
+  const runOneInterval = (
+    voice: VoiceType,
+    context: ReturnType<typeof createMockContext>,
+    overrides: { nextInterval?: number; waveforms?: string[] } = {}
+  ) => {
+
+    const runningRef = { current: true }
+    const voicesRef = { current: [voice] }
+    const waveforms = (overrides.waveforms ?? ['sine']) as Waveform[]
+
+    firstInterval(
+      voice,
+      overrides.nextInterval ?? 0,
+      runningRef,
+      voicesRef,
+      waveforms,
+      context as unknown as AudioContext
+    )
+
+    voice.isActive = false
+    jest.runAllTimers()
+  }
 
   beforeAll(() => jest.useFakeTimers())
   afterAll(() => jest.useRealTimers())
@@ -171,12 +175,20 @@ describe('firstInterval', () => {
 
   it('uses "0" as interval when activeIntervals is empty', () => {
 
-    const voice = { ...setUpVoice(), activeIntervals: [], restChance: 100 };
+    const voice = { 
+      ...setUpVoice(), 
+      activeIntervals: [], 
+      restChance: 100 
+    };
+    
     const runningRef = { current: true };
     const voicesRef = { current: [voice] };
     const mockContext = createMockContext() as unknown as AudioContext;
+
     firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);
+
     runningRef.current = false;
+
     jest.runAllTimers();
 
     expect(voice.isActive).toBe(true);
