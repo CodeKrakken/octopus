@@ -168,6 +168,7 @@ describe('firstInterval', () => {
     expect(mockGain.gain.linearRampToValueAtTime).toHaveBeenCalled()
   })
 
+
   it('calls makeSound when isRest returns false', () => {
 
     const voice = {
@@ -183,7 +184,9 @@ describe('firstInterval', () => {
     expect(mockContext.createOscillator).toHaveBeenCalled();
   });
 
+
   it('uses "0" as fallback interval when activeIntervals is empty', () => {
+    
     const voice = {
       ...setUpVoice(),
       activeIntervals: [],
@@ -193,13 +196,14 @@ describe('firstInterval', () => {
     const mockContext = createMockContext('running', 0) as ReturnType<typeof createMockContext>;
 
     runOneInterval(voice, mockContext)
-
     jest.runAllTimers();
 
     expect(mockContext.createOscillator).toHaveBeenCalled();
   });
 
+
   it('skips makeSound when isRest returns true', () => {
+
     const voice = {
       ...setUpVoice(),
       restChance: 100
@@ -214,13 +218,21 @@ describe('firstInterval', () => {
   });
 
   it('logs "Unknown error" when a non-Error is thrown inside makeSound', () => {
+    
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+    
     const throwingContext = {
+
       ...createMockContext(),
       createOscillator: jest.fn(() => { throw 'string error'; }),
+
     } as ReturnType<typeof createMockContext>;
 
-    const voice = { ...setUpVoice(), restChance: 0, activeSounds: ['sine'] };
+    const voice = { 
+      ...setUpVoice(), 
+      restChance: 0, 
+      activeSounds: ['sine'] 
+    };
 
     runOneInterval(voice, throwingContext)
     jest.runAllTimers();
@@ -229,6 +241,7 @@ describe('firstInterval', () => {
   });
 
   it('applies negative modifier when detune cents < 0', () => {
+
     const voice = {
       ...setUpVoice(),
       restChance: 0,
@@ -236,6 +249,7 @@ describe('firstInterval', () => {
       minDetune: -50,
       maxDetune: -10,
     };
+
     const runningRef = { current: true };
     const voicesRef = { current: [voice] };
     const mockContext = createMockContext() as unknown as AudioContext;
@@ -267,6 +281,7 @@ describe('firstInterval', () => {
   })
 
   it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {
+    
     const calledFunctions: Function[] = []
 
     jest.spyOn(global, 'setTimeout').mockImplementation((calledFunction: Function) => {
@@ -301,11 +316,12 @@ describe('nextInterval', () => {
   afterEach(() => jest.useRealTimers());
 
   it('returns early without scheduling a timer when voice.isActive is false', () => {
+    
     const voice = { ...setUpVoice(), isActive: false };
     const runningRef = { current: true };
     const voicesRef = { current: [voice] };
     const mockContext = { currentTime: 0 } as Partial<AudioContext>;
-
+    
     const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
 
     nextInterval(
