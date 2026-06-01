@@ -5,6 +5,7 @@ import { Waveform } from './Synth.types';
 
 
 jest.mock('../content/data', () => ({
+
   allFrequencies: [
     [
       261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88,
@@ -58,18 +59,13 @@ global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as type
 describe('getContext', () => {
 
   it('creates a new AudioContext when passed null', () => {
-
     getContext(null)
-    
     expect(MockAudioContext).toHaveBeenCalledTimes(1)
   })
 
   it('resumes a suspended context', () => {
-    
     const context = createMockContext('suspended') as unknown as AudioContext
-
     getContext(context)
-
     expect(mockResume).toHaveBeenCalledTimes(1)
   })
 })
