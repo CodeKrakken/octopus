@@ -4,6 +4,13 @@ import { VoiceType } from '../components/Voice/Voice.types';
 import { firstInterval, getContext, stopOne } from './Synth.functions';  
 import { waveforms } from '../content/data';  
 
+
+jest.mock('./Synth.functions', () => ({  
+  firstInterval: jest.fn(),  
+  getContext: jest.fn(() => ({ currentTime: 0 })),  
+  stopOne: jest.fn(),  
+}));  
+
 describe('Synth', () => {
   beforeEach(() => {
     Synth.voices = [];
@@ -13,6 +20,7 @@ describe('Synth', () => {
   describe('add', () => {
 
     it('calls firstInterval when running is true', () => {
+
       const voice = setUpVoice();
       const runningRef = { current: true };
       const voicesRef = { current: [voice] };
@@ -25,60 +33,33 @@ describe('Synth', () => {
 
   describe('integration', () => {
     it('adds, updates, and deletes voices', () => {
+
       const voice1 = setUpVoice();
       const voice2 = setUpVoice();
       const runningRef = { current: false };
       const voicesRef = { current: [] };
 
-      // Add voices
+      // test add
       Synth.add(voice1, false, runningRef, voicesRef);
       Synth.add(voice2, false, runningRef, voicesRef);
       expect(Synth.voices.length).toBe(2);
 
-      // Update
+      // test update
       voice1.bpm = 200;
       Synth.update(voice1, 0);
       expect(Synth.voices[0].bpm).toBe(200);
 
-      // Delete
+      // test delete
       Synth.delete(0);
       expect(Synth.voices.length).toBe(1);
       expect(Synth.voices[0]).toBe(voice2);
 
-      // Stop remaining
+      // test stop remaining
       Synth.stop();
       expect(stopOne).toHaveBeenCalled();
     });
   });
 });
-
-// Mock Audio API and data
-jest.mock('../content/data', () => ({
-  allFrequencies: [
-    [32.7, 36.7, 41.2, 43.6, 49.0],    // Octave 0
-    [65.4, 73.4, 82.4, 87.3, 98.0],    // Octave 1
-    [130.8, 146.8, 164.8, 174.6, 196.0] // Octave 2
-  ],
-  extrema: ['min', 'max'],
-  oneMinute: 60,
-  samples: {
-    snare: 'test-snare.wav',
-    kick: 'test-kick.wav'
-  }
-}));
-
-
-  
-// Mock dependencies  
-jest.mock('./Synth.functions', () => ({  
-  firstInterval: jest.fn(),  
-  getContext: jest.fn(() => ({ currentTime: 0 })),  
-  stopOne: jest.fn(),  
-}));  
-  
-jest.mock('../content/data', () => ({  
-  waveforms: ['sine', 'square', 'triangle'],  
-}));  
   
 describe('Synth.start', () => {  
   beforeEach(() => {  
@@ -87,34 +68,9 @@ describe('Synth.start', () => {
   });  
   
   it('calls firstInterval for each voice with correct arguments', () => {  
-    // Arrange  
-    const mockVoice1: VoiceType = {  
-      bpm: 120,  
-      minLevel: 10,  
-      maxLevel: 90,  
-      activeSounds: ['sine'],  
-      activeIntervals: ['1'],  
-      activeOctaves: ['4'],  
-      activeNotes: ['1'],  
-      restChance: 0,  
-      minLength: 50,  
-      maxLength: 100,  
-      minOffset: 0,  
-      maxOffset: 0,
-      minDetune: 0,
-      maxDetune: 0,
-      minFadeIn: 0,
-      maxFadeIn: 0,
-      minFadeOut: 0,
-      maxFadeOut: 0,  
-      nextInterval: 0,  
-      thisInterval: 0,  
-      isActive: false,  
-      label: 1  
-    };  
-  
-    const mockVoice2: VoiceType = { ...mockVoice1, label: 2 };  
-  
+
+    const mockVoice1: VoiceType = setUpVoice()
+    const mockVoice2: VoiceType = setUpVoice(mockVoice1)  
     const runningRef = { current: true };  
     const voicesRef = { current: [mockVoice1, mockVoice2] };  
     const mockContext = { currentTime: 1.5 };  
@@ -133,23 +89,16 @@ describe('Synth.start', () => {
   
     // Assert  
     expect(firstInterval).toHaveBeenCalledTimes(2);  
+
+    const args = [ 
+      mockContext.currentTime,  
+      runningRef,  
+      voicesRef,  
+      waveforms,  
+      mockContext 
+    ] 
       
-    expect(firstInterval).toHaveBeenCalledWith(  
-      mockVoice1,  
-      mockContext.currentTime,  
-      runningRef,  
-      voicesRef,  
-      waveforms,  
-      mockContext  
-    );  
-  
-    expect(firstInterval).toHaveBeenCalledWith(  
-      mockVoice2,  
-      mockContext.currentTime,  
-      runningRef,  
-      voicesRef,  
-      waveforms,  
-      mockContext  
-    );  
+    expect(firstInterval).toHaveBeenCalledWith(mockVoice1, ...args);  
+    expect(firstInterval).toHaveBeenCalledWith(mockVoice2, ...args);  
   });  
 });
