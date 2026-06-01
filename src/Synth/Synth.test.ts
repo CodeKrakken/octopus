@@ -1,18 +1,8 @@
 import { Synth } from './Synth';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
-
-// jest.mock('./Synth.functions', () => ({
-//   firstInterval: jest.fn(),
-//   getContext: jest.fn(() => ({
-//     currentTime: 0,
-//     state: 'running',
-//     resume: jest.fn()
-//   })),
-//   stopOne: jest.fn()
-// }));
-
-import * as synthFunctions from './Synth.functions';
+import { firstInterval, getContext, stopOne } from './Synth.functions';  
+import { waveforms } from '../content/data';  
 
 describe('Synth', () => {
   beforeEach(() => {
@@ -29,7 +19,7 @@ describe('Synth', () => {
 
       Synth.add(voice, true, runningRef, voicesRef);
 
-      expect(synthFunctions.firstInterval).toHaveBeenCalled();
+      expect(firstInterval).toHaveBeenCalled();
     });
   });
 
@@ -57,7 +47,7 @@ describe('Synth', () => {
 
       // Stop remaining
       Synth.stop();
-      expect(synthFunctions.stopOne).toHaveBeenCalled();
+      expect(stopOne).toHaveBeenCalled();
     });
   });
 });
@@ -77,8 +67,7 @@ jest.mock('../content/data', () => ({
   }
 }));
 
-import { firstInterval, getContext } from './Synth.functions';  
-import { waveforms } from '../content/data';  
+
   
 // Mock dependencies  
 jest.mock('./Synth.functions', () => ({  
