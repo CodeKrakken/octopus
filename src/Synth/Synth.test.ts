@@ -23,10 +23,10 @@ describe('Synth', () => {
     it('calls firstInterval when running is true', () => {
 
       const voice = setUpVoice();
-      const runningRef = { current: true };
+      const running = true;
       const voicesRef = { current: [voice] };
 
-      Synth.add(voice, runningRef, voicesRef);
+      Synth.add(voice, running, voicesRef);
 
       expect(firstInterval).toHaveBeenCalled();
     });
@@ -39,22 +39,22 @@ describe('Synth', () => {
 
       const voice1: VoiceType = setUpVoice()
       const voice2: VoiceType = setUpVoice(voice1)
-      const runningRef = { current: false };
+      const running = false;
       const voicesRef = { current: [voice1, voice2] };
       const mockContext = { currentTime: 1.5 };
       (getContext as jest.Mock).mockReturnValue(mockContext);
 
       const args = [
         mockContext.currentTime,
-        runningRef,
+        running,
         voicesRef,
         waveforms,
         mockContext
       ];
 
-      Synth.add(voice1, runningRef, voicesRef);
-      Synth.add(voice2, runningRef, voicesRef);
-      Synth.start(runningRef, voicesRef);
+      Synth.add(voice1, running, voicesRef);
+      Synth.add(voice2, running, voicesRef);
+      Synth.start(running, voicesRef);
 
       expect(firstInterval).toHaveBeenCalledTimes(2);
       expect(firstInterval).toHaveBeenCalledWith(voice1, ...args);
@@ -69,12 +69,12 @@ describe('Synth', () => {
 
       const voice1 = setUpVoice();
       const voice2 = setUpVoice();
-      const runningRef = { current: false };
+      const running = false;
       const voicesRef = { current: [] };
 
       // test add
-      Synth.add(voice1, runningRef, voicesRef);
-      Synth.add(voice2, runningRef, voicesRef);
+      Synth.add(voice1, running, voicesRef);
+      Synth.add(voice2, running, voicesRef);
       expect(Synth.voices.length).toBe(2);
 
       // test update

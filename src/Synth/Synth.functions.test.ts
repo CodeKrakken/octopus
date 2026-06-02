@@ -61,14 +61,14 @@ const runOneInterval = (
   overrides: { nextInterval?: number; waveforms?: string[] } = {}
 ) => {
 
-  const runningRef = { current: true }
+  const running = true
   const voicesRef = { current: [voice] }
   const waveforms = (overrides.waveforms ?? ['sine']) as Waveform[]
 
   firstInterval(
     voice,
     overrides.nextInterval ?? 0,
-    runningRef,
+    running,
     voicesRef,
     waveforms,
     context as unknown as AudioContext
@@ -136,18 +136,6 @@ describe('firstInterval', () => {
     runOneInterval(voice, context)
 
     expect(mockGain.gain.setValueAtTime).toHaveBeenCalled()
-  })
-
-  it('applies detune when cents are non-zero', () => {
-
-    const voice = { ...setUpVoice(), minDetune: 50, maxDetune: 50 }
-    const context = createMockContext('running', 10)
-
-    runOneInterval(voice, context)
-
-    const assignedFreq = mockOscillator.frequency.value
-
-    expect(assignedFreq).not.toBe(261.63)
   })
 
   it('uses non-overlapping fade envelope when fade percentages are small', () => {
@@ -240,45 +228,20 @@ describe('firstInterval', () => {
     expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
   });
 
-  it('applies negative modifier when detune cents < 0', () => {
-
-    const voice = {
-      ...setUpVoice(),
-      restChance: 0,
-      activeSounds: ['sine'],
-      minDetune: -50,
-      maxDetune: -10,
-    };
-
-    const runningRef = { current: true };
-    const voicesRef = { current: [voice] };
-    const mockContext = createMockContext() as unknown as AudioContext;
-
-    firstInterval(voice, 0, runningRef, voicesRef, ['sine'] as any, mockContext);
-    runningRef.current = false;
+  it('does not schedule intervals when running is false', () => {  
+    const voice = setUpVoice();  
+    const context = createMockContext('running', 0);  
+    const running = false;  
+    const voicesRef = { current: [voice] };  
+    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');  
     
-    jest.runAllTimers();
-
-    expect(mockContext.createOscillator).toHaveBeenCalled();
+    firstInterval(voice, 0, running, voicesRef, ['sine'] as Waveform[], context as unknown as AudioContext);  
+    
+    expect(setTimeoutSpy).not.toHaveBeenCalled();  
+    expect(context.createOscillator).not.toHaveBeenCalled();  
+    
+    setTimeoutSpy.mockRestore();  
   });
-
-
-  it('logs the error message when an exception is thrown inside runInterval', () => {
-
-    const voice = setUpVoice()
-    const context = createMockContext('running', 10)
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => { })
-
-    Object.defineProperty(context, 'currentTime', {
-      get: () => { throw new Error('simulated context error') }
-    })
-
-    runOneInterval(voice, context)
-
-    expect(consoleSpy).toHaveBeenCalledWith('simulated context error')
-
-    consoleSpy.mockRestore()
-  })
 
   it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {
     
@@ -295,7 +258,7 @@ describe('firstInterval', () => {
     firstInterval(
       voice,
       0,
-      { current: true },
+      true,
       { current: [voice] },
       ['sine'] as Waveform[],
       context as unknown as AudioContext
@@ -307,6 +270,43 @@ describe('firstInterval', () => {
 
     jest.spyOn(global, 'setTimeout').mockRestore()
   })
+
+  it('applies detune calculations', () => {
+    const voice = {
+      ...setUpVoice(),
+      activeSounds: ['sine'],
+      activeOctaves: ['0'],
+      activeNotes: ['1', '2'],
+      restChance: 0,
+      minDetune: 50,
+      maxDetune: 50,
+    };
+
+    const context = createMockContext('running', 10);
+
+    runOneInterval(voice, context);
+
+    expect(context.createOscillator).toHaveBeenCalled();
+    expect(mockOscillator.frequency.value).toBeGreaterThan(261.63);
+  });
+
+  it('uses negative modifier when detune is negative', () => {
+    const voice = {
+      ...setUpVoice(),
+      activeSounds: ['sine'],
+      activeOctaves: ['0'],
+      activeNotes: ['2'], // 293.66, so there is a lower neighbour
+      restChance: 0,
+      minDetune: -50,
+      maxDetune: -50,
+    };
+
+    const context = createMockContext('running', 10);
+
+    runOneInterval(voice, context);
+
+    expect(mockOscillator.frequency.value).toBeLessThan(293.66);
+  });
 });
 
 
@@ -318,7 +318,7 @@ describe('nextInterval', () => {
   it('returns early without scheduling a timer when voice.isActive is false', () => {
     
     const voice = { ...setUpVoice(), isActive: false };
-    const runningRef = { current: true };
+    const running = true;
     const voicesRef = { current: [voice] };
     const mockContext = { currentTime: 0 } as Partial<AudioContext>;
     
@@ -327,7 +327,7 @@ describe('nextInterval', () => {
     nextInterval(
       voice,
       mockContext as AudioContext,
-      runningRef,
+      running,
       voicesRef,
       ['sine'] as Waveform[]
     );

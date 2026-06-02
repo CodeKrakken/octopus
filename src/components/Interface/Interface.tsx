@@ -15,7 +15,7 @@ function Interface() {
 
   // refs
 
-  const runningRef = useRef(false)
+  const runningRef = useRef(running)
   const voicesRef = useRef(voices)
 
   // effect

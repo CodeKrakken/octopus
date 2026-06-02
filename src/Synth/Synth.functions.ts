@@ -34,25 +34,22 @@ const runInterval = (
   voicesRef: VoicesRef, 
   waveforms: Waveform[], 
   context: AudioContext
-) => {
-  try {    
-    if (running) {
-      const thisInterval = voice.nextInterval
-      voice.thisInterval = voice.nextInterval
-  
-      if (isTimeFor(thisInterval, context)) {
-        const intervalLength = getIntervalLength(voice)
-        voice.nextInterval += intervalLength
-      
-        if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, waveforms, context)
-      } 
+) => {  
+  if (running) {
+    const thisInterval = voice.nextInterval
+    voice.thisInterval = voice.nextInterval
 
-      nextInterval(voice, context, running, voicesRef, waveforms)
-    }
-  } catch (error: any) {
-    console.log(error.message)
+    if (isTimeFor(thisInterval, context)) {
+      const intervalLength = getIntervalLength(voice)
+      voice.nextInterval += intervalLength
+    
+      if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, waveforms, context)
+    } 
+
+    nextInterval(voice, context, running, voicesRef, waveforms)
   }
 }
+
 
 const nextInterval = (
   voice: VoiceType, 
@@ -69,8 +66,6 @@ const nextInterval = (
     runInterval(voice, running, voicesRef, waveforms, context)
   }, (voice.nextInterval - context.currentTime)*1000)    
 }
-
-const isRunning = (running: boolean) => running
 
 const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
 
