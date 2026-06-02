@@ -42,30 +42,21 @@ describe('Synth', () => {
       const runningRef = { current: true };  
       const voicesRef = { current: [mockVoice1, mockVoice2] };  
       const mockContext = { currentTime: 1.5 };  
-    
-      (getContext as jest.Mock).mockReturnValue(mockContext);  
-    
-      // Initialize context by calling Synth.add (which calls getContext internally)  
-      Synth.add(mockVoice1, false, runningRef, voicesRef);  
-      Synth.add(mockVoice2, false, runningRef, voicesRef);  
-        
-      // Clear the firstInterval calls from add()  
-      (firstInterval as jest.Mock).mockClear();  
-        
-      // Act  
-      Synth.start(runningRef, voicesRef);  
-    
-      // Assert  
-      expect(firstInterval).toHaveBeenCalledTimes(2);  
-
+      
       const args = [ 
         mockContext.currentTime,  
         runningRef,  
         voicesRef,  
         waveforms,  
         mockContext 
-      ] 
-        
+      ]; 
+    
+      (getContext as jest.Mock).mockReturnValue(mockContext);  
+      Synth.add(mockVoice1, false, runningRef, voicesRef);  
+      Synth.add(mockVoice2, false, runningRef, voicesRef);   
+      Synth.start(runningRef, voicesRef);  
+    
+      expect(firstInterval).toHaveBeenCalledTimes(2);
       expect(firstInterval).toHaveBeenCalledWith(mockVoice1, ...args);  
       expect(firstInterval).toHaveBeenCalledWith(mockVoice2, ...args);  
     });  
