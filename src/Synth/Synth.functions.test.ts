@@ -276,7 +276,7 @@ describe('firstInterval', () => {
     const voice = {
       ...setUpVoice(),
       activeOctaves: ['0'],
-      activeNotes: ['1'],
+      activeNotes: ['1'], // 261.63
       minDetune: 50,
       maxDetune: 50,
     };
@@ -290,12 +290,11 @@ describe('firstInterval', () => {
   });
 
   it('uses negative modifier when detune is negative', () => {
+
     const voice = {
       ...setUpVoice(),
-      activeSounds: ['sine'],
       activeOctaves: ['0'],
       activeNotes: ['2'], // 293.66, so there is a lower neighbour
-      restChance: 0,
       minDetune: -50,
       maxDetune: -50,
     };
@@ -319,8 +318,8 @@ describe('nextInterval', () => {
     const voice = { ...setUpVoice(), isActive: false };
     const running = true;
     const voicesRef = { current: [voice] };
-    const mockContext = { currentTime: 0 } as Partial<AudioContext>;
-    
+    // const mockContext = { currentTime: 0 } as Partial<AudioContext>;
+    const mockContext = createMockContext() as Partial<AudioContext>
     const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
 
     nextInterval(
