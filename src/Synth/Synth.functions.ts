@@ -265,9 +265,8 @@ const detune = (frequency: number, voice: VoiceType) => {
 
 const getActiveFrequencies = (voice: VoiceType) => {
     
-  const activeOctaves = voice.activeOctaves
-  const activeNotes   = voice.activeNotes
-
+  const { activeOctaves, activeNotes } = voice
+  
   let allFrequenciesInOctaves = allFrequencies.filter(
     (octave, j) => activeOctaves.includes(j.toString())
   )

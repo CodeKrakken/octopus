@@ -86,8 +86,8 @@ describe('getContext', () => {
   })
 
   it('resumes a suspended context', () => {
-    const context = createMockContext('suspended') as unknown as AudioContext
-    getContext(context)
+    const mockContext = createMockContext('suspended') as unknown as AudioContext
+    getContext(mockContext)
     expect(mockResume).toHaveBeenCalledTimes(1)
   })
 })
@@ -121,9 +121,9 @@ describe('firstInterval', () => {
   it('plays a sample', () => {
 
     const voice = { ...setUpVoice(), activeSounds: ['snare'] }
-    const context = createMockContext('running', 10)
+    const mockContext = createMockContext('running')
 
-    runOneInterval(voice, context)
+    runOneInterval(voice, mockContext)
 
     expect(global.Audio).toHaveBeenCalledWith('snare.wav')
   })
@@ -131,16 +131,16 @@ describe('firstInterval', () => {
   it('schedules note end when noteLength is shorter than intervalLength', () => {
 
     const voice = { ...setUpVoice(), minLength: 50, maxLength: 50 }
-    const context = createMockContext('running', 10)
+    const mockContext = createMockContext('running')
 
-    runOneInterval(voice, context)
+    runOneInterval(voice, mockContext)
 
     expect(mockGain.gain.setValueAtTime).toHaveBeenCalled()
   })
 
   it('uses non-overlapping fade envelope when fade percentages are small', () => {
 
-    const context = createMockContext('running', 10)
+    const mockContext = createMockContext('running')
 
     const voice = {
       ...setUpVoice(),
@@ -151,7 +151,7 @@ describe('firstInterval', () => {
       maxFadeOut: 20,
     }
 
-    runOneInterval(voice, context)
+    runOneInterval(voice, mockContext)
 
     expect(mockGain.gain.linearRampToValueAtTime).toHaveBeenCalled()
   })
@@ -164,7 +164,7 @@ describe('firstInterval', () => {
       restChance: 0
     };
     
-    const mockContext = createMockContext('running', 0) as ReturnType<typeof createMockContext>;
+    const mockContext = createMockContext('running') as ReturnType<typeof createMockContext>;
     
     runOneInterval(voice, mockContext)
     jest.runAllTimers();
@@ -181,7 +181,7 @@ describe('firstInterval', () => {
       restChance: 0
     };
 
-    const mockContext = createMockContext('running', 0) as ReturnType<typeof createMockContext>;
+    const mockContext = createMockContext('running') as ReturnType<typeof createMockContext>;
 
     runOneInterval(voice, mockContext)
     jest.runAllTimers();
@@ -197,7 +197,7 @@ describe('firstInterval', () => {
       restChance: 100
     };
 
-    const mockContext = createMockContext('running', 0) as ReturnType<typeof createMockContext>
+    const mockContext = createMockContext('running') as ReturnType<typeof createMockContext>
     
     runOneInterval(voice, mockContext)
     jest.runAllTimers();
@@ -230,15 +230,15 @@ describe('firstInterval', () => {
 
   it('does not schedule intervals when running is false', () => {  
     const voice = setUpVoice();  
-    const context = createMockContext('running', 0);  
+    const mockContext = createMockContext('running');  
     const running = false;  
     const voicesRef = { current: [voice] };  
     const setTimeoutSpy = jest.spyOn(global, 'setTimeout');  
     
-    firstInterval(voice, 0, running, voicesRef, ['sine'] as Waveform[], context as unknown as AudioContext);  
+    firstInterval(voice, 0, running, voicesRef, ['sine'] as Waveform[], mockContext as unknown as AudioContext);  
     
     expect(setTimeoutSpy).not.toHaveBeenCalled();  
-    expect(context.createOscillator).not.toHaveBeenCalled();  
+    expect(mockContext.createOscillator).not.toHaveBeenCalled();  
     
     setTimeoutSpy.mockRestore();  
   });
@@ -253,7 +253,7 @@ describe('firstInterval', () => {
     })
 
     const voice = setUpVoice()
-    const context = createMockContext('running', 0)
+    const mockContext = createMockContext('running')
 
     firstInterval(
       voice,
@@ -261,7 +261,7 @@ describe('firstInterval', () => {
       true,
       { current: [voice] },
       ['sine'] as Waveform[],
-      context as unknown as AudioContext
+      mockContext as unknown as AudioContext
     )
 
     calledFunctions[1]()
@@ -272,21 +272,20 @@ describe('firstInterval', () => {
   })
 
   it('applies detune calculations', () => {
+
     const voice = {
       ...setUpVoice(),
-      activeSounds: ['sine'],
       activeOctaves: ['0'],
-      activeNotes: ['1', '2'],
-      restChance: 0,
+      activeNotes: ['1'],
       minDetune: 50,
       maxDetune: 50,
     };
 
-    const context = createMockContext('running', 10);
+    const mockContext = createMockContext('running');
 
-    runOneInterval(voice, context);
+    runOneInterval(voice, mockContext);
 
-    expect(context.createOscillator).toHaveBeenCalled();
+    expect(mockContext.createOscillator).toHaveBeenCalled();
     expect(mockOscillator.frequency.value).toBeGreaterThan(261.63);
   });
 
@@ -301,9 +300,9 @@ describe('firstInterval', () => {
       maxDetune: -50,
     };
 
-    const context = createMockContext('running', 10);
+    const mockContext = createMockContext('running');
 
-    runOneInterval(voice, context);
+    runOneInterval(voice, mockContext);
 
     expect(mockOscillator.frequency.value).toBeLessThan(293.66);
   });
