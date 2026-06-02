@@ -1,15 +1,15 @@
 import { Synth } from './Synth';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
-import { firstInterval, getContext, stopOne } from './Synth.functions';  
-import { waveforms } from '../content/data';  
+import { firstInterval, getContext, stopOne } from './Synth.functions';
+import { waveforms } from '../content/data';
 
 
-jest.mock('./Synth.functions', () => ({  
-  firstInterval: jest.fn(),  
-  getContext: jest.fn(() => ({ currentTime: 0 })),  
-  stopOne: jest.fn(),  
-}));  
+jest.mock('./Synth.functions', () => ({
+  firstInterval: jest.fn(),
+  getContext: jest.fn(() => ({ currentTime: 0 })),
+  stopOne: jest.fn(),
+}));
 
 describe('Synth', () => {
 
@@ -33,44 +33,42 @@ describe('Synth', () => {
   });
 
 
-  describe('start', () => {  
-    
-    it('calls firstInterval for each voice with correct arguments', () => {  
+  describe('start', () => {
+
+    it('calls firstInterval for each voice with correct arguments', () => {
 
       const voice1: VoiceType = setUpVoice()
-      const voice2: VoiceType = setUpVoice(voice1)  
-      const running = false
-      const runningRef = { current: false };  
-      const voicesRef = { current: [voice1, voice2] };  
-      const mockContext = { currentTime: 1.5 };  
-      (getContext as jest.Mock).mockReturnValue(mockContext);  
+      const voice2: VoiceType = setUpVoice(voice1)
+      const runningRef = { current: false };
+      const voicesRef = { current: [voice1, voice2] };
+      const mockContext = { currentTime: 1.5 };
+      (getContext as jest.Mock).mockReturnValue(mockContext);
 
-      const args = [ 
-        mockContext.currentTime,  
-        runningRef,  
-        voicesRef,  
-        waveforms,  
-        mockContext 
-      ]; 
-    
-      Synth.add(voice1, runningRef, voicesRef);  
-      Synth.add(voice2, runningRef, voicesRef);   
-      Synth.start(runningRef, voicesRef);  
-    
+      const args = [
+        mockContext.currentTime,
+        runningRef,
+        voicesRef,
+        waveforms,
+        mockContext
+      ];
+
+      Synth.add(voice1, runningRef, voicesRef);
+      Synth.add(voice2, runningRef, voicesRef);
+      Synth.start(runningRef, voicesRef);
+
       expect(firstInterval).toHaveBeenCalledTimes(2);
-      expect(firstInterval).toHaveBeenCalledWith(voice1, ...args);  
-      expect(firstInterval).toHaveBeenCalledWith(voice2, ...args);  
-    });  
+      expect(firstInterval).toHaveBeenCalledWith(voice1, ...args);
+      expect(firstInterval).toHaveBeenCalledWith(voice2, ...args);
+    });
   });
 
 
   describe('integration', () => {
-    
+
     it('adds, updates, and deletes voices', () => {
 
       const voice1 = setUpVoice();
       const voice2 = setUpVoice();
-      const running = false;
       const runningRef = { current: false };
       const voicesRef = { current: [] };
 
