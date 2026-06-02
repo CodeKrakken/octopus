@@ -9,18 +9,17 @@ export const Synth = {
 
   voices: [] as VoiceType[],
 
-  start: (runningRef: RunningRef, voicesRef: VoicesRef) => {
-    Synth.voices.forEach(voice => firstInterval(voice, context.currentTime, runningRef, voicesRef, waveforms as Waveform[], context))
+  start: (running: boolean, voicesRef: VoicesRef) => {
+    Synth.voices.forEach(voice => firstInterval(voice, context.currentTime, running, voicesRef, waveforms as Waveform[], context))
   },
 
   stop: () => Synth.voices.forEach(voice => stopOne(voice)),
 
-  add: (voice: VoiceType, runningRef: RunningRef, voicesRef: VoicesRef) => {
+  add: (voice: VoiceType, running: boolean, voicesRef: VoicesRef) => {
     Synth.voices.push(voice)
     const nextInterval = voice.nextInterval
     context = getContext(context)
-    const running = runningRef.current
-    if (running) firstInterval(voice, nextInterval, runningRef, voicesRef, waveforms as Waveform[], context)
+    if (running) firstInterval(voice, nextInterval, running, voicesRef, waveforms as Waveform[], context)
   },
   
   delete: (i: number) => {Synth.voices = Synth.voices.filter((voice, j) => j !== i)},

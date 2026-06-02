@@ -13,7 +13,7 @@ const getContext = (context: AudioContext | null) => {
 const firstInterval = (
   voice: VoiceType, 
   nextInterval: number, 
-  runningRef: RunningRef, 
+  running: boolean, 
   voicesRef: VoicesRef, 
   waveforms: Waveform[], 
   context: AudioContext
@@ -21,7 +21,7 @@ const firstInterval = (
   voice.nextInterval = nextInterval
   voice.isActive = true
 
-  runInterval(voice, runningRef, voicesRef, waveforms, context)
+  runInterval(voice, running, voicesRef, waveforms, context)
 }
 
 const stopOne = (voice: VoiceType) => voice.isActive = false
@@ -30,13 +30,13 @@ const stopOne = (voice: VoiceType) => voice.isActive = false
 
 const runInterval = (
   voice: VoiceType, 
-  runningRef: RunningRef, 
+  running: boolean, 
   voicesRef: VoicesRef, 
   waveforms: Waveform[], 
   context: AudioContext
 ) => {
   try {    
-    if (isRunning(runningRef.current)) {
+    if (running) {
       const thisInterval = voice.nextInterval
       voice.thisInterval = voice.nextInterval
   
@@ -47,7 +47,7 @@ const runInterval = (
         if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, waveforms, context)
       } 
 
-      nextInterval(voice, context, runningRef, voicesRef, waveforms)
+      nextInterval(voice, context, running, voicesRef, waveforms)
     }
   } catch (error: any) {
     console.log(error.message)
@@ -57,7 +57,7 @@ const runInterval = (
 const nextInterval = (
   voice: VoiceType, 
   context: AudioContext, 
-  runningRef: RunningRef, 
+  running: boolean, 
   voicesRef: VoicesRef, 
   waveforms: Waveform[]
 ) => {
@@ -66,7 +66,7 @@ const nextInterval = (
 
   setTimeout(() => {
     if (!voice.isActive) return
-    runInterval(voice, runningRef, voicesRef, waveforms, context)
+    runInterval(voice, running, voicesRef, waveforms, context)
   }, (voice.nextInterval - context.currentTime)*1000)    
 }
 

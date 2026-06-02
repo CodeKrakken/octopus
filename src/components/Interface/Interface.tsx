@@ -32,7 +32,7 @@ function Interface() {
   const handleAddVoice = () => {
     const newVoice = setUpVoice(voices[voices.length - 1])
     setVoices(voices => [voices, newVoice].flat())
-    Synth.add(newVoice, runningRef, voicesRef)
+    Synth.add(newVoice, running, voicesRef)
   }
 
   const handleDelete = (i: number) => {
@@ -46,7 +46,7 @@ function Interface() {
 
   const start = async () => {
     toggleRunning(true)
-    Synth.start(runningRef, voicesRef)
+    Synth.start(runningRef.current, voicesRef)
   }
 
   const stopAll = (voices: VoiceType[]) => {
