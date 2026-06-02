@@ -32,7 +32,7 @@ function Interface() {
   const handleAddVoice = () => {
     const newVoice = setUpVoice(voices[voices.length - 1])
     setVoices(voices => [voices, newVoice].flat())
-    Synth.add(newVoice, running, runningRef, voicesRef)
+    Synth.add(newVoice, runningRef, voicesRef)
   }
 
   const handleDelete = (i: number) => {

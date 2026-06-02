@@ -15,10 +15,11 @@ export const Synth = {
 
   stop: () => Synth.voices.forEach(voice => stopOne(voice)),
 
-  add: (voice: VoiceType, running: Boolean, runningRef: RunningRef, voicesRef: VoicesRef) => {
+  add: (voice: VoiceType, runningRef: RunningRef, voicesRef: VoicesRef) => {
     Synth.voices.push(voice)
     const nextInterval = voice.nextInterval
     context = getContext(context)
+    const running = runningRef.current
     if (running) firstInterval(voice, nextInterval, runningRef, voicesRef, waveforms as Waveform[], context)
   },
   

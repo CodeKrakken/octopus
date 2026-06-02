@@ -23,11 +23,10 @@ describe('Synth', () => {
     it('calls firstInterval when running is true', () => {
 
       const voice = setUpVoice();
-      const running = true
       const runningRef = { current: true };
       const voicesRef = { current: [voice] };
 
-      Synth.add(voice, running, runningRef, voicesRef);
+      Synth.add(voice, runningRef, voicesRef);
 
       expect(firstInterval).toHaveBeenCalled();
     });
@@ -54,8 +53,8 @@ describe('Synth', () => {
         mockContext 
       ]; 
     
-      Synth.add(voice1, running, runningRef, voicesRef);  
-      Synth.add(voice2, running, runningRef, voicesRef);   
+      Synth.add(voice1, runningRef, voicesRef);  
+      Synth.add(voice2, runningRef, voicesRef);   
       Synth.start(runningRef, voicesRef);  
     
       expect(firstInterval).toHaveBeenCalledTimes(2);
@@ -76,8 +75,8 @@ describe('Synth', () => {
       const voicesRef = { current: [] };
 
       // test add
-      Synth.add(voice1, running, runningRef, voicesRef);
-      Synth.add(voice2, running, runningRef, voicesRef);
+      Synth.add(voice1, runningRef, voicesRef);
+      Synth.add(voice2, runningRef, voicesRef);
       expect(Synth.voices.length).toBe(2);
 
       // test update
