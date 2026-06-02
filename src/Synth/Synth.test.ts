@@ -71,12 +71,13 @@ describe('Synth', () => {
 
       const voice1 = setUpVoice();
       const voice2 = setUpVoice();
+      const running = false;
       const runningRef = { current: false };
       const voicesRef = { current: [] };
 
       // test add
-      Synth.add(voice1, false, runningRef, voicesRef);
-      Synth.add(voice2, false, runningRef, voicesRef);
+      Synth.add(voice1, running, runningRef, voicesRef);
+      Synth.add(voice2, running, runningRef, voicesRef);
       expect(Synth.voices.length).toBe(2);
 
       // test update
