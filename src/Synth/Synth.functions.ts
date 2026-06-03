@@ -1,5 +1,5 @@
 import { VoiceType }                                    from '../components/Voice/Voice.types'
-import { OscGain, RunningRef, VoicesRef, Waveform }     from './Synth.types'
+import { OscGain, VoicesRef, Waveform }     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples }  from '../content/data';
 
 const getContext = (context: AudioContext | null) => {
