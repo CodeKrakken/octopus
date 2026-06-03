@@ -47,7 +47,7 @@ const createMockContext = (state = 'running', currentTime = 0) => ({
   createOscillator: jest.fn().mockReturnValue(mockOscillator),
   createGain: jest.fn().mockReturnValue(mockGain),
   createMediaElementSource: jest.fn().mockReturnValue(mockMediaElementSource)
-})
+}  as Partial<AudioContext>)
 
 const MockAudioContext = jest.fn().mockImplementation(() => createMockContext())
 
@@ -57,7 +57,7 @@ global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as type
 
 const runOneInterval = (
   voice: VoiceType,
-  context: ReturnType<typeof createMockContext>,
+  context: Partial<AudioContext>,
   overrides: { nextInterval?: number; waveforms?: string[] } = {}
 ) => {
 
@@ -86,8 +86,8 @@ describe('getContext', () => {
   })
 
   it('resumes a suspended context', () => {
-    const mockContext = createMockContext('suspended') as unknown as AudioContext
-    getContext(mockContext)
+    const mockContext = createMockContext('suspended') as Partial<AudioContext>
+    getContext(mockContext as AudioContext)
     expect(mockResume).toHaveBeenCalledTimes(1)
   })
 })
@@ -164,7 +164,7 @@ describe('firstInterval', () => {
       restChance: 0
     };
     
-    const mockContext = createMockContext('running') as ReturnType<typeof createMockContext>;
+    const mockContext = createMockContext('running');
     
     runOneInterval(voice, mockContext)
     jest.runAllTimers();
@@ -181,7 +181,7 @@ describe('firstInterval', () => {
       restChance: 0
     };
 
-    const mockContext = createMockContext('running') as ReturnType<typeof createMockContext>;
+    const mockContext = createMockContext('running');
 
     runOneInterval(voice, mockContext)
     jest.runAllTimers();
@@ -197,7 +197,7 @@ describe('firstInterval', () => {
       restChance: 100
     };
 
-    const mockContext = createMockContext('running') as ReturnType<typeof createMockContext>
+    const mockContext = createMockContext('running')
     
     runOneInterval(voice, mockContext)
     jest.runAllTimers();
@@ -214,7 +214,7 @@ describe('firstInterval', () => {
       ...createMockContext(),
       createOscillator: jest.fn(() => { throw 'string error'; }),
 
-    } as ReturnType<typeof createMockContext>;
+    }
 
     const voice = { 
       ...setUpVoice(), 
@@ -235,7 +235,7 @@ describe('firstInterval', () => {
     const voicesRef = { current: [voice] };  
     const setTimeoutSpy = jest.spyOn(global, 'setTimeout');  
     
-    firstInterval(voice, 0, running, voicesRef, ['sine'] as Waveform[], mockContext as unknown as AudioContext);  
+    firstInterval(voice, 0, running, voicesRef, ['sine'] as Waveform[], mockContext as AudioContext);  
     
     expect(setTimeoutSpy).not.toHaveBeenCalled();  
     expect(mockContext.createOscillator).not.toHaveBeenCalled();  
@@ -318,8 +318,7 @@ describe('nextInterval', () => {
     const voice = { ...setUpVoice(), isActive: false };
     const running = true;
     const voicesRef = { current: [voice] };
-    // const mockContext = { currentTime: 0 } as Partial<AudioContext>;
-    const mockContext = createMockContext() as Partial<AudioContext>
+    const mockContext = createMockContext()
     const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
 
     nextInterval(
