@@ -3,6 +3,7 @@ import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
 import { firstInterval, getContext, stopOne } from './Synth.functions';
 import { waveforms } from '../content/data';
+import { createMockContext } from './Synth.test.functions';
 
 
 jest.mock('./Synth.functions', () => ({
@@ -41,7 +42,7 @@ describe('Synth', () => {
       const voice2: VoiceType = setUpVoice(voice1)
       const running = false;
       const voicesRef = { current: [voice1, voice2] };
-      const mockContext = { currentTime: 1.5 };
+      const mockContext = createMockContext();
       (getContext as jest.Mock).mockReturnValue(mockContext);
 
       const args = [
