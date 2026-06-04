@@ -18,12 +18,16 @@ describe('Inputs.functions', () => {
     jest.clearAllMocks();
   });
 
+  const createEvent = (value: string) => (
+    { target: { value: value }} as ChangeEvent<HTMLInputElement, Element>
+  )
+
   describe('updateField', () => {
 
     it('handles range field updates (maxLevel)', () => {
-      const mockEvent = { target: { value: '99' }} as ChangeEvent<HTMLInputElement, Element>;
+      const event = createEvent('99')
 
-      updateField(mockEvent, 'maxLevel', voices, 0, setVoices);
+      updateField(event, 'maxLevel', voices, 0, setVoices);
 
       expect(voices[0].maxLevel).toBe(99);
     });
@@ -33,9 +37,9 @@ describe('Inputs.functions', () => {
     
     it('preserves other values when adding a checkbox', () => {
 
-      const mockEvent = { target: { value: 'square' } } as any;
+      const event = createEvent('square')
 
-      updateCheckbox(mockEvent, 'activeSounds', voices, 0, setVoices);
+      updateCheckbox(event, 'activeSounds', voices, 0, setVoices);
 
       expect(voices[0].activeSounds).toContain('sine');
       expect(voices[0].activeSounds).toContain('square');
@@ -44,9 +48,9 @@ describe('Inputs.functions', () => {
     it('preserves other values when removing a checkbox', () => {
       
       voices[0].activeSounds = ['sine', 'square', 'triangle'];
-      const mockEvent = { target: { value: 'square' } } as any;
+      const event = createEvent('square')
 
-      updateCheckbox(mockEvent, 'activeSounds', voices, 0, setVoices);
+      updateCheckbox(event, 'activeSounds', voices, 0, setVoices);
 
       expect(voices[0].activeSounds).toContain('sine');
       expect(voices[0].activeSounds).toContain('triangle');
