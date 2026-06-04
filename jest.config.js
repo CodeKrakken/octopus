@@ -2,8 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(wav|mp3|m4a|aac|ogg)$': '<rootDir>/src/__mocks__/fileMock.js'
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   collectCoverageFrom: [  

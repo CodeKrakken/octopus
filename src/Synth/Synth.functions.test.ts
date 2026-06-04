@@ -98,13 +98,13 @@ describe('firstInterval', () => {
   })
 
   it('schedules note end when noteLength is shorter than intervalLength', () => {  
-  const voice = {...setUpVoice(), minLength: 50, maxLength: 50 }  
+  const voice = {...setUpVoice(), minLength: 50, maxLength: 50 }
   const mockContext = createMockContext('running', 10) as AudioContext
     
-  runOneInterval(voice, mockContext)  
+  runOneInterval(voice, mockContext)
     
   const mockGain = mockContext.createGain() 
-  expect(mockGain.gain.setValueAtTime).toHaveBeenCalled()  
+  expect(mockGain.gain.setValueAtTime).toHaveBeenCalled()
 })
 
   it('uses non-overlapping fade envelope when fade percentages are small', () => {
@@ -196,14 +196,14 @@ describe('firstInterval', () => {
     expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
   });
 
-  it('does not schedule intervals when running is false', () => {  
+  it('does not schedule intervals when running is false', () => {
     
-    const voice = setUpVoice();  
+    const voice = setUpVoice();
     const nextInterval = 0
-    const mockContext = createMockContext('running') as AudioContext;  
-    const running = false;  
-    const voicesRef = { current: [voice] };  
-    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');  
+    const mockContext = createMockContext('running') as AudioContext;
+    const running = false;
+    const voicesRef = { current: [voice] };
+    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
     
     firstInterval(
       voice, 
@@ -214,10 +214,10 @@ describe('firstInterval', () => {
       mockContext
     );  
     
-    expect(setTimeoutSpy).not.toHaveBeenCalled();  
-    expect(mockContext.createOscillator).not.toHaveBeenCalled();  
+    expect(setTimeoutSpy).not.toHaveBeenCalled();
+    expect(mockContext.createOscillator).not.toHaveBeenCalled();
     
-    setTimeoutSpy.mockRestore();  
+    setTimeoutSpy.mockRestore();
   });
 
   it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {
@@ -252,7 +252,7 @@ describe('firstInterval', () => {
     jest.spyOn(global, 'setTimeout').mockRestore()
   })
 
-  it('applies detune when cents are non-zero', () => {  
+  it('applies detune when cents are non-zero', () => {
 
     const voice = {
       ...setUpVoice(), 
@@ -262,12 +262,12 @@ describe('firstInterval', () => {
 
     const mockContext = createMockContext('running', 10) as AudioContext
       
-    runOneInterval(voice, mockContext)  
+    runOneInterval(voice, mockContext)
       
     const mockOscillator = mockContext.createOscillator()
-    const frequency = mockOscillator.frequency.value  
+    const frequency = mockOscillator.frequency.value
       
-    expect(frequency).not.toBe(261.63)  
+    expect(frequency).not.toBe(261.63)
   })
 
   it('uses negative modifier when detune is negative', () => {
@@ -285,7 +285,7 @@ describe('firstInterval', () => {
     runOneInterval(voice, mockContext);
 
     const mockOscillator = mockContext.createOscillator()
-    const frequency = mockOscillator.frequency.value  
+    const frequency = mockOscillator.frequency.value
 
     expect(frequency).toBeLessThan(293.66);
   });
