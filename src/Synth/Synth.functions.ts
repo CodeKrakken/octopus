@@ -18,11 +18,11 @@ const runInterval = (
   voicesRef: VoicesRef, 
   waveforms: Waveform[], 
   context: AudioContext
-) => {  
+) => {
+
   if (running) {
     voice.thisInterval = voice.nextInterval
     const thisInterval = voice.thisInterval
-
 
     if (isTimeFor(thisInterval, context)) {
       const intervalLength = getIntervalLength(voice)
@@ -31,26 +31,15 @@ const runInterval = (
       if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, waveforms, context)
     } 
 
-    nextInterval(voice, context, running, voicesRef, waveforms)
+    if (!voice.isActive) return
+
+    setTimeout(() => {
+      runInterval(voice, running, voicesRef, waveforms, context)
+    }, (voice.nextInterval - context.currentTime)*1000)    
   }
 }
 
 // private functions
-
-const nextInterval = (
-  voice: VoiceType, 
-  context: AudioContext, 
-  running: boolean, 
-  voicesRef: VoicesRef, 
-  waveforms: Waveform[]
-) => {
-
-  if (!voice.isActive) return
-
-  setTimeout(() => {
-    runInterval(voice, running, voicesRef, waveforms, context)
-  }, (voice.nextInterval - context.currentTime)*1000)    
-}
 
 const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
 
@@ -284,6 +273,5 @@ const getRangeValue = (key: string, voice: VoiceType) => {
 export {
   getContext,
   runInterval,
-  nextInterval,
   stopOne
 }

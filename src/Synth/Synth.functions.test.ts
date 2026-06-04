@@ -1,4 +1,4 @@
-import { getContext, stopOne, nextInterval, runInterval } from './Synth.functions';
+import { getContext, stopOne, runInterval } from './Synth.functions';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { createMockContext, runOneInterval } from './Synth.test.functions';
 
@@ -198,7 +198,7 @@ describe('runInterval', () => {
     setTimeoutSpy.mockRestore();
   });
 
-  it('calls runInterval again from the nextInterval setTimeout when voice is still active', () => {  
+  it('calls runInterval again when voice is still active', () => {  
     const calledFunctions: Function[] = []  
     
     jest.spyOn(global, 'setTimeout').mockImplementation((calledFunction: Function) => {  
@@ -221,7 +221,6 @@ describe('runInterval', () => {
       context as unknown as AudioContext  
     )  
     
-    // The first setTimeout is from makeSound (offset), second from nextInterval  
     calledFunctions[1]()  
     
     expect(calledFunctions.length).toBeGreaterThan(2)  
@@ -265,33 +264,5 @@ describe('runInterval', () => {
     const frequency = mockOscillator.frequency.value
 
     expect(frequency).toBeLessThan(293.66);
-  });
-});
-
-
-describe('nextInterval', () => {
-
-  beforeEach(() => jest.useFakeTimers());
-  afterEach(() => jest.useRealTimers());
-
-  it('returns early without scheduling a timer when voice.isActive is false', () => {
-    
-    const voice = { ...setUpVoice(), isActive: false };
-    const running = true;
-    const voicesRef = { current: [voice] };
-    const waveforms = ['sine']
-    const mockContext = createMockContext() as AudioContext
-    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
-
-    nextInterval(
-      voice,
-      mockContext,
-      running,
-      voicesRef,
-      waveforms
-    );
-
-    expect(setTimeoutSpy).not.toHaveBeenCalled();
-    expect(jest.getTimerCount()).toBe(0);
   });
 });
