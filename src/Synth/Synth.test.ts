@@ -44,9 +44,10 @@ describe('Synth', () => {
       const voicesRef = { current: [voice1, voice2] };
       const mockContext = createMockContext();
       (getContext as jest.Mock).mockReturnValue(mockContext);
+      const nextInterval = mockContext.currentTime
 
       const args = [
-        mockContext.currentTime,
+        nextInterval,
         running,
         voicesRef,
         waveforms,
