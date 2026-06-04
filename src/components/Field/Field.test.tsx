@@ -7,7 +7,6 @@ import { VoiceType } from '../Voice/Voice.types';
 jest.mock('../../content/data', () => ({
   fields: {
     level: {
-      label: 'Level',
       value: 'Level',
       input: 'range'
     }
