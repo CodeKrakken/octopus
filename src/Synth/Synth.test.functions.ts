@@ -12,14 +12,14 @@ const createMockContext = (state = 'running', currentTime = 0) => (
       type: 'sine'
     }),
     createGain: jest.fn().mockReturnValue({
-    gain: {
-      setValueAtTime: jest.fn(),
-      linearRampToValueAtTime: jest.fn(),
-      value: 0
-    },
-    connect: jest.fn(),
-    disconnect: jest.fn()
-  }),
+      gain: {
+        setValueAtTime: jest.fn(),
+        linearRampToValueAtTime: jest.fn(),
+        value: 0
+      },
+      connect: jest.fn(),
+      disconnect: jest.fn()
+    }),
     createMediaElementSource: jest.fn().mockReturnValue({ connect: jest.fn() })
   } as Partial<AudioContext>
 )
