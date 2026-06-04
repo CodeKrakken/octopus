@@ -175,7 +175,6 @@ describe('firstInterval', () => {
   it('does not schedule intervals when running is false', () => {
     
     const voice = setUpVoice();
-    const nextInterval = 0
     const mockContext = createMockContext('running') as AudioContext;
     const running = false;
     const voicesRef = { current: [voice] };
@@ -183,7 +182,6 @@ describe('firstInterval', () => {
     
     firstInterval(
       voice, 
-      nextInterval, 
       running, 
       voicesRef, 
       ['sine'], 
@@ -206,7 +204,6 @@ describe('firstInterval', () => {
     })
 
     const voice = setUpVoice()
-    const nextInterval = 0
     const running = true
     const voicesRef = { current: [voice] }
     const waveforms = ['sine']
@@ -214,7 +211,6 @@ describe('firstInterval', () => {
 
     firstInterval(
       voice,
-      nextInterval,
       running,
       voicesRef,
       waveforms,

@@ -12,13 +12,11 @@ const getContext = (context: AudioContext | null) => {
 
 const firstInterval = (
   voice: VoiceType, 
-  nextInterval: number, 
   running: boolean, 
   voicesRef: VoicesRef, 
   waveforms: Waveform[], 
   context: AudioContext
 ) => {
-  voice.nextInterval = nextInterval
   voice.isActive = true
 
   runInterval(voice, running, voicesRef, waveforms, context)

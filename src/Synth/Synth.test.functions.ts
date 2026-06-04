@@ -33,14 +33,12 @@ const runOneInterval = (
   overrides: { nextInterval?: number; waveforms?: string[] } = {}
 ) => {
 
-  const nextInterval = overrides.nextInterval ?? 0
   const running = true
   const voicesRef = { current: [voice] }
   const waveforms = (overrides.waveforms ?? ['sine'])
 
   firstInterval(
     voice,
-    nextInterval,
     running,
     voicesRef,
     waveforms,

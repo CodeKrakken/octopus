@@ -47,7 +47,6 @@ describe('Synth', () => {
       const nextInterval = mockContext.currentTime
 
       const args = [
-        nextInterval,
         running,
         voicesRef,
         waveforms,
