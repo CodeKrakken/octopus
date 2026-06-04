@@ -24,8 +24,6 @@ const firstInterval = (
 
 const stopOne = (voice: VoiceType) => voice.isActive = false
 
-// private functions
-
 const runInterval = (
   voice: VoiceType, 
   running: boolean, 
@@ -48,6 +46,7 @@ const runInterval = (
   }
 }
 
+// private functions
 
 const nextInterval = (
   voice: VoiceType, 
@@ -297,6 +296,7 @@ const getRangeValue = (key: string, voice: VoiceType) => {
 export {
   getContext,
   firstInterval,
+  runInterval,
   nextInterval,
   stopOne
 }

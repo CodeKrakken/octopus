@@ -1,7 +1,7 @@
 import { VoiceType }                          from '../components/Voice/Voice.types'
 import { waveforms }                          from '../content/data'
 import { VoicesRef, Waveform }                from './Synth.types'
-import { firstInterval, getContext, stopOne } from './Synth.functions'
+import { firstInterval, getContext, runInterval, stopOne } from './Synth.functions'
 
 let context: AudioContext
 
@@ -12,7 +12,8 @@ export const Synth = {
   start: (running: boolean, voicesRef: VoicesRef) => {
     Synth.voices.forEach(voice => {
       voice.nextInterval = context.currentTime
-      firstInterval(voice, running, voicesRef, waveforms as Waveform[], context)
+      voice.isActive = true
+      runInterval(voice, running, voicesRef, waveforms as Waveform[], context)
     })
   },
 
@@ -21,7 +22,10 @@ export const Synth = {
   add: (voice: VoiceType, running: boolean, voicesRef: VoicesRef) => {
     Synth.voices.push(voice)
     context = getContext(context)
-    if (running) firstInterval(voice, running, voicesRef, waveforms as Waveform[], context)
+    if (running) {
+      voice.isActive = true
+      runInterval(voice, running, voicesRef, waveforms as Waveform[], context)
+    }
   },
   
   delete: (i: number) => {Synth.voices = Synth.voices.filter((voice, j) => j !== i)},
