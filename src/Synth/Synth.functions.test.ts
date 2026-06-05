@@ -13,19 +13,15 @@ jest.mock('../content/data', () => ({
   ],
   extrema: ['min', 'max'],
   oneMinute: 60,
-  samples: { snare: 'snare.wav' }
+  samples: { snare: 'snare.wav' },
+  waveforms: ['sine', 'square', 'sawtooth', 'triangle']
 }))
 
 const MockAudioContext = jest.fn().mockImplementation(() => createMockContext())
 
 global.AudioContext = MockAudioContext
 
-// beforeAll(() => {
 global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as typeof Audio
-// })
-
-// global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() }))
-
 
 describe('getContext', () => {
 

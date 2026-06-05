@@ -29,8 +29,7 @@ const createMockContext = (state = 'running', currentTime = 0) => (
 
 const runOneInterval = (
   voice: VoiceType,
-  context: Partial<AudioContext>,
-  overrides: { nextInterval?: number; waveforms?: string[] } = {}
+  context: Partial<AudioContext>
 ) => {
 
   const running = true
