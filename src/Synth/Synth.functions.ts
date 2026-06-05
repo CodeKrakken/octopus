@@ -58,12 +58,12 @@ const isRest = (voice: VoiceType) => {
 
 const makeSound = (
   voice: VoiceType, 
-  length: number, 
+  intervalLength: number, 
   voicesRef: VoicesRef, 
   context: AudioContext
 ) => {
 
-  const offsetTime = getOffsetTime(voice, length)
+  const offsetTime = getOffsetTime(voice, intervalLength)
 
   setTimeout(() => {
 
@@ -74,8 +74,8 @@ const makeSound = (
 
       if (waveforms.includes(randomSound)) {
         const oscGain = setUpOscillator(context)
-        oscillate(voice, length, offsetTime, level, oscGain, randomSound, context)
-        setTimeout(() => removeOscillator(oscGain), length*1000)
+        oscillate(voice, intervalLength, offsetTime, level, oscGain, randomSound, context)
+        setTimeout(() => removeOscillator(oscGain), intervalLength*1000)
       } else {
         playSample(randomSound, level, context)
       }
@@ -114,33 +114,19 @@ const playSample = (
   sample.play()
 }
 
-const scheduleNoteEnd = (
-  oscGain: OscGain, 
-  noteLength: number, 
-  offsetTime: number,
-  context: AudioContext
-) => {
-  setTimeout(() => {
-    oscGain.gain?.gain.setValueAtTime(0, context.currentTime)
-  }, (offsetTime + noteLength)*1000)
-}
-
 const oscillate = (
   voice: VoiceType, 
-  length: number, 
+  intervalLength: number, 
   offsetTime: number, 
   level: number, 
   oscGain: OscGain,
   sound: OscillatorType,
   context: AudioContext
 ) => {
-
   oscGain.oscillator.frequency.value = generateFrequency(voice)
   oscGain.oscillator.type = sound
 
-  const noteLength = generateNoteLength(voice, length)
-  
-  if (noteLength < length) scheduleNoteEnd(oscGain, noteLength, offsetTime, context)
+  const noteLength = generateNoteLength(voice, intervalLength)
 
   const gain         = oscGain.gain!.gain
   const thisInterval = voice.thisInterval! + offsetTime

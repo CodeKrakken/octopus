@@ -42,7 +42,7 @@ function Interface() {
     Synth.delete(i)
   }
 
-  const handleStartStop = () => runningRef.current ? stopAll(voices) : start()
+  const handleStartStop = () => running ? stopAll(voices) : start()
 
   const start = async () => {
     toggleRunning(true)
