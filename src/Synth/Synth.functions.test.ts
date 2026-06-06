@@ -26,7 +26,7 @@ global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as type
 describe('getContext', () => {
 
   it('creates a new AudioContext when passed null', () => {
-    getContext(null)
+    getContext()
     expect(MockAudioContext).toHaveBeenCalledTimes(1)
   })
 

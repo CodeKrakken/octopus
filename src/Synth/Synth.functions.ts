@@ -2,7 +2,7 @@ import { VoiceType }                                    from '../components/Voic
 import { OscGain, VoicesRef }     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, waveforms }  from '../content/data';
 
-const getContext = (context: AudioContext | null) => {
+const getContext = (context: AudioContext | null = null) => {
   
   if (!context) { context = new AudioContext() }
   if (context.state === 'suspended') { context.resume() }
@@ -74,7 +74,9 @@ const makeSound = (
 
       if (waveforms.includes(randomSound)) {
         const oscGain = setUpOscillator(context)
-        oscillate(voice, intervalLength, offsetTime, level, oscGain, randomSound, context)
+        oscGain.oscillator.type = randomSound
+        const noteLength = generateNoteLength(voice, intervalLength)
+        oscillate(voice, noteLength, offsetTime, level, oscGain)
         setTimeout(() => removeOscillator(oscGain), intervalLength*1000)
       } else {
         playSample(randomSound, level, context)
@@ -116,17 +118,13 @@ const playSample = (
 
 const oscillate = (
   voice: VoiceType, 
-  intervalLength: number, 
+  noteLength: number, 
   offsetTime: number, 
   level: number, 
   oscGain: OscGain,
-  sound: OscillatorType,
-  context: AudioContext
 ) => {
   oscGain.oscillator.frequency.value = generateFrequency(voice)
-  oscGain.oscillator.type = sound
 
-  const noteLength = generateNoteLength(voice, intervalLength)
 
   const gain         = oscGain.gain!.gain
   const thisInterval = voice.thisInterval! + offsetTime
