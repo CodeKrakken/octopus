@@ -2,9 +2,9 @@ import { VoiceType }                                    from '../components/Voic
 import { OscGain, VoicesRef }     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, waveforms }  from '../content/data';
 
-const getContext = (context: AudioContext | null = null) => {
-  
-  if (!context) { context = new AudioContext() }
+
+const getContext = (context: AudioContext = new AudioContext()) => {
+
   if (context.state === 'suspended') { context.resume() }
   
   return context
@@ -123,8 +123,8 @@ const oscillate = (
   level: number, 
   oscGain: OscGain,
 ) => {
+  
   oscGain.oscillator.frequency.value = generateFrequency(voice)
-
 
   const gain         = oscGain.gain!.gain
   const thisInterval = voice.thisInterval! + offsetTime
