@@ -2,6 +2,7 @@ import { VoiceType }                                    from '../components/Voic
 import { OscGain, VoicesRef }     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, waveforms }  from '../content/data';
 
+let globalContext: AudioContext
 
 const getContext = (context: AudioContext = new AudioContext()) => {
 
@@ -16,31 +17,33 @@ const runInterval = (
   voice: VoiceType, 
   running: boolean, 
   voicesRef: VoicesRef, 
-  context: AudioContext
+  context: AudioContext = globalContext
 ) => {
+
+  globalContext = context
 
   if (running) {
     voice.thisInterval = voice.nextInterval
     const thisInterval = voice.thisInterval
 
-    if (isTimeFor(thisInterval, context)) {
+    if (isTimeFor(thisInterval)) {
       const intervalLength = getIntervalLength(voice)
       voice.nextInterval += intervalLength
     
-      if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, context)
+      if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef)
     } 
 
     if (!voice.isActive) return
 
     setTimeout(() => {
-      runInterval(voice, running, voicesRef, context)
+      runInterval(voice, running, voicesRef)
     }, (voice.nextInterval - context.currentTime)*1000)    
   }
 }
 
 // private functions
 
-const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
+const isTimeFor = (timeCode: number) => globalContext.currentTime >= timeCode
 
 const getIntervalLength = (voice: VoiceType) => {
   const {activeIntervals, bpm} = voice
@@ -60,7 +63,6 @@ const makeSound = (
   voice: VoiceType, 
   intervalLength: number, 
   voicesRef: VoicesRef, 
-  context: AudioContext
 ) => {
 
   const offsetTime = getOffsetTime(voice, intervalLength)
@@ -73,13 +75,13 @@ const makeSound = (
       const level = generateLevel(voice, voicesRef.current)
 
       if (waveforms.includes(randomSound)) {
-        const oscGain = setUpOscillator(context)
+        const oscGain = setUpOscillator()
         oscGain.oscillator.type = randomSound
         const noteLength = generateNoteLength(voice, intervalLength)
         oscillate(voice, noteLength, offsetTime, level, oscGain)
         setTimeout(() => removeOscillator(oscGain), intervalLength*1000)
       } else {
-        playSample(randomSound, level, context)
+        playSample(randomSound, level)
       }
 
     } catch (error) {
@@ -88,7 +90,8 @@ const makeSound = (
   }, offsetTime*1000)
 }
 
-const setUpOscillator = (context: AudioContext) => {
+const setUpOscillator = () => {
+  const context     = globalContext
   const oscillator  = context.createOscillator()
   const gain        = context.createGain()
 
@@ -110,9 +113,8 @@ const removeOscillator = (oscGain: OscGain) => {
 const playSample = (
   name: string, 
   level: number,
-  context: AudioContext
 ) => {
-  const sample = setUpSample(samples[name as keyof typeof samples], context, level)
+  const sample = setUpSample(samples[name as keyof typeof samples], level)
   sample.play()
 }
 
@@ -170,11 +172,11 @@ const generateLevel = (voice: VoiceType, voices: VoiceType[]) => {
 
 const setUpSample = (
   file: string, 
-  context: AudioContext, 
   level: number
 ) => {
 
   const sample = new Audio(file)
+  const context = globalContext
   const sound = context.createMediaElementSource(sample);
   const gain  = context.createGain()
   
