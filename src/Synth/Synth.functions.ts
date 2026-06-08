@@ -78,11 +78,14 @@ const makeSound = (
       const level = calculateLevel(voice, voicesRef.current)
 
       if (waveforms.includes(randomSound)) {
+
         const oscGain = setUpOscillator(context)
         oscGain.oscillator.type = randomSound
         const noteLength = generateNoteLength(voice, intervalLength)
         voice.offsetInterval = thisInterval! + offsetTime
+
         oscillate(voice, noteLength, level, oscGain)
+
         setTimeout(() => removeOscillator(oscGain), intervalLength*1000)
       } else {
         playSample(randomSound, level, context)
@@ -95,6 +98,7 @@ const makeSound = (
 }
 
 const setUpOscillator = (context: AudioContext) => {
+
   const oscillator  = context.createOscillator()
   const gain        = context.createGain()
 
@@ -107,7 +111,9 @@ const setUpOscillator = (context: AudioContext) => {
 }
 
 const removeOscillator = (oscGain: OscGain) => {
+
   const { oscillator, gain } = oscGain
+
   oscillator.stop()
   oscillator.disconnect()
   gain.disconnect()
@@ -155,12 +161,15 @@ const oscillate = (
 }
 
 const randomOneFrom = (array: (OscillatorType | String | number)[]) => {
+
   return array[Math.floor(Math.random() * array.length)]
 }
 
 const calculateLevel = (voice: VoiceType, voices: VoiceType[]) => {
+
   const { minLevel, maxLevel } = voice
   const balancedLevel = ((minLevel + Math.random() * (maxLevel - minLevel))/100)/voices.length
+  
   return balancedLevel
 }
 
