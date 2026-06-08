@@ -154,17 +154,8 @@ const oscillate = (
   gain.setValueAtTime(gain.value, 0)  
 }
 
-const randomOneFrom = (array: (OscillatorType | String)[]) => {
+const randomOneFrom = (array: (OscillatorType | String | number)[]) => {
   return array[Math.floor(Math.random() * array.length)]
-}
-
-const getRandomFrequency = (voice: VoiceType) => {
-    
-  const activeFrequencies = getActiveFrequencies(voice) 
-  const randomIndex = Math.floor(Math.random()*activeFrequencies.length)
-  const randomFrequency = activeFrequencies[randomIndex]
-  
-  return randomFrequency
 }
 
 const calculateLevel = (voice: VoiceType, voices: VoiceType[]) => {
@@ -192,7 +183,6 @@ const setUpSample = (
 
 const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 
-  const { minLength, maxLength } = voice
   const noteLengthPercentage  = getRangeValue('Length', voice)
   const noteLength = intervalLength / 100 * noteLengthPercentage
 
@@ -202,7 +192,7 @@ const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
 
 const generateFrequency = (voice: VoiceType) => {
-  const randomFrequency = getRandomFrequency(voice)
+  const randomFrequency = randomOneFrom(getActiveFrequencies(voice) as number[])
   const frequency   = detune(randomFrequency as number, voice)
   return frequency
 }
