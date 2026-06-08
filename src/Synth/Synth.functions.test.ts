@@ -38,26 +38,6 @@ describe('getContext', () => {
 })
 
 
-// describe('stopOne', () => {
-
-//   it('stops multiple voices independently', () => {
-
-//     const voice1 = { ...setUpVoice(), isActive: true };
-//     const voice2 = { ...setUpVoice(), isActive: true };
-
-//     stopOne(voice1);
-
-//     expect(voice1.isActive).toBe(false);
-//     expect(voice2.isActive).toBe(true);
-
-//     stopOne(voice2);
-
-//     expect(voice1.isActive).toBe(false);
-//     expect(voice2.isActive).toBe(false);
-//   });
-// })
-
-
 describe('runInterval', () => {
 
   beforeAll(() => jest.useFakeTimers())
