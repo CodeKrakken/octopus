@@ -2,6 +2,9 @@ import { VoiceType }                                              from '../compo
 import { OscGain, VoicesRef }                                     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, waveforms } from '../content/data';
 
+let freqArray: number[] | undefined  
+
+const getFreqArray = (): number[] => freqArray ??= [...new Set(allFrequencies.flat())]
 
 const getContext = (context: AudioContext = new AudioContext()) => {
 
@@ -201,20 +204,21 @@ const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
 
 const generateFrequency = (voice: VoiceType) => {
+
   const randomFrequency = randomOneFrom(getActiveFrequencies(voice) as number[])
   const frequency   = detune(randomFrequency as number, voice)
+
   return frequency
 }
 
 const detune = (frequency: number, voice: VoiceType) => {
 
   const cents = getRangeValue('Detune', voice)
+
   if (!cents) return frequency
-  
-  const freqArray = [...new Set(allFrequencies.flat())]
-  
+    
   const modifier = cents < 0 ? -1 : 1
-  const nextFreq = freqArray[freqArray.indexOf(frequency) + modifier]
+  const nextFreq = getFreqArray()[freqArray!.indexOf(frequency) + modifier]
   const hzDiff = Math.max(nextFreq, frequency) - Math.min(nextFreq, frequency)
   const detunedFrequency = frequency + hzDiff / 100 * cents
   
