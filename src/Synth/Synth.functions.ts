@@ -59,9 +59,8 @@ const isRest = (voice: VoiceType) => {
 
   const restChance  = voice.restChance/100
   const diceRoll = Math.random()
-  const result = diceRoll < restChance
-
-  return result
+  
+  return diceRoll < restChance
 }
 
 const makeSound = (
