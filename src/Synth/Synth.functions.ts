@@ -1,6 +1,7 @@
 import { VoiceType }                                              from '../components/Voice/Voice.types'
 import { OscGain, VoicesRef }                                     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, waveforms } from '../content/data';
+import { Range } from '../components/shared.types';
 
 let freqArray: number[] | undefined  
 
@@ -243,7 +244,7 @@ const getActiveFrequencies = (voice: VoiceType) => {
 }
 
 
-const getRangeValue = (key: string, voice: VoiceType) => {
+const getRangeValue = (key: Range, voice: VoiceType) => {
     
   const [min, max] = extrema.map(prefix => voice[prefix + key as keyof VoiceType])
 
