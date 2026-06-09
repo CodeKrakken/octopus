@@ -160,7 +160,7 @@ const oscillate = (
   gain.setValueAtTime(gain.value, 0)  
 }
 
-const randomOneFrom = (array: (OscillatorType | String | number)[]) => {
+const randomOneFrom = <T>(array: T[]): T => {
 
   return array[Math.floor(Math.random() * array.length)]
 }
