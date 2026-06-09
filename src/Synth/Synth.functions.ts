@@ -106,16 +106,16 @@ const setUpOscillator = (context: AudioContext) => {
   gain.connect(context.destination);
   oscillator.start(0);
 
-  return {oscillator, gain}
+  return {oscillator, gainNode: gain}
 }
 
 const removeOscillator = (oscGain: OscGain) => {
 
-  const { oscillator, gain } = oscGain
+  const { oscillator, gainNode } = oscGain
 
   oscillator.stop()
   oscillator.disconnect()
-  gain.disconnect()
+  gainNode.disconnect()
 }
 
 const playSample = (
@@ -136,7 +136,7 @@ const oscillate = (
   
   oscGain.oscillator.frequency.value = generateFrequency(voice)
 
-  const gain         = oscGain.gain!.gain
+  const gain         = oscGain.gainNode.gain
   const thisInterval = voice.offsetInterval!
 
   const fadeInPercentage  = getRangeValue('FadeIn', voice)

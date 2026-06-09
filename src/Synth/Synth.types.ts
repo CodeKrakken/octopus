@@ -4,7 +4,7 @@ type VoicesRef = { current: VoiceType[] }
 
 type OscGain = {
   oscillator  : OscillatorNode, 
-  gain        : GainNode
+  gainNode    : GainNode
 }
 
 export type {
