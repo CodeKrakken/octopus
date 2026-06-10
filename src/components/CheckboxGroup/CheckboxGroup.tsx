@@ -8,7 +8,7 @@ type CheckboxGroupProps = {
   groupName: string
   voices: VoiceType[]
   i: number
-  setVoices: Function
+  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 }
 
 export default function CheckboxGroup({

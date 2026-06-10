@@ -26,7 +26,7 @@ type VoiceType = {
 
 type VoiceProps = {
   i             : number, 
-  setVoices     : Function, 
+  setVoices     : React.Dispatch<React.SetStateAction<VoiceType[]>>, 
   voices        : VoiceType[], 
   handleDelete  : Function
   dataAttribute : string

@@ -8,7 +8,7 @@ type FieldProps = {
   fieldName: string,
   i: number,
   voices: VoiceType[],
-  setVoices: Function
+  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 }
 
 export default function Field ({

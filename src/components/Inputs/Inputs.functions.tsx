@@ -8,7 +8,7 @@ const updateField = (
   attribute: Atom,
   voices: VoiceType[], 
   i: number,
-  setVoices: Function
+  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 ) => {
 
   voices[i][attribute] = +e.target!.value
@@ -21,7 +21,7 @@ const updateCheckbox = (
   attribute: Compound, 
   voices: VoiceType[], 
   i: number, 
-  setVoices: Function
+  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 ) => {
 
   if ((voices[i][attribute]).includes(e.target.value)) {
