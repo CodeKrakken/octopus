@@ -10,6 +10,7 @@ type FieldProps = {
   voices: VoiceType[],
   setVoices: Function
 }
+
 export default function Field ({
   fieldName,
   i,
@@ -40,13 +41,17 @@ export default function Field ({
             {
               extrema.map((ex) => {
 
-                props['data-attribute'] = `${ex}${f.value}`;
-                props.value = voice[`${ex}${f.value}` as Atom] // populates field
-                props.onChange = (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, `${ex}${f.value}` as Atom, voices, i, setVoices) // updates field
+                const rangeProps = {
+                  ...props,
+                  'data-attribute': `${ex}${f.value}`,
+                  value: voice[`${ex}${f.value}` as Atom],
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, `${ex}${f.value}` as Atom, voices, i, setVoices)
+                }
+
                 
                 return <>
                   <div key={ex}>
-                    <input {...props} />
+                    <input {...rangeProps} />
                   </div>
                 </>
               })
