@@ -42,14 +42,14 @@ function Interface() {
     Synth.delete(i)
   }
 
-  const handleStartStop = () => running ? stopAll(voices) : start()
+  const handleStartStop = () => running ? stopAll() : start()
 
   const start = async () => {
     toggleRunning(true)
     Synth.start(voicesRef)
   }
 
-  const stopAll = (voices: VoiceType[]) => {
+  const stopAll = () => {
     toggleRunning(false)
     Synth.stop()
   }
