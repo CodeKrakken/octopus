@@ -71,9 +71,8 @@ function Interface() {
     <br />
     <br />
     {
-      voices.map((voice) => {
-        console.log(voice.id)
-        return <div key = {voice.id}>
+      voices.map((voice) => (
+        <div key = {voice.id}>
           <Voice
             i             = {voices.indexOf(voice)} 
             setVoices     = {setVoices} 
@@ -82,7 +81,7 @@ function Interface() {
             dataAttribute = "Voices"
           />
         </div>
-      })
+      ))
     }
   </>
 }
