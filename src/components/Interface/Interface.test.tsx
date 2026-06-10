@@ -33,10 +33,6 @@ jest.mock('../Voice/Voice', () => ({
   )
 }));
 
-global.crypto = {  
-  randomUUID: () => 'mock-uuid-' + Math.random().toString(36).substr(2, 9)  
-} as any;
-
 
 describe('Interface', () => {
   beforeEach(() => { 

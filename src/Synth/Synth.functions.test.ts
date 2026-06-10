@@ -23,6 +23,7 @@ global.AudioContext = MockAudioContext
 
 global.Audio = jest.fn().mockImplementation(() => ({ play: jest.fn() })) as typeof Audio
 
+
 describe('getContext', () => {
 
   it('creates a new AudioContext when passed null', () => {
