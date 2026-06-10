@@ -17,5 +17,6 @@ type CheckboxGroupType =
 
 export type {
   Atom,
+  Range,
   CheckboxGroupType
 }

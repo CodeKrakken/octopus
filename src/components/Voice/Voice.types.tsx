@@ -2,6 +2,7 @@ type VoiceType = {
   isActive        : boolean
   label           : number
   thisInterval?   : number
+  offsetInterval? : number
   nextInterval    : number
   bpm             : number
   minLevel        : number

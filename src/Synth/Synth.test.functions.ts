@@ -32,12 +32,10 @@ const runOneInterval = (
   context: Partial<AudioContext>
 ) => {
 
-  const running = true
   const voicesRef = { current: [voice] }
 
   runInterval(
     voice,
-    running,
     voicesRef,
     context as AudioContext
   )

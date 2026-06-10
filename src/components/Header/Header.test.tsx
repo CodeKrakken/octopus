@@ -7,7 +7,7 @@ describe('Header', () => {
   const mockHandleStartStop = jest.fn();
 
   const header = (state: Boolean) => (
-      <Header
+    <Header
       handleAddVoice={mockHandleAddVoice}
       handleStartStop={mockHandleStartStop}
       showStart={true}

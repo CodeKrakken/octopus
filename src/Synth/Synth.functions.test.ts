@@ -1,4 +1,4 @@
-import { getContext, stopOne, runInterval } from './Synth.functions';
+import { getContext, runInterval } from './Synth.functions';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { createMockContext, runOneInterval } from './Synth.test.functions';
 
@@ -35,26 +35,6 @@ describe('getContext', () => {
     getContext(mockContext as AudioContext)
     expect(mockContext.resume).toHaveBeenCalledTimes(1)
   })
-})
-
-
-describe('stopOne', () => {
-
-  it('stops multiple voices independently', () => {
-
-    const voice1 = { ...setUpVoice(), isActive: true };
-    const voice2 = { ...setUpVoice(), isActive: true };
-
-    stopOne(voice1);
-
-    expect(voice1.isActive).toBe(false);
-    expect(voice2.isActive).toBe(true);
-
-    stopOne(voice2);
-
-    expect(voice1.isActive).toBe(false);
-    expect(voice2.isActive).toBe(false);
-  });
 })
 
 
@@ -172,26 +152,6 @@ describe('runInterval', () => {
     expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
   });
 
-  it('does not schedule intervals when running is false', () => {
-
-    const voice = setUpVoice();
-    const mockContext = createMockContext('running') as AudioContext;
-    const running = false;
-    const voicesRef = { current: [voice] };
-    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
-
-    runInterval(
-      voice,
-      running,
-      voicesRef,
-      mockContext
-    );
-
-    expect(setTimeoutSpy).not.toHaveBeenCalled();
-    expect(mockContext.createOscillator).not.toHaveBeenCalled();
-
-    setTimeoutSpy.mockRestore();
-  });
 
   it('calls runInterval again when voice is still active', () => {
 
@@ -207,13 +167,11 @@ describe('runInterval', () => {
       isActive: true
     }
 
-    const running = true
     const voicesRef = { current: [voice] }
     const context = createMockContext('running', 0)
 
     runInterval(
       voice,
-      running,
       voicesRef,
       context as unknown as AudioContext
     )

@@ -46,7 +46,7 @@ function Interface() {
 
   const start = async () => {
     toggleRunning(true)
-    Synth.start(runningRef.current, voicesRef)
+    Synth.start(voicesRef)
   }
 
   const stopAll = (voices: VoiceType[]) => {

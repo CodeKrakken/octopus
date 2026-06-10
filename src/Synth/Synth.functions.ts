@@ -1,7 +1,9 @@
-import { VoiceType }                                    from '../components/Voice/Voice.types'
-import { OscGain, VoicesRef }     from './Synth.types'
-import { allFrequencies, extrema, oneMinute, samples, waveforms }  from '../content/data';
+import { VoiceType }                                              from '../components/Voice/Voice.types'
+import { OscGain, VoicesRef }                                     from './Synth.types'
+import { allFrequencies, extrema, oneMinute, samples, waveforms } from '../content/data';
+import { Range } from '../components/shared.types';
 
+let freqArray: number[] | undefined  
 
 const getContext = (context: AudioContext = new AudioContext()) => {
 
@@ -10,50 +12,52 @@ const getContext = (context: AudioContext = new AudioContext()) => {
   return context
 }
 
-const stopOne = (voice: VoiceType) => voice.isActive = false
-
 const runInterval = (
   voice: VoiceType, 
-  running: boolean, 
   voicesRef: VoicesRef, 
   context: AudioContext
 ) => {
+
+  globalContext = context
 
   if (running) {
     voice.thisInterval = voice.nextInterval
     const thisInterval = voice.thisInterval
 
-    if (isTimeFor(thisInterval, context)) {
+    if (isTimeFor(thisInterval)) {
       const intervalLength = getIntervalLength(voice)
       voice.nextInterval += intervalLength
     
-      if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, context)
+      if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef)
     } 
 
-    if (!voice.isActive) return
+  if (!voice.isActive) return
 
     setTimeout(() => {
-      runInterval(voice, running, voicesRef, context)
+      runInterval(voice, running, voicesRef)
     }, (voice.nextInterval - context.currentTime)*1000)    
   }
 }
 
 // private functions
 
-const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
+const isTimeFor = (timeCode: number) => globalContext.currentTime >= timeCode
 
 const getIntervalLength = (voice: VoiceType) => {
+
   const {activeIntervals, bpm} = voice
   const interval = (randomOneFrom(activeIntervals) || '0') as string
   const intervalLength  = oneMinute / bpm * parseFloat(interval)
+
   return intervalLength
 }
 
 const isRest = (voice: VoiceType) => {
+
   const restChance  = voice.restChance/100
   const diceRoll = Math.random()
-  const result = diceRoll < restChance
-  return result
+  
+  return diceRoll < restChance
 }
 
 const makeSound = (
@@ -63,20 +67,24 @@ const makeSound = (
   context: AudioContext
 ) => {
 
-  const offsetTime = getOffsetTime(voice, intervalLength)
+  const { activeSounds, thisInterval } = voice
+
+  const offsetTime = getRangeValue('Offset', voice) / 100 * intervalLength
 
   setTimeout(() => {
 
     try {
-      const activeSounds = voice.activeSounds
       const randomSound = randomOneFrom(activeSounds) as OscillatorType
-      const level = generateLevel(voice, voicesRef.current)
+      const level = calculateLevel(voice, voicesRef.current)
 
       if (waveforms.includes(randomSound)) {
-        const oscGain = setUpOscillator(context)
+        const oscGain = setUpOscillator()
         oscGain.oscillator.type = randomSound
         const noteLength = generateNoteLength(voice, intervalLength)
-        oscillate(voice, noteLength, offsetTime, level, oscGain)
+        voice.offsetInterval = thisInterval! + offsetTime
+
+        oscillate(voice, noteLength, level, oscGain)
+
         setTimeout(() => removeOscillator(oscGain), intervalLength*1000)
       } else {
         playSample(randomSound, level, context)
@@ -88,7 +96,8 @@ const makeSound = (
   }, offsetTime*1000)
 }
 
-const setUpOscillator = (context: AudioContext) => {
+const setUpOscillator = () => {
+  const context     = globalContext
   const oscillator  = context.createOscillator()
   const gain        = context.createGain()
 
@@ -97,14 +106,16 @@ const setUpOscillator = (context: AudioContext) => {
   gain.connect(context.destination);
   oscillator.start(0);
 
-  return {oscillator, gain}
+  return {oscillator, gainNode: gain}
 }
 
 const removeOscillator = (oscGain: OscGain) => {
-  const { oscillator, gain } = oscGain
+
+  const { oscillator, gainNode } = oscGain
+
   oscillator.stop()
   oscillator.disconnect()
-  gain.disconnect()
+  gainNode.disconnect()
 }
 
 const playSample = (
@@ -119,15 +130,14 @@ const playSample = (
 const oscillate = (
   voice: VoiceType, 
   noteLength: number, 
-  offsetTime: number, 
   level: number, 
   oscGain: OscGain,
 ) => {
   
   oscGain.oscillator.frequency.value = generateFrequency(voice)
 
-  const gain         = oscGain.gain!.gain
-  const thisInterval = voice.thisInterval! + offsetTime
+  const gain         = oscGain.gainNode.gain
+  const thisInterval = voice.offsetInterval!
 
   const fadeInPercentage  = getRangeValue('FadeIn', voice)
   const fadeOutPercentage = getRangeValue('FadeOut', voice)
@@ -146,25 +156,19 @@ const oscillate = (
   gain.linearRampToValueAtTime(level, startOfPeak)
   gain.setValueAtTime(level, endOfPeak)
   gain.linearRampToValueAtTime(0, thisInterval + noteLength)
-  gain.setValueAtTime(gain.value, 0)  
+  gain.setValueAtTime(gain.value, thisInterval)  
 }
 
-const randomOneFrom = (array: (OscillatorType | String)[]) => {
+const randomOneFrom = <T>(array: T[]): T => {
+
   return array[Math.floor(Math.random() * array.length)]
 }
 
-const getRandomFrequency = (voice: VoiceType) => {
-    
-  const activeFrequencies = getActiveFrequencies(voice) 
-  const randomIndex = Math.floor(Math.random()*activeFrequencies.length)
-  const randomFrequency = activeFrequencies[randomIndex]
-  
-  return randomFrequency
-}
+const calculateLevel = (voice: VoiceType, voices: VoiceType[]) => {
 
-const generateLevel = (voice: VoiceType, voices: VoiceType[]) => {
   const { minLevel, maxLevel } = voice
   const balancedLevel = ((minLevel + Math.random() * (maxLevel - minLevel))/100)/voices.length
+  
   return balancedLevel
 }
 
@@ -187,30 +191,28 @@ const setUpSample = (
 
 const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 
-  const { minLength, maxLength } = voice
-  const noteLengthPercentage  = (minLength + Math.random() * (maxLength - minLength))
-  const noteLength = intervalLength / 100 * noteLengthPercentage
+  const noteLengthPercentage  = getRangeValue('Length', voice)
 
-  return noteLength
+  return intervalLength / 100 * noteLengthPercentage
 }
 
 const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
 
 const generateFrequency = (voice: VoiceType) => {
-  const randomFrequency = getRandomFrequency(voice)
-  const frequency   = detune(randomFrequency as number, voice)
-  return frequency
+
+  const randomFrequency = randomOneFrom(getActiveFrequencies(voice) as number[])
+
+  return detune(randomFrequency as number, voice)
 }
 
 const detune = (frequency: number, voice: VoiceType) => {
 
   const cents = getRangeValue('Detune', voice)
+
   if (!cents) return frequency
-  
-  const freqArray = [...new Set(allFrequencies.flat())]
-  
+    
   const modifier = cents < 0 ? -1 : 1
-  const nextFreq = freqArray[freqArray.indexOf(frequency) + modifier]
+  const nextFreq = getFreqArray()[freqArray!.indexOf(frequency) + modifier]
   const hzDiff = Math.max(nextFreq, frequency) - Math.min(nextFreq, frequency)
   const detunedFrequency = frequency + hzDiff / 100 * cents
   
@@ -234,12 +236,8 @@ const getActiveFrequencies = (voice: VoiceType) => {
   return activeFrequencies.flat(Infinity)
 }
 
-const getOffsetTime = (
-  voice: VoiceType, 
-  intervalLength: number
-) => getRangeValue('Offset', voice) / 100 * intervalLength
 
-const getRangeValue = (key: string, voice: VoiceType) => {
+const getRangeValue = (key: Range, voice: VoiceType) => {
     
   const [min, max] = extrema.map(prefix => voice[prefix + key as keyof VoiceType])
 
@@ -254,6 +252,5 @@ const getRangeValue = (key: string, voice: VoiceType) => {
 
 export {
   getContext,
-  runInterval,
-  stopOne
+  runInterval
 }

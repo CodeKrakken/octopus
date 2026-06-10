@@ -1,14 +1,13 @@
 import { Synth } from './Synth';
 import { setUpVoice } from '../components/Interface/Interface.functions';
 import { VoiceType } from '../components/Voice/Voice.types';
-import { runInterval, getContext, stopOne } from './Synth.functions';
+import { runInterval, getContext } from './Synth.functions';
 import { createMockContext } from './Synth.test.functions';
 
 
 jest.mock('./Synth.functions', () => ({
   runInterval: jest.fn(),
   getContext: jest.fn(() => ({ currentTime: 0 })),
-  stopOne: jest.fn(),
 }));
 
 describe('Synth', () => {
@@ -45,14 +44,13 @@ describe('Synth', () => {
       (getContext as jest.Mock).mockReturnValue(mockContext);
 
       const args = [
-        running,
         voicesRef,
         mockContext
       ];
 
       Synth.add(voice1, running, voicesRef);
       Synth.add(voice2, running, voicesRef);
-      Synth.start(running, voicesRef);
+      Synth.start(voicesRef);
 
       expect(runInterval).toHaveBeenCalledTimes(2);
       expect(runInterval).toHaveBeenCalledWith(voice1, ...args);
@@ -67,7 +65,7 @@ describe('Synth', () => {
 
       const voice1 = setUpVoice();
       const voice2 = setUpVoice();
-      const running = false;
+      let running = false;
       const voicesRef = { current: [] };
 
       // test add
@@ -85,9 +83,10 @@ describe('Synth', () => {
       expect(Synth.voices.length).toBe(1);
       expect(Synth.voices[0]).toBe(voice2);
 
-      // test stop
-      Synth.stop();
-      expect(stopOne).toHaveBeenCalled();
+       // test stop  
+      Synth.voices[0].isActive = true; // Set active before stopping  
+      Synth.stop();  
+      expect(Synth.voices[0].isActive).toBe(false);  
     });
   });
 });
