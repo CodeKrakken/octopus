@@ -41,8 +41,20 @@ describe('getContext', () => {
 
 describe('runInterval', () => {
 
-  beforeAll(() => jest.useFakeTimers())
-  afterAll(() => jest.useRealTimers())
+  beforeEach(() => {
+    global.Audio = jest.fn().mockImplementation(() => ({
+      play: jest.fn()
+    })) as unknown as typeof Audio
+  })
+
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.clearAllTimers()
+    jest.useRealTimers()
+  })
 
   it('plays a sample', () => {
 
@@ -53,6 +65,56 @@ describe('runInterval', () => {
 
     expect(global.Audio).toHaveBeenCalledWith('snare.wav')
   })
+
+  it('logs errors thrown during sound creation', () => {
+
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    const throwingContext = {
+      ...createMockContext(),
+      createOscillator: jest.fn(() => {
+        throw new Error('oscillator failed')
+      }),
+    }
+
+    const voice = {
+      ...setUpVoice(),
+      restChance: 0,
+      activeSounds: ['sine']
+    }
+
+    runOneInterval(voice, throwingContext)
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'oscillator failed',
+      expect.any(Error)
+    )
+
+    consoleSpy.mockRestore()
+  })
+
+  it('logs "Unknown error" when a non-Error is thrown inside makeSound', () => {
+
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+    const throwingContext = {
+      ...createMockContext(),
+      createOscillator: jest.fn(() => { throw 'string error'; }),
+    }
+
+    const voice = {
+      ...setUpVoice(),
+      restChance: 0,
+      activeSounds: ['sine']
+    };
+
+    runOneInterval(voice, throwingContext)
+    jest.runAllTimers();
+
+    expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
+  });
 
   it('schedules note end when noteLength is shorter than intervalLength', () => {
     const voice = { ...setUpVoice(), minLength: 50, maxLength: 50 }
@@ -130,27 +192,6 @@ describe('runInterval', () => {
     jest.runAllTimers();
 
     expect(mockContext.createOscillator).not.toHaveBeenCalled();
-  });
-
-  it('logs "Unknown error" when a non-Error is thrown inside makeSound', () => {
-
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-
-    const throwingContext = {
-      ...createMockContext(),
-      createOscillator: jest.fn(() => { throw 'string error'; }),
-    }
-
-    const voice = {
-      ...setUpVoice(),
-      restChance: 0,
-      activeSounds: ['sine']
-    };
-
-    runOneInterval(voice, throwingContext)
-    jest.runAllTimers();
-
-    expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error');
   });
 
 
