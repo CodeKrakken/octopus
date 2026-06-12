@@ -1,6 +1,7 @@
 import { extrema, fields } from "../../content/data";
 import { InputProps } from "../Input/Input.types";
 import { updateField } from "../Inputs/Inputs.functions";
+import RangeSlider from "../RangeSlider/RangeSlider";
 import { Atom } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
 
@@ -37,7 +38,9 @@ export default function Field ({
         <div className="label">{f.label}</div>
         {
           f.input === 'range' ? <>
-            {
+            <RangeSlider min={0} max={100} />
+
+            {/* {
               extrema.map((ex) => {
 
                 const rangeProps = {
@@ -52,7 +55,7 @@ export default function Field ({
                   <input {...rangeProps} />
                 </div>
               })
-            }
+            } */}
           </> : <>
             <input {...props} />
           </>
