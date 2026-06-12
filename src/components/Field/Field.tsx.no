@@ -1,7 +1,7 @@
 import { fields } from "../../content/data";
 import { InputProps } from "../Input/Input.types";
 import { updateField } from "../Inputs/Inputs.functions";
-import RangeSlider from "../RangeSlider/RangeSlider";
+import RangeSlider from "../Slider/Slider";
 import { Atom } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
 
