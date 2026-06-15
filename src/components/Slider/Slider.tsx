@@ -44,9 +44,10 @@ export default function Slider ({
     setVoices(updatedVoices);  
   };  
   
-  return <RangeSlider  
-    value={rangeValue}  
-    onInput={handleRangeInput}  
-  />  
- 
+  return <div className="slider">
+    <RangeSlider  
+      value={rangeValue}  
+      onInput={handleRangeInput}  
+    /> 
+  </div>
 }

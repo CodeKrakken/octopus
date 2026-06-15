@@ -3,7 +3,7 @@ import { InputsProps } from "./Inputs.types";
 import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
 import Slider from "../Slider/Slider";
 import "./Inputs.css";
-import { render } from "@testing-library/react";
+import Field from "../Field/Field";
 
 export default function Inputs(
   { 
@@ -29,6 +29,26 @@ export default function Inputs(
                     voices={voices}
                     setVoices={setVoices}
                     key={attr}
+                  />
+                    :
+                  attributes[attr as keyof typeof attributes].inputType === 'singleValueSlider'
+                    ?
+                  <Slider
+                    defaultValue={[0, 50]}
+                    attr={attr}
+                    i={i}
+                    voices={voices}
+                    setVoices={setVoices}
+                    key={attr}
+                  />
+                    :
+                  attributes[attr as keyof typeof attributes].inputType === 'textField'
+                    ?
+                  <Field
+                    fieldName="Name"
+                    i={0}
+                    voices={voices}
+                    setVoices={setVoices}
                   />
                     :
                   <></>
