@@ -1,6 +1,4 @@
 import { attributes } from "../../content/data";  
-import { InputProps } from "../Input/Input.types";  
-import { updateField } from "../Inputs/Inputs.functions";  
 import { Atom } from "../shared.types";  
 import { VoiceType } from "../Voice/Voice.types";  
 import RangeSlider from 'react-range-slider-input';  
@@ -11,28 +9,21 @@ type SliderProps = {
   i: number,  
   voices: VoiceType[],  
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>,
-  defaultValue: [number, number]  
+  defaultValue: [number, number],
+  thumbsDisabled: [boolean, boolean]
 }  
   
 export default function Slider ({  
   attr,  
-  i,  
+  i,    
   voices,  
-  setVoices  
-}: SliderProps) {  
+  setVoices,
+  defaultValue,
+  thumbsDisabled}: SliderProps) {  
   
   const voice = voices[i]  
   const a = attributes[attr as keyof typeof attributes]  
-  
-  const props: InputProps = {  
-    className: 'textbox',  
-    'data-voice': i,  
-    'data-attribute': `${a.value}`,  
-    type: 'number',  
-    value: voice[a.value as Atom],  
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, a.value as Atom, voices, i, setVoices)  
-  }  
-  
+    
   const rangeValue = a.inputType === 'rangeSlider'   
     ? [voice[`min${a.value}` as Atom], voice[`max${a.value}` as Atom]] as [number, number]  
     : undefined;  
@@ -46,8 +37,9 @@ export default function Slider ({
   
   return <div className="slider">
     <RangeSlider  
-      value={rangeValue}  
-      onInput={handleRangeInput}  
+      value={defaultValue}  
+      onInput={handleRangeInput}
+      thumbsDisabled={thumbsDisabled}
     /> 
   </div>
 }

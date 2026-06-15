@@ -4,6 +4,7 @@ import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
 import Slider from "../Slider/Slider";
 import "./Inputs.css";
 import Field from "../Field/Field";
+import { Atom } from "../shared.types";
 
 export default function Inputs(
   { 
@@ -25,9 +26,11 @@ export default function Inputs(
                   <Slider
                     defaultValue={
                       [
-                        voices[i][`min${attr}`], 
-                        voices[i][`max${attr}`]
-                      ]}
+                        voices[i][`min${attr as string}` as Atom], 
+                        voices[i][`max${attr as string}` as Atom]
+                      ]
+                    }
+                    thumbsDisabled={[false, false]}
                     attr={attr}
                     i={i}
                     voices={voices}
@@ -40,10 +43,11 @@ export default function Inputs(
                   <Slider
                     defaultValue={
                       [
-                        voices[i][`min${attr}`], 
-                        voices[i][`max${attr}`]
+                        voices[i][attr as Atom], 
+                        voices[i][attr as Atom]
                       ]
                     }
+                    thumbsDisabled={[true, false]}
                     attr={attr}
                     i={i}
                     voices={voices}
