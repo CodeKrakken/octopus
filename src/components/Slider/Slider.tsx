@@ -1,4 +1,4 @@
-import { fields } from "../../content/data";  
+import { attributes } from "../../content/data";  
 import { InputProps } from "../Input/Input.types";  
 import { updateField } from "../Inputs/Inputs.functions";  
 import { Atom } from "../shared.types";  
@@ -6,8 +6,8 @@ import { VoiceType } from "../Voice/Voice.types";
 import RangeSlider from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
   
-type FieldProps = {  
-  fieldName: string,  
+type SliderProps = {  
+  attr: string,  
   i: number,  
   voices: VoiceType[],  
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>,
@@ -15,42 +15,39 @@ type FieldProps = {
 }  
   
 export default function Slider ({  
-  fieldName,  
+  attr,  
   i,  
   voices,  
   setVoices  
-}: FieldProps) {  
+}: SliderProps) {  
   
   const voice = voices[i]  
-  const f = fields[fieldName as keyof typeof fields]  
+  const a = attributes[attr as keyof typeof attributes]  
   
   const props: InputProps = {  
     className: 'textbox',  
     'data-voice': i,  
-    'data-attribute': `${f.value}`,  
+    'data-attribute': `${a.value}`,  
     type: 'number',  
-    value: voice[f.value as Atom],  
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, f.value as Atom, voices, i, setVoices)  
+    value: voice[a.value as Atom],  
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, a.value as Atom, voices, i, setVoices)  
   }  
   
-  // For range inputs, extract min and max values from voice  
-  const rangeValue = f.input === 'range'   
-    ? [voice[`min${f.value}` as Atom], voice[`max${f.value}` as Atom]] as [number, number]  
+  const rangeValue = a.input === 'range'   
+    ? [voice[`min${a.value}` as Atom], voice[`max${a.value}` as Atom]] as [number, number]  
     : undefined;  
   
   const handleRangeInput = (values: [number, number]) => {  
-    // Update both min and max values when slider changes  
     const updatedVoices = [...voices];  
-    updatedVoices[i][`min${f.value}` as Atom] = values[0];  
-    updatedVoices[i][`max${f.value}` as Atom] = values[1];  
+    updatedVoices[i][`min${a.value}` as Atom] = values[0];  
+    updatedVoices[i][`max${a.value}` as Atom] = values[1];  
     setVoices(updatedVoices);  
   };  
   
   return <>  
     <div className="row">  
-      <div className="label">{f.label}</div>  
       {  
-        f.input === 'range' ? <>  
+        a.input === 'range' ? <>  
           <RangeSlider  
             value={rangeValue}  
             onInput={handleRangeInput}  

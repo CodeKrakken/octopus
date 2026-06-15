@@ -51,7 +51,7 @@ const checkboxGroups = {
 }
 
 
-const fields = {
+const attributes = {
   label: {
     label: 'Name', 
     value: 'label',
@@ -110,7 +110,7 @@ export {
   waveforms,
   ranges,
   checkboxGroups,
-  fields,
+  attributes,
   extrema,
   oneMinute,
   samples

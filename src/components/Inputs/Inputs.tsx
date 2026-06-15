@@ -1,4 +1,4 @@
-import { checkboxGroups, fields }  from "../../content/data";
+import { checkboxGroups, attributes }  from "../../content/data";
 import { InputsProps } from "./Inputs.types";
 import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
 import Slider from "../Slider/Slider";
@@ -16,21 +16,19 @@ export default function Inputs(
       <div className="row">
         <div className="column">
           {
-            Object.keys(fields).map(field => {
-              console.log(field)
-              return <div className="row">
-                <div className="label">{fields[field as keyof typeof fields].label}</div>
+            Object.keys(attributes).map(attr => 
+              <div className="row">
+                <div className="label">{attributes[attr as keyof typeof attributes].label}</div>
                 <Slider
                   defaultValue={[0, 100]}
-                  fieldName={field}
+                  attr={attr}
                   i={i}
                   voices={voices}
                   setVoices={setVoices}
-                  //   key={field}
-                  // />       
+                  key={attr}
                 /> 
               </div>
-            })
+            )
           }
         </div>
       </div>
