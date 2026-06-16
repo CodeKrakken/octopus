@@ -5,7 +5,6 @@ import SingleSlider from "../SingleSlider/SingleSlider";
 import "./Inputs.css";
 import Field from "../Field/Field";
 import { Atom } from "../shared.types";
-import { useState } from "react";
 import DoubleSlider from "../DoubleSlider/DoubleSlider";
 
 export default function Inputs(
@@ -20,8 +19,7 @@ export default function Inputs(
       <div className="row">
         <div className="column">
           {
-            Object.keys(attributes).map(attr => { console.log(attr); console.log(voices[i][attr as Atom])
-              return <div className="row">
+            Object.keys(attributes).map(attr => <div className="row">
               <div className="label">{attributes[attr as keyof typeof attributes].label}</div>
                 {  
                   attributes[attr as keyof typeof attributes].inputType === 'rangeSlider' 
@@ -58,7 +56,7 @@ export default function Inputs(
                     :
                   <></>
                 }
-            </div>})
+            </div>)
           }
         </div>
       </div>

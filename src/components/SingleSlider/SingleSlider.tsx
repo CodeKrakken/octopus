@@ -31,10 +31,9 @@ export default function SingleSlider ({
     ? [voice[`min${a.value}` as Atom], voice[`max${a.value}` as Atom]] as [number, number]  
     : undefined;  
   
-  const handleRangeInput = (values: [number, number]) => {  
+  const handleInput = (values: [number, number]) => {  
     const updatedVoices = [...voices];  
-    updatedVoices[i][`min${a.value}` as Atom] = values[0];  
-    updatedVoices[i][`max${a.value}` as Atom] = values[1];  
+    updatedVoices[i][attr as Atom] = values[1];  
     setVoices(updatedVoices);
     setVal(values[1])  
   };  
@@ -46,7 +45,7 @@ export default function SingleSlider ({
       value={[0, val]}  
       thumbsDisabled={thumbsDisabled}  
       rangeSlideDisabled={true}  
-      onInput={handleRangeInput}  
+      onInput={handleInput}  
     />
   </div>
 }
