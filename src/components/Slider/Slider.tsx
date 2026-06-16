@@ -3,6 +3,7 @@ import { Atom } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";  
 import RangeSlider from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
+import { useState } from "react";
   
 type SliderProps = {  
   attr: string,  
@@ -34,12 +35,22 @@ export default function Slider ({
     updatedVoices[i][`max${a.value}` as Atom] = values[1];  
     setVoices(updatedVoices);  
   };  
+
+  const [val, setVal] = useState(50);
   
   return <div className="slider">
-    <RangeSlider  
-      value={defaultValue}  
+    {/* <RangeSlider  
+      value={rangeValue}  
       onInput={handleRangeInput}
       thumbsDisabled={thumbsDisabled}
-    /> 
+    />  */}
+    
+    <RangeSlider  
+      min={0}  
+      max={100}  
+      value={[val, val]}  
+      rangeSlideDisabled={true}  
+      onInput={([, newVal]) => setVal(newVal)}  
+    />
   </div>
 }
