@@ -1,0 +1,7 @@
+.range-slider__thumb[data-lower] {  
+  display: none;  
+}
+
+.range-slider .range-slider__range {  
+  background: transparent;  
+}

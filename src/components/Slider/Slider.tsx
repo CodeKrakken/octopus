@@ -4,6 +4,7 @@ import { VoiceType } from "../Voice/Voice.types";
 import RangeSlider from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
 import { useState } from "react";
+import "./Slider.css";
   
 type SliderProps = {  
   attr: string,  
@@ -48,7 +49,8 @@ export default function Slider ({
     <RangeSlider  
       min={0}  
       max={100}  
-      value={[val, val]}  
+      value={[0, val]}  
+      thumbsDisabled={[true, false]}  
       rangeSlideDisabled={true}  
       onInput={([, newVal]) => setVal(newVal)}  
     />
