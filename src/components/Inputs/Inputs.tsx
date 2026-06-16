@@ -1,7 +1,7 @@
 import { checkboxGroups, attributes }  from "../../content/data";
 import { InputsProps } from "./Inputs.types";
 import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
-import Slider from "../Slider/Slider";
+import SingleSlider from "../SingleSlider/SingleSlider";
 import "./Inputs.css";
 import Field from "../Field/Field";
 import { Atom } from "../shared.types";
@@ -25,13 +25,7 @@ export default function Inputs(
                 {  
                   attributes[attr as keyof typeof attributes].inputType === 'rangeSlider' 
                     ?
-                  <Slider
-                    defaultValue={
-                      [
-                        voices[i][`min${attr as string}` as Atom], 
-                        voices[i][`max${attr as string}` as Atom]
-                      ]
-                    }
+                  <SingleSlider
                     thumbsDisabled={[false, false]}
                     attr={attr}
                     i={i}
@@ -42,13 +36,7 @@ export default function Inputs(
                     :
                   attributes[attr as keyof typeof attributes].inputType === 'singleValueSlider'
                     ?
-                  <Slider
-                    defaultValue={
-                      [
-                        voices[i][attr as Atom], 
-                        voices[i][attr as Atom]
-                      ]
-                    }
+                  <SingleSlider
                     thumbsDisabled={[true, false]}
                     attr={attr}
                     i={i}

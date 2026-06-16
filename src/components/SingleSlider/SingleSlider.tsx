@@ -4,24 +4,25 @@ import { VoiceType } from "../Voice/Voice.types";
 import RangeSlider from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
 import { useState } from "react";
-import "./Slider.css";
+import "./SingleSlider.css";
   
-type SliderProps = {  
+type SingleSliderProps = {  
   attr: string,  
   i: number,  
   voices: VoiceType[],  
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>,
-  defaultValue: [number, number],
   thumbsDisabled: [boolean, boolean]
 }  
   
-export default function Slider ({  
+export default function SingleSlider ({  
   attr,  
   i,    
   voices,  
   setVoices,
-  defaultValue,
-  thumbsDisabled}: SliderProps) {  
+  thumbsDisabled
+}: SingleSliderProps) {  
+  
+  const [val, setVal] = useState(voices[i][attr as Atom]);
   
   const voice = voices[i]  
   const a = attributes[attr as keyof typeof attributes]  
@@ -34,25 +35,18 @@ export default function Slider ({
     const updatedVoices = [...voices];  
     updatedVoices[i][`min${a.value}` as Atom] = values[0];  
     updatedVoices[i][`max${a.value}` as Atom] = values[1];  
-    setVoices(updatedVoices);  
+    setVoices(updatedVoices);
+    setVal(values[1])  
   };  
-
-  const [val, setVal] = useState(50);
   
-  return <div className="slider">
-    {/* <RangeSlider  
-      value={rangeValue}  
-      onInput={handleRangeInput}
-      thumbsDisabled={thumbsDisabled}
-    />  */}
-    
+  return <div className="slider">    
     <RangeSlider  
       min={0}  
       max={100}  
       value={[0, val]}  
-      thumbsDisabled={[true, false]}  
+      thumbsDisabled={thumbsDisabled}  
       rangeSlideDisabled={true}  
-      onInput={([, newVal]) => setVal(newVal)}  
+      onInput={handleRangeInput}  
     />
   </div>
 }
