@@ -26,12 +26,16 @@ export default function SingleSlider ({
     }  
   }, []);
         
-  const handleInput = (values: [number, number]) => {  
+  const handleInput = ([lo, hi]: [number, number]) => {  
+    if (sliderRef.current) {  
+      sliderRef.current.thumb.lower.dataset.label = `${lo}`;  
+      sliderRef.current.thumb.upper.dataset.label = `${hi}`;  
+    }
     const updatedVoices = [...voices];  
-    updatedVoices[i][attrName as Atom] = values[1];  
+    updatedVoices[i][attrName as Atom] = hi;  
     setVoices(updatedVoices);
-    setVal(values[1])  
-  };  
+    setVal(hi)    
+  }    
   
   return (
     <div className="single slider">    
@@ -42,16 +46,7 @@ export default function SingleSlider ({
         value={[0, val]}  
         thumbsDisabled={[true, false]}  
         rangeSlideDisabled={true}  
-        onInput={([lo, hi]) => {  
-          if (sliderRef.current) {  
-            sliderRef.current.thumb.lower.dataset.label = `${lo}`;  
-            sliderRef.current.thumb.upper.dataset.label = `${hi}`;  
-          }
-          const updatedVoices = [...voices];  
-          updatedVoices[i][attrName as Atom] = hi;  
-          setVoices(updatedVoices);
-          setVal(hi)    
-        }}  
+        onInput={handleInput}  
       />
     </div>
   )
