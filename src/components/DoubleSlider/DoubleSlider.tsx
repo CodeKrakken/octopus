@@ -4,7 +4,7 @@ import { VoiceType } from "../Voice/Voice.types";
 import RangeSlider from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
     
-export default function Slider ({  
+export default function DoubleSlider ({  
   fieldName,  
   i,  
   voices,  
