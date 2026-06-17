@@ -32,7 +32,7 @@ describe('Field', () => {
     
     render(
       <Field
-        fieldName="level"
+        attrName="level"
         i={0}
         voices={voices}
         setVoices={mockSetVoices}

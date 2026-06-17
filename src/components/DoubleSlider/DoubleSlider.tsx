@@ -30,12 +30,15 @@ export default function DoubleSlider ({
     updatedVoices[i][`max${attr.value}` as Atom] = values[1];  
     setVoices(updatedVoices);  
   };  
+
+  const props = {'data-attribute': {attrName}}
   
   return <>  
     <div className="slider">  
       <RangeSlider  
         value={rangeValue}  
-        onInput={handleRangeInput}  
+        onInput={handleRangeInput}
+        {...props}  
       />   
     </div>  
   </>  
