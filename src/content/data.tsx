@@ -138,6 +138,7 @@ export {
   ranges,
   checkboxGroups,
   singleSliders,
+  doubleSliders,
   attributes,
   extrema,
   oneMinute,

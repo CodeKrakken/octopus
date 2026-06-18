@@ -1,9 +1,11 @@
+import { useEffect, useRef } from "react";
 import { attributes } from "../../content/data";  
 import { Atom } from "../shared.types";  
 import { VoiceType } from "../Voice/Voice.types";  
-import RangeSlider from 'react-range-slider-input';  
+import RangeSlider, { ReactRangeSliderInputRef } from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
-    
+import { doubleSliders } from "../../content/data";
+
 export default function DoubleSlider ({  
   attrName,  
   i,  
@@ -22,20 +24,57 @@ export default function DoubleSlider ({
   const rangeValue = [
     voice[`min${attr.value}` as Atom], 
     voice[`max${attr.value}` as Atom]
-  ] as [number, number]  
+  ] as [number, number]
+
+  const sliderRef = useRef<ReactRangeSliderInputRef>(null);  
+  
+  useEffect(() => {    
+  if (sliderRef.current) {    
+    const lowerThumb = sliderRef.current.thumb.lower;  
+    const upperThumb = sliderRef.current.thumb.upper;  
+      
+    // Check which thumb has the data-lower attribute  
+    if (lowerThumb.hasAttribute('data-lower')) {  
+      lowerThumb.dataset.label = String(rangeValue[0]);  
+      upperThumb.dataset.label = String(rangeValue[1]);  
+    } else {  
+      lowerThumb.dataset.label = String(rangeValue[1]);  
+      upperThumb.dataset.label = String(rangeValue[0]);  
+    }  
+  }  
+}, [rangeValue]); // Add rangeValue as dependency  
+
+  const {min, max} = doubleSliders[attrName as keyof typeof doubleSliders]
+
+
+  const handleRangeInput = ([lo, hi]: [number, number]) => {    
+  if (sliderRef.current) {    
+    const lowerThumb = sliderRef.current.thumb.lower;  
+    const upperThumb = sliderRef.current.thumb.upper;  
+      
+    if (lowerThumb.hasAttribute('data-lower')) {  
+      lowerThumb.dataset.label = lo.toString();  
+      upperThumb.dataset.label = hi.toString();  
+    } else {  
+      lowerThumb.dataset.label = hi.toString();  
+      upperThumb.dataset.label = lo.toString();  
+    }  
+  }    
     
-  const handleRangeInput = (values: [number, number]) => {  
-    const updatedVoices = [...voices];  
-    updatedVoices[i][`min${attr.value}` as Atom] = values[0];  
-    updatedVoices[i][`max${attr.value}` as Atom] = values[1];  
-    setVoices(updatedVoices);  
-  };  
+  const updatedVoices = [...voices];   
+    updatedVoices[i][`min${attr.value}` as Atom] = lo;    
+    updatedVoices[i][`max${attr.value}` as Atom] = hi;    
+    setVoices(updatedVoices);    
+  };
 
   const props = {'data-attribute': {attrName}}
   
   return <>  
-    <div className="slider">  
-      <RangeSlider  
+    <div className="slider">
+      <RangeSlider
+        ref={sliderRef}   
+        min={min}  
+        max={max}    
         value={rangeValue}  
         onInput={handleRangeInput}
         {...props}  
