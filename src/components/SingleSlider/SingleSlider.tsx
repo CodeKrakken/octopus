@@ -18,12 +18,12 @@ export default function SingleSlider ({
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>,
 }) {  
   
-  const val = voices[i][attrName as Atom]
+  const value = voices[i][attrName as Atom]
   const sliderRef = useRef<ReactRangeSliderInputRef>(null);  
 
   useEffect(() => {  
     if (sliderRef.current) {  
-      sliderRef.current.thumb.upper.dataset.label = String(val);  
+      sliderRef.current.thumb.upper.dataset.label = String(value);  
     }  
   });
 
@@ -48,7 +48,7 @@ export default function SingleSlider ({
         ref={sliderRef}   
         min={min}  
         max={max}  
-        value={[0, val]}  
+        value={[0, value]}  
         thumbsDisabled={[true, false]}  
         rangeSlideDisabled={true}  
         onInput={handleInput}  
