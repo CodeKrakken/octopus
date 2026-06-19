@@ -28,16 +28,12 @@ export default function SingleSlider ({
     sliderRef.current!.thumb.upper.dataset.label = String(value);  
   });
   
-  const value = voices[i][attrName as Atom]
-
   const {min, max} = singleSliders[attrName as keyof typeof singleSliders]
+  const value = voices[i][attrName as Atom]
         
   const handleInput = ([lo, hi]: [number, number]) => {  
 
-    if (sliderRef.current) {  
-      sliderRef.current.thumb.lower.dataset.label = lo.toString();  
-      sliderRef.current.thumb.upper.dataset.label = hi.toString();  
-    }
+    sliderRef.current!.thumb.upper.dataset.label = hi.toString();  
 
     const updatedVoices = [...voices];
 
