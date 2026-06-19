@@ -5,15 +5,19 @@ import SingleSlider from "../SingleSlider/SingleSlider"
 import { VoiceType } from "../Voice/Voice.types"
 
 export default function Input({
+
   attrName,
   i,
   voices,
   setVoices
+
 }: {
+
   attrName: string,
   i: number,
   voices: VoiceType[],
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
+  
 }) {
 
   const props = {
