@@ -33,7 +33,6 @@ export default function DoubleSlider ({
     const lowerThumb = sliderRef.current.thumb.lower;  
     const upperThumb = sliderRef.current.thumb.upper;  
       
-    // Check which thumb has the data-lower attribute  
     if (lowerThumb.hasAttribute('data-lower')) {  
       lowerThumb.dataset.label = String(rangeValue[0]);  
       upperThumb.dataset.label = String(rangeValue[1]);  
@@ -42,7 +41,7 @@ export default function DoubleSlider ({
       upperThumb.dataset.label = String(rangeValue[0]);  
     }  
   }  
-}, [rangeValue]); // Add rangeValue as dependency  
+});
 
   const {min, max} = doubleSliders[attrName as keyof typeof doubleSliders]
 
