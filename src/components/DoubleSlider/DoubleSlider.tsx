@@ -29,22 +29,18 @@ export default function DoubleSlider ({
     sliderRef.current!.thumb.upper.dataset.label = String(rangeValue[1]);  
   });
   
-  const voice = voices[i]  
-  const attr = attributes[attrName as keyof typeof attributes]  
   const {min, max} = doubleSliders[attrName as keyof typeof doubleSliders]
+  const attr = attributes[attrName as keyof typeof attributes]  
 
   const rangeValue = [
-    voice[`min${attr.value}` as Atom], 
-    voice[`max${attr.value}` as Atom]
+    voices[i][`min${attr.value}` as Atom], 
+    voices[i][`max${attr.value}` as Atom]
   ] as [number, number]
   
-
   const handleRangeInput = ([lo, hi]: [number, number]) => {    
     
-    const lowerThumb = sliderRef.current!.thumb.lower;  
-    const upperThumb = sliderRef.current!.thumb.upper;  
-    lowerThumb.dataset.label = String(lo);  
-    upperThumb.dataset.label = String(hi);  
+    sliderRef.current!.thumb.lower.dataset.label = String(lo);  
+    sliderRef.current!.thumb.upper.dataset.label = String(hi);  
     
     const updatedVoices = [...voices];   
 
