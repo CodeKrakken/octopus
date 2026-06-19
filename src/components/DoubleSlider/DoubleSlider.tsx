@@ -7,15 +7,19 @@ import 'react-range-slider-input/dist/style.css';
 import { doubleSliders } from "../../content/data";
 
 export default function DoubleSlider ({  
+  
   attrName,  
   i,  
   voices,  
   setVoices  
+
 }: {  
+
   attrName: string,  
   i: number,  
   voices: VoiceType[],  
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>,
+
 }) {  
   
   const voice = voices[i]  
@@ -29,22 +33,14 @@ export default function DoubleSlider ({
   const sliderRef = useRef<ReactRangeSliderInputRef>(null);  
   
   useEffect(() => {    
-  if (sliderRef.current) {    
-    const lowerThumb = sliderRef.current.thumb.lower;  
-    const upperThumb = sliderRef.current.thumb.upper;  
-      
-    if (lowerThumb.hasAttribute('data-lower')) {  
-      lowerThumb.dataset.label = String(rangeValue[0]);  
-      upperThumb.dataset.label = String(rangeValue[1]);  
-    } else {  
-      lowerThumb.dataset.label = String(rangeValue[1]);  
-      upperThumb.dataset.label = String(rangeValue[0]);  
-    }  
-  }  
-});
+
+    const lowerThumb = sliderRef.current!.thumb.lower;  
+    const upperThumb = sliderRef.current!.thumb.upper;  
+    lowerThumb.dataset.label = String(rangeValue[0]);  
+    upperThumb.dataset.label = String(rangeValue[1]);  
+  });
 
   const {min, max} = doubleSliders[attrName as keyof typeof doubleSliders]
-
 
   const handleRangeInput = ([lo, hi]: [number, number]) => {    
   if (sliderRef.current) {    
@@ -52,9 +48,12 @@ export default function DoubleSlider ({
     const upperThumb = sliderRef.current.thumb.upper;  
       
     if (lowerThumb.hasAttribute('data-lower')) {  
+
       lowerThumb.dataset.label = lo.toString();  
       upperThumb.dataset.label = hi.toString();  
+
     } else {  
+
       lowerThumb.dataset.label = hi.toString();  
       upperThumb.dataset.label = lo.toString();  
     }  
