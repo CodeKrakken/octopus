@@ -12,24 +12,25 @@ export default function Voice(
   }: VoiceProps
 ) {
   
-  return <div 
-    className="voice" 
-    data-voice={i}
-    data-attribute={dataAttribute}
-  >
-    <div className="row">
+  return (
+    <div 
+      className="voice" 
+      data-voice={i}
+      data-attribute={dataAttribute}
+    >
+      <div className="row">
+        <DeleteButton
+          handleDelete={handleDelete}
+          i={i}
+        />
 
-      <Inputs 
-        i         = {i}
-        voices    = {voices}
-        setVoices = {setVoices}
-      />   
+        <Inputs
+          i         = {i}
+          voices    = {voices}
+          setVoices = {setVoices}
+        />
 
-      <DeleteButton
-        handleDelete={handleDelete}
-        i={i}
-      />
-
+      </div>
     </div>
-  </div>
+  )
 }

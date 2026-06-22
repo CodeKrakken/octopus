@@ -52,7 +52,7 @@ const checkboxGroups = {
 
 const textFields = {
   label: {
-    label: 'Name', 
+    label: '', 
     value: 'label',
     inputType: 'textField'
   }

@@ -28,29 +28,31 @@ export default function Input({
     key: attrName
   }
 
+  const label = attributes[attrName as keyof typeof attributes].label
+
   const inputType = attributes[attrName as keyof typeof attributes].inputType
 
-  let input = <></>
-
-  if (inputType === 'rangeSlider') { 
-    input = <DoubleSlider {...props} />
-  } else if (inputType === 'SingleSlider') { 
-    input = <SingleSlider {...props} /> 
-  } else if (inputType === 'textField') { 
-    input = <TextField {...props} />
-  }
+  let input
 
   switch(inputType) {
-    case 'rangeSlider': input = <DoubleSlider {...props} />; break;
-    case 'SingleSlider': input = <SingleSlider {...props} />; break;
-    case 'text': input = <DoubleSlider {...props} />; break;
+    case 'rangeSlider'  : input = <DoubleSlider {...props} />; break;
+    case 'SingleSlider' : input = <SingleSlider {...props} />; break;
+    case 'textField'    : input = <TextField    {...props} />; break;
+    default: <></>
   }
 
   return (
     <div className="row">
-      <div className="label">
-        {attributes[attrName as keyof typeof attributes].label}
-      </div>
+      {
+        label ? (
+          <div className="label">
+            {label}
+          </div> 
+        ) : (
+          <></>
+        )
+      }
+
       {input}
     </div>
   )

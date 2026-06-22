@@ -27,7 +27,7 @@ export default function TextField ({
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateTextField(e, attrName as Atom, voices, i, setVoices)
   }
 
-  return <div className="row">
+  return <div>
     <input {...props} />
   </div>
 }

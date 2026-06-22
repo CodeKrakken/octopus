@@ -70,8 +70,6 @@ function Interface() {
       disableStartStop  = {disableStartStop}
     />
 
-    <br />
-    <br />
     {
       voices.map((voice) => (
         <div key = {voice.id}>
