@@ -1,7 +1,6 @@
 body {
   background-color: black;
   color: white;
-  /* text-align: center; */
 }
 
 .row {
@@ -11,7 +10,6 @@ body {
 
 .column {
   column-width: auto;
-  padding: 5px
 }
 
 .voice {

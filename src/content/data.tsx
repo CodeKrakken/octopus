@@ -50,14 +50,6 @@ const checkboxGroups = {
   Intervals: ['1','0.5','0.25','0.125','0.0625']
 }
 
-const textFields = {
-  label: {
-    label: '', 
-    value: 'label',
-    inputType: 'textField'
-  }
-}
-
 const singleSliders = {
   bpm: {
     label: 'BPM',
@@ -121,7 +113,6 @@ const doubleSliders = {
 }
 
 const attributes = {
-  ...textFields,
   ...singleSliders,
   ...doubleSliders
 }
