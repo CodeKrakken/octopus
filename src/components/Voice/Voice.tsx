@@ -1,7 +1,8 @@
 import { VoiceProps } from './Voice.types'
 import DeleteButton   from '../DeleteButton/DeleteButton'
-import Inputs         from '../Inputs/Inputs'
 import TextField from '../TextField/TextField'
+import { doubleSliders, singleSliders } from '../../content/data'
+import Input from '../Input/Input'
 
 export default function Voice(
   {
@@ -31,14 +32,32 @@ export default function Voice(
           voices    = {voices}
           setVoices = {setVoices}
         />
+
+        {
+          Object.keys(singleSliders).map(attrName => (
+            <Input 
+              attrName={attrName}
+              i={i}
+              voices={voices}
+              setVoices={setVoices}
+            />
+          ))
+        }
       </div>
-      
+
       <div className="row">
-        <Inputs
-          i         = {i}
-          voices    = {voices}
-          setVoices = {setVoices}
-        />
+        <div className="column">
+          {
+            Object.keys(doubleSliders).map(attrName => (
+              <Input 
+                attrName={attrName}
+                i={i}
+                voices={voices}
+                setVoices={setVoices}
+              />
+            ))
+          }
+        </div>
       </div>
     </div>
   )

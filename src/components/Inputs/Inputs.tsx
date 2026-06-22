@@ -12,36 +12,34 @@ export default function Inputs(
   }: InputsProps) {
 
   return <>
-    {/* <div className="column"> */}
-      <div className="row">
-        <div className="column">
-          {
-            Object.keys(attributes).map(attrName => (
-              <Input 
-                attrName={attrName}
-                i={i}
-                voices={voices}
-                setVoices={setVoices}
-              />
-            ))
-          }
-        </div>
+    <div className="row">
+      <div className="column">
+        {
+          Object.keys(attributes).map(attrName => (
+            <Input 
+              attrName={attrName}
+              i={i}
+              voices={voices}
+              setVoices={setVoices}
+            />
+          ))
+        }
       </div>
-      <div className="row">
-        <div className="column">
-          {
-            Object.keys(checkboxGroups).map(checkboxGroup =>
-              <CheckboxGroup 
-                groupName={checkboxGroup}
-                voices={voices}
-                i={i}
-                setVoices={setVoices}
-                key={checkboxGroup}
-              />
-            )
-          }
-        </div>
+    </div>
+    <div className="row">
+      <div className="column">
+        {
+          Object.keys(checkboxGroups).map(checkboxGroup =>
+            <CheckboxGroup 
+              groupName={checkboxGroup}
+              voices={voices}
+              i={i}
+              setVoices={setVoices}
+              key={checkboxGroup}
+            />
+          )
+        }
       </div>
-    {/* </div> */}
+    </div>
   </>
 }

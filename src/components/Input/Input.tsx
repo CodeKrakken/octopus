@@ -37,7 +37,7 @@ export default function Input({
   switch(inputType) {
     case 'rangeSlider'  : input = <DoubleSlider {...props} />; break;
     case 'SingleSlider' : input = <SingleSlider {...props} />; break;
-    case 'textField'    : input = <TextField    {...props} />; break;
+    // case 'textField'    : input = <TextField    {...props} />; break; // currently unused
     default: <></>
   }
 
