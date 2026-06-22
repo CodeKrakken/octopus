@@ -27,8 +27,8 @@ const waveforms = [
 ]
 
 const samples = {
-  snare: snareFile,
-  kick: kickFile
+  kick: kickFile,
+  snare: snareFile
 }
 
 const ranges = [
@@ -50,11 +50,11 @@ const checkboxGroups = {
   Intervals: ['1','0.5','0.25','0.125','0.0625']
 }
 
-const fieldInputs = {
+const textFields = {
   label: {
     label: 'Name', 
     value: 'label',
-    inputType: 'textbox'
+    inputType: 'textField'
   }
 }
 
@@ -62,14 +62,14 @@ const singleSliders = {
   bpm: {
     label: 'BPM',
     value: 'bpm', 
-    inputType: 'singleValueSlider',
+    inputType: 'SingleSlider',
     min: 1,
     max: 480
   },
   restChance: {
     label: 'Rest Chance', 
     value: 'restChance',
-    inputType: 'singleValueSlider',
+    inputType: 'SingleSlider',
     min: 0,
     max: 100
   }
@@ -121,7 +121,7 @@ const doubleSliders = {
 }
 
 const attributes = {
-  ...fieldInputs,
+  ...textFields,
   ...singleSliders,
   ...doubleSliders
 }

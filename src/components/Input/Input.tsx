@@ -1,6 +1,6 @@
 import { attributes } from "../../content/data"
 import DoubleSlider from "../DoubleSlider/DoubleSlider"
-import Field from "../Field/Field"
+import TextField from "../TextField/TextField"
 import SingleSlider from "../SingleSlider/SingleSlider"
 import { VoiceType } from "../Voice/Voice.types"
 
@@ -34,10 +34,16 @@ export default function Input({
 
   if (inputType === 'rangeSlider') { 
     input = <DoubleSlider {...props} />
-  } else if (inputType === 'singleValueSlider') { 
+  } else if (inputType === 'SingleSlider') { 
     input = <SingleSlider {...props} /> 
-  } else if (inputType === 'textbox') { 
-    input = <Field {...props} />
+  } else if (inputType === 'textField') { 
+    input = <TextField {...props} />
+  }
+
+  switch(inputType) {
+    case 'rangeSlider': input = <DoubleSlider {...props} />; break;
+    case 'SingleSlider': input = <SingleSlider {...props} />; break;
+    case 'text': input = <DoubleSlider {...props} />; break;
   }
 
   return (

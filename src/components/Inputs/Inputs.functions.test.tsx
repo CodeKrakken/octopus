@@ -1,4 +1,4 @@
-import { updateField, updateCheckbox } from './Inputs.functions';
+import { updateTextField, updateCheckbox } from './Inputs.functions';
 import { setUpVoice } from '../Interface/Interface.functions';
 import { VoiceType } from '../Voice/Voice.types';
 import { ChangeEvent } from 'react';
@@ -22,12 +22,12 @@ describe('Inputs.functions', () => {
     { target: { value: value }} as ChangeEvent<HTMLInputElement, Element>
   )
 
-  describe('updateField', () => {
+  describe('updateTextField', () => {
 
-    it('handles range field updates (maxLevel)', () => {
+    it('handles range TextField updates (maxLevel)', () => {
       const event = createEvent('99')
 
-      updateField(event, 'maxLevel', voices, 0, setVoices);
+      updateTextField(event, 'maxLevel', voices, 0, setVoices);
 
       expect(voices[0].maxLevel).toBe(99);
     });
