@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Field from './Field';
+import TextField from './TextField';
 import { setUpVoice } from '../Interface/Interface.functions';
-import { updateField } from '../Inputs/Inputs.functions';
+import { updateTextField } from '../Inputs/Inputs.functions';
 import { VoiceType } from '../Voice/Voice.types';
 
 jest.mock('../../content/data', () => ({
@@ -15,10 +15,10 @@ jest.mock('../../content/data', () => ({
 }));
 
 jest.mock('../Inputs/Inputs.functions', () => ({
-  updateField: jest.fn()
+  updateTextField: jest.fn()
 }));
 
-describe('Field', () => {
+describe('TextField', () => {
 
   const mockSetVoices = jest.fn();
   const voices: VoiceType[] = [setUpVoice()];
@@ -28,10 +28,10 @@ describe('Field', () => {
   beforeEach(() => { jest.clearAllMocks(); });
   
 
-  it('calls updateField when range max input changes', () => {
+  it('calls updateTextField when range max input changes', () => {
     
     render(
-      <Field
+      <TextField
         attrName="level"
         i={0}
         voices={voices}
@@ -43,7 +43,7 @@ describe('Field', () => {
     
     fireEvent.change(maxInput, { target: { value: '90' } });
 
-    expect(updateField).toHaveBeenCalledWith(
+    expect(updateTextField).toHaveBeenCalledWith(
       expect.any(Object),
       'maxLevel',
       voices,

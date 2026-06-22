@@ -1,12 +1,12 @@
 import { render, screen, fireEvent }    from '@testing-library/react';
 import Inputs                           from './Inputs';
-import { updateField, updateCheckbox }  from './Inputs.functions';
+import { updateTextField, updateCheckbox }  from './Inputs.functions';
 import { setUpVoice }                   from '../../components/Interface/Interface.functions';
 import { VoiceType }                    from '../Voice/Voice.types';
 
 
 jest.mock('./Inputs.functions', () => ({
-  updateField: jest.fn(),
+  updateTextField: jest.fn(),
   updateCheckbox: jest.fn()
 }));
 
@@ -29,7 +29,7 @@ describe('Inputs', () => {
   beforeEach(() => { jest.clearAllMocks();});
 
   
-  it('calls updateField when a numeric field changes', () => {
+  it('calls updateTextField when a numeric TextField changes', () => {
 
     renderInputs();
 
@@ -37,9 +37,9 @@ describe('Inputs', () => {
       screen.getByDisplayValue('120'), { target: { value: '140'} }
     );
 
-    expect(updateField).toHaveBeenCalledTimes(1);
+    expect(updateTextField).toHaveBeenCalledTimes(1);
 
-    expect(updateField).toHaveBeenCalledWith(
+    expect(updateTextField).toHaveBeenCalledWith(
       expect.any(Object),
       'bpm',
       voices,

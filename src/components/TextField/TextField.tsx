@@ -1,8 +1,8 @@
-import { updateField } from "../Inputs/Inputs.functions";
+import { updateTextField } from "../Inputs/Inputs.functions";
 import { Atom } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
 
-export default function Field ({
+export default function TextField ({
 
   attrName,
   i,
@@ -17,16 +17,14 @@ export default function Field ({
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 
 }) {
-
-  const voice = voices[i]
   
   const props = {
-    className: 'textbox',
+    className: 'text-field',
     'data-voice': i,
     'data-attribute': {attrName},
     type: 'number',
-    value: voice[attrName as Atom],
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateField(e, attrName as Atom, voices, i, setVoices)
+    value: voices[i][attrName as Atom],
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateTextField(e, attrName as Atom, voices, i, setVoices)
   }
 
   return <div className="row">
