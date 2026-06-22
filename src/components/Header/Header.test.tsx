@@ -10,7 +10,7 @@ describe('Header', () => {
     <Header
       handleAddVoice={mockHandleAddVoice}
       handleStartStop={mockHandleStartStop}
-      showStart={true}
+      disableStartStop={false}
       running={state}
     />
   )

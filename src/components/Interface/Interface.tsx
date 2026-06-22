@@ -59,13 +59,15 @@ function Interface() {
     setRunning(state)
   }
 
+  const disableStartStop = Boolean(voices.length === 0)
+
   return <>
     <br />
     <Header 
-      handleStartStop = {handleStartStop}
-      running         = {running}
-      handleAddVoice  = {handleAddVoice}
-      showStart       = {Boolean(voices.length)}
+      handleStartStop   = {handleStartStop}
+      running           = {running}
+      handleAddVoice    = {handleAddVoice}
+      disableStartStop  = {disableStartStop}
     />
 
     <br />

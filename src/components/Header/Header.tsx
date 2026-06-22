@@ -1,31 +1,38 @@
-import { HeaderProps } from "./Header.types"
 import { title, addLabel } from '../../content/data'
+import './Header.css'
 
-export default function Header(props: HeaderProps) {
+export default function Header ({
 
-  const { 
-    handleAddVoice,
-    handleStartStop,
-    showStart,
-    running
-  } = props
+  handleAddVoice,
+  handleStartStop,
+  disableStartStop,
+  running
 
-  return <>
+} : {
+
+  handleAddVoice    : React.MouseEventHandler<HTMLButtonElement>,
+  handleStartStop   : React.MouseEventHandler<HTMLButtonElement>,
+  disableStartStop  : Boolean,
+  running           : Boolean
+
+}) {
+  console.log(disableStartStop)
+
+  return <div className="header">
     {title}{" "}
-    <br />
-    <br />
     <button 
       value={addLabel}
       onClick={handleAddVoice}
     >
       {addLabel}
     </button>
+        
+    <button 
+      onClick={handleStartStop}
+      disabled={disableStartStop as boolean}
+    >
+      {running ? 'Stop' : 'Start'}
+    </button>
     
-    {
-      showStart &&
-      <button onClick={handleStartStop}>
-        {running ? 'Stop' : 'Start'}
-      </button>
-    }
-  </>
+  </div>
 }
