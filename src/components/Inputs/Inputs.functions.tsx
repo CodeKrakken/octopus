@@ -5,13 +5,13 @@ import { Compound, VoiceType }  from "../Voice/Voice.types"
 
 const updateTextField = (
   e: React.ChangeEvent<HTMLInputElement>, 
-  attribute: Atom,
+  attribute: 'label',
   voices: VoiceType[], 
   i: number,
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 ) => {
 
-  voices[i][attribute] = +e.target!.value
+  voices[i][attribute] = e.target!.value
   updateVoice(voices, i, setVoices)
 } 
 

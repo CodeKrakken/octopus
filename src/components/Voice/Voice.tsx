@@ -18,31 +18,94 @@ export default function Voice(
 <div className="voice">
 
   <div className="row">
-    <div className="label block">Label</div>
-    <div className="single block">BPM</div>
-    <div className="single block">Rest</div>
-    <div className="delete block">X</div>
+    <div className="label">
+      <TextField 
+        attrName  = {'label'}
+        i         = {i}
+        voices    = {voices}
+        setVoices = {setVoices}
+      />
+    </div>
+
+    <div className="slider">
+      Single slider
+      <br />
+      BPM
+    </div>
+
+    <div className="slider">
+      Single slider
+      <br />
+      Rest
+    </div>
+
+    <div className="delete">
+      X
+    </div>
   </div>
+
 
   <div className="row">
-    <div className="double block">Length</div>
-    <div className="double block">Offset</div>
-    <div className="double block">Detune</div>
+    <div className="slider">
+      Double slider
+      <br />
+      Length
+    </div>
+
+    <div className="slider">
+      Double slider
+      <br />
+      Offset
+    </div>
+
+    <div className="slider">
+      Double slider
+      <br />
+      Detune
+    </div>
   </div>
+
 
   <div className="row">
-    <div className="double block">Level</div>
-    <div className="double block">Attack</div>
-    <div className="double block">Decay</div>
+    <div className="slider">
+      Double slider
+      <br />
+      Level
+    </div>
+
+    <div className="slider">
+      Double slider
+      <br />
+      Attack
+    </div>
+
+    <div className="slider">
+      Double slider
+      <br />
+      Decay
+    </div>
   </div>
 
-  <div className="notes block">Notes</div>
 
-  <div className="octaves block">Octaves</div>
+  <div className="notes">
+    Notes
+  </div>
+
+  <div className="octaves">
+    Octaves
+  </div>
+
 
   <div className="bottom">
-    <div className="sounds block">Sounds</div>
-    <div className="intervals block">Intervals</div>
+
+    <div className="sounds">
+      Sounds
+    </div>
+
+    <div className="intervals">
+      Intervals
+    </div>
+
   </div>
 
 </div>

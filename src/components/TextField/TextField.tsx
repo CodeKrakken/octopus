@@ -24,8 +24,10 @@ export default function TextField ({
     'data-attribute': {attrName},
     type: 'text',
     value: voices[i][attrName as Atom],
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateTextField(e, attrName as Atom, voices, i, setVoices)
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateTextField(e, attrName as 'label', voices, i, setVoices)
   }
+
+  console.log(typeof props.value)
 
   return <div>
     <input {...props} />

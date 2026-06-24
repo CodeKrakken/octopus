@@ -1,10 +1,10 @@
 import { VoiceType } from "../Voice/Voice.types"
 
-const setUpVoice = (template: VoiceType | null = null) => {
+const setUpVoice = (voices: VoiceType[], template: VoiceType | null = null) => {
   return {
     id              : crypto.randomUUID(),
     isActive        : false,
-    label           : template?.label!+1        ||  1,
+    label           : '', // template?.label ? generateNewLabel(template.label, voices) : '1',
     nextInterval    : template?.nextInterval    ||  0,
     bpm             : template?.bpm             ??  60,
     minLevel        : template?.minLevel        ??  100,
@@ -24,6 +24,21 @@ const setUpVoice = (template: VoiceType | null = null) => {
     maxFadeIn       : template?.maxFadeIn       ??  100,
     minFadeOut      : template?.minFadeOut      ??  100,
     maxFadeOut      : template?.maxFadeOut      ??  100
+  }
+}
+
+const generateNewLabel = (templateLabel: string, voices: VoiceType[]) => {
+
+  let newLabel: string
+
+  if (+templateLabel) {
+    newLabel = String(+templateLabel+1)
+  } else {
+    newLabel = String(
+      voices.map(voice => +voice.label).filter(
+        label => !Number.isNaN(label)
+      ).sort((a, b) => b - a)[0] + 1
+    )
   }
 }
 
