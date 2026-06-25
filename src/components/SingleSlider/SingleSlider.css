@@ -1,4 +1,4 @@
-/* .single {
+.single {
   .range-slider__thumb[data-lower] {  
     display: none;  
   }
@@ -16,4 +16,4 @@
   font-size: 12px;  
   white-space: nowrap;  
   margin: auto;
-} */
+}
