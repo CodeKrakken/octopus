@@ -76,16 +76,22 @@ export default function Voice(
       }
 
       {
-        checkboxGroups.map(group =>
+        [1,2,3].map(row => 
           <div className="row">
-            <div className="label">{group.label}</div>
-            <CheckboxGroup 
-              group={group}
-              voices={voices}
-              i={i}
-              setVoices={setVoices}
-              key={group.label}
-            />
+            {
+              checkboxGroups.filter(group => group.row === row).map(group =>
+                <div className="row">
+                  <div className="label">{group.label}</div>
+                  <CheckboxGroup 
+                    group={group}
+                    voices={voices}
+                    i={i}
+                    setVoices={setVoices}
+                    key={group.label}
+                  />
+                </div>
+              )
+            }
           </div>
         )
       }
