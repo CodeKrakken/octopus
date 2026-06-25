@@ -7,13 +7,3 @@
     background: transparent;  
   }
 }
-
-.range-slider__thumb::after {  
-  content: attr(data-label);  
-  position: absolute;  
-  bottom: calc(50% - 7px);   
-  transform: translateX(50%);  
-  font-size: 12px;  
-  white-space: nowrap;  
-  margin: auto;
-}

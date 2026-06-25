@@ -16,14 +16,12 @@ body {
   display: flex;
   flex-direction: row;
 }
-
+ */
 
 
 .voice {
   border: 1px dotted red;
-  padding: 5px;
-  width: 560px;
-} */
+}
 
 #delete-voice {
   height: 29px
@@ -89,6 +87,16 @@ body {
   aspect-ratio: 3 / 1;
 }
 
+.range-slider__thumb::after {  
+  content: attr(data-label);  
+  /* position: absolute;   */
+  /* bottom: calc(50%);    */
+  /* transform: translateX(50%);   */
+  font-size: 12px;  
+  white-space: nowrap;  
+  margin: auto;
+}
+
 .delete {
   width: var(--delete-w);
   aspect-ratio: 1 / 1;
@@ -123,6 +131,6 @@ body {
 
 /* borders */
 
-.box {
+/* .box {
   border: 1px dashed red
-}
+} */
