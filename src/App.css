@@ -23,15 +23,6 @@ body {
   border: 1px dotted red;
   padding: 5px;
   width: 560px;
-}
-
-
-
-.label {
-  width: 100px;
-  padding: 5px;
-  height: 15px;
-  text-align: right
 } */
 
 #delete-voice {
@@ -41,7 +32,7 @@ body {
 :root {
   --u: 40px;
 
-  --label-w: calc(var(--u) * 2);
+  --name-w: calc(var(--u) * 2);
   --slider-w: calc(var(--u) * 3);
   --delete-w: calc(var(--u));
 
@@ -68,7 +59,7 @@ body {
   display: flex;
 }
 
-.label,
+.name,
 .slider,
 .delete,
 .notes,
@@ -88,8 +79,8 @@ body {
 
 /* row 1 */
 
-.label {
-  width: var(--label-w);
+.name {
+  width: var(--name-w);
   aspect-ratio: 2 / 1;
 }
 

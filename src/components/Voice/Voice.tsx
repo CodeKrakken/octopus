@@ -19,7 +19,7 @@ export default function Voice(
     <div className="voice">
 
       <div className="row">
-        <div className="label box">
+        <div className="name box">
           <TextField 
             attrName  = {'label'}
             i         = {i}
