@@ -1,10 +1,17 @@
 import { VoiceType } from "../Voice/Voice.types"
 
-const setUpVoice = (voices: VoiceType[], template: VoiceType | null = null) => {
+const setUpVoice = (voices: VoiceType[]) => {
+
+  let template: VoiceType | null = null
+  
+  if (voices.length) {
+    template = voices[voices.length - 1]
+  }
+  
   return {
     id              : crypto.randomUUID(),
     isActive        : false,
-    label           : '', // template?.label ? generateNewLabel(template.label, voices) : '1',
+    label           : generateNewLabel(template, voices),
     nextInterval    : template?.nextInterval    ||  0,
     bpm             : template?.bpm             ??  60,
     minLevel        : template?.minLevel        ??  100,
@@ -27,12 +34,16 @@ const setUpVoice = (voices: VoiceType[], template: VoiceType | null = null) => {
   }
 }
 
-const generateNewLabel = (templateLabel: string, voices: VoiceType[]) => {
+const generateNewLabel = (template: VoiceType | null, voices: VoiceType[]) => {
 
+  console.log(template?.label)
+  
   let newLabel: string
 
-  if (+templateLabel) {
-    newLabel = String(+templateLabel+1)
+  if (!template) newLabel = '1'
+
+  if (template?.label && +template.label) {
+    newLabel = String(+template.label+1)
   } else {
     newLabel = String(
       voices.map(voice => +voice.label).filter(
@@ -40,6 +51,8 @@ const generateNewLabel = (templateLabel: string, voices: VoiceType[]) => {
       ).sort((a, b) => b - a)[0] + 1
     )
   }
+
+  return newLabel
 }
 
 export { 
