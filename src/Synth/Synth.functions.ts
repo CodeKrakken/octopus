@@ -139,18 +139,18 @@ const oscillate = (
   const gain         = oscGain.gainNode.gain
   const thisInterval = voice.offsetInterval!
 
-  const fadeInPercentage  = getRangeValue('FadeIn', voice)
-  const fadeOutPercentage = getRangeValue('FadeOut', voice)
+  const attackPercentage  = getRangeValue('Attack', voice)
+  const decayPercentage = getRangeValue('Decay', voice)
 
-  const fadeInLength  = getFadeLength(fadeInPercentage , noteLength)
-  const fadeOutLength = getFadeLength(fadeOutPercentage, noteLength)
+  const attackLength  = getFadeLength(attackPercentage , noteLength)
+  const decayLength = getFadeLength(decayPercentage, noteLength)
 
-  const endOfFadeIn    = thisInterval + fadeInLength
-  const startOfFadeOut = thisInterval + noteLength - fadeOutLength
-  const peakPoint      = thisInterval + noteLength * fadeInPercentage / (fadeInPercentage + fadeOutPercentage)
-  const overlap        = endOfFadeIn >= startOfFadeOut
-  const startOfPeak    = overlap ? peakPoint : endOfFadeIn
-  const endOfPeak      = overlap ? peakPoint : startOfFadeOut
+  const endOfAttack    = thisInterval + attackLength
+  const startOfDecay = thisInterval + noteLength - decayLength
+  const peakPoint      = thisInterval + noteLength * attackPercentage / (attackPercentage + decayPercentage)
+  const overlap        = endOfAttack >= startOfDecay
+  const startOfPeak    = overlap ? peakPoint : endOfAttack
+  const endOfPeak      = overlap ? peakPoint : startOfDecay
 
   gain.setValueAtTime(0, thisInterval)
   gain.linearRampToValueAtTime(level, startOfPeak)

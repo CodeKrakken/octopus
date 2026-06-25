@@ -36,8 +36,8 @@ const ranges = [
   'Length',
   'Offset',
   'Detune',
-  'FadeIn',
-  'FadeOut',
+  'Attack',
+  'Decay',
 ] as const
 
 const checkboxGroups = {
@@ -51,12 +51,12 @@ const checkboxGroups = {
 }
 
 const singleSliders = {
-  bpm: {
+  bpm: { // used
     label: 'BPM',
     value: 'bpm', 
-    inputType: 'SingleSlider',
-    min: 1,
-    max: 480
+    inputType: 'SingleSlider', // used
+    min: 1, // used
+    max: 480 // used
   },
   restChance: {
     label: 'Rest', 
@@ -71,42 +71,42 @@ const doubleSliders = {
   level: {
     label: 'Level',
     value: 'Level',  
-    inputType: 'rangeSlider',
+    inputType: 'doubleSlider',
     min: 0,
     max: 100
   },
   length: {
     label: 'Length',
     value: 'Length',   
-    inputType: 'rangeSlider',
+    inputType: 'doubleSlider',
     min: 0,
     max: 100
   },
   offset: {
     label: 'Offset',
     value: 'Offset',   
-    inputType: 'rangeSlider',
+    inputType: 'doubleSlider',
     min: 0,
     max: 100
   },
   detune: {
     label: 'Detune',
     value: 'Detune',   
-    inputType: 'rangeSlider',
+    inputType: 'doubleSlider',
     min: -100,
     max: 100
   },
-  fadeIn: {
-    label: 'FadeIn',
-    value: 'FadeIn',   
-    inputType: 'rangeSlider',
+  attack: {
+    label: 'Attack',
+    value: 'Attack',   
+    inputType: 'doubleSlider',
     min: 0,
     max: 100
   },
-  fadeOut: {
-    label: 'FadeOut',
-    value: 'FadeOut',   
-    inputType: 'rangeSlider',
+  decay: {
+    label: 'Decay',
+    value: 'Decay',   
+    inputType: 'doubleSlider',
     min: 0,
     max: 100
   }

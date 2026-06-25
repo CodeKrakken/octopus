@@ -28,10 +28,10 @@ export default function Voice(
     </div>
 
     {
-      Object.keys(singleSliders).map(attrName => (
+      Object.keys(singleSliders).map(sliderName => (
         <div className="slider box">
           <Input 
-            attrName={attrName}
+            attrName={sliderName}
             i={i}
             voices={voices}
             setVoices={setVoices}
@@ -50,6 +50,17 @@ export default function Voice(
 
 
   <div className="row">
+
+    {
+      Object.keys(doubleSliders).map(sliderName => (
+        <Input 
+          attrName={sliderName}
+          i={i}
+          voices={voices}
+          setVoices={setVoices}
+        />
+      ))
+    }
     
     <div className="slider box">
       Double slider

@@ -34,7 +34,7 @@ export default function Input({
   let input
 
   switch(inputType) {
-    case 'rangeSlider'  : input = <DoubleSlider {...props} />; break;
+    case 'doubleSlider' : input = <DoubleSlider {...props} />; break;
     case 'SingleSlider' : input = <SingleSlider {...props} />; break;
     default: <></>
   }

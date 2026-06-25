@@ -126,10 +126,10 @@ describe('runInterval', () => {
     const voice = {
       ...setUpVoice(),
       activeOctaves: ['0'],
-      minFadeIn: 20,
-      maxFadeIn: 20,
-      minFadeOut: 20,
-      maxFadeOut: 20,
+      minAttack: 20,
+      maxAttack: 20,
+      minDecay: 20,
+      maxDecay: 20,
     }
 
     runOneInterval(voice, mockContext)

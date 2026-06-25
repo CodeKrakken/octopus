@@ -27,10 +27,10 @@ const setUpVoice = (voices: VoiceType[]) => {
     maxOffset       : template?.maxOffset       ??  0,
     minDetune       : template?.minDetune       ??  0,
     maxDetune       : template?.maxDetune       ??  0,
-    minFadeIn       : template?.minFadeIn       ??  100,
-    maxFadeIn       : template?.maxFadeIn       ??  100,
-    minFadeOut      : template?.minFadeOut      ??  100,
-    maxFadeOut      : template?.maxFadeOut      ??  100
+    minAttack       : template?.minAttack       ??  100,
+    maxAttack       : template?.maxAttack       ??  100,
+    minDecay      : template?.minDecay      ??  100,
+    maxDecay      : template?.maxDecay      ??  100
   }
 }
 

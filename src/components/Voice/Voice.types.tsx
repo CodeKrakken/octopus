@@ -19,10 +19,10 @@ type VoiceType = {
   maxOffset       : number
   minDetune       : number
   maxDetune       : number
-  minFadeIn       : number
-  maxFadeIn       : number
-  minFadeOut      : number
-  maxFadeOut      : number
+  minAttack       : number
+  maxAttack       : number
+  minDecay      : number
+  maxDecay      : number
 }
 
 type VoiceProps = {
