@@ -1,4 +1,4 @@
-import { Atom } from "../shared.types";  
+import { NumericAttribute } from "../shared.types";  
 import { VoiceType } from "../Voice/Voice.types";  
 import RangeSlider, { ReactRangeSliderInputRef } from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
@@ -29,7 +29,7 @@ export default function SingleSlider ({
   });
   
   const {min, max} = singleSliders[attrName as keyof typeof singleSliders]
-  const value = voices[i][attrName as Atom]
+  const value = voices[i][attrName as NumericAttribute]
         
   const handleInput = ([lo, hi]: [number, number]) => {  
 
@@ -37,7 +37,7 @@ export default function SingleSlider ({
 
     const updatedVoices = [...voices];
 
-    updatedVoices[i][attrName as Atom] = hi;  
+    updatedVoices[i][attrName as NumericAttribute] = hi;  
     setVoices(updatedVoices);
   }    
   

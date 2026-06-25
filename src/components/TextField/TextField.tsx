@@ -1,5 +1,5 @@
 import { updateTextField } from "../Inputs/Inputs.functions";
-import { Atom } from "../shared.types";
+import { NumericAttribute } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
 
 export default function TextField ({
@@ -23,7 +23,7 @@ export default function TextField ({
     'data-voice': i,
     'data-attribute': {attrName},
     type: 'text',
-    value: voices[i][attrName as Atom],
+    value: voices[i][attrName as NumericAttribute],
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateTextField(e, attrName as 'label', voices, i, setVoices)
   }
 

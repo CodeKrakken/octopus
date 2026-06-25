@@ -1,5 +1,5 @@
 import { Synth }                from "../../Synth/Synth"
-import { Atom }                 from "../shared.types"
+import { NumericAttribute }                 from "../shared.types"
 import { Compound, VoiceType }  from "../Voice/Voice.types"
 
 

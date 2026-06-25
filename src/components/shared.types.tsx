@@ -2,7 +2,7 @@ import { ranges } from "../content/data"
 
 type Range = typeof ranges[number]
 
-type Atom = 
+type NumericAttribute = 
   'bpm'
 | 'restChance'
 | `min${Range}`
@@ -15,7 +15,7 @@ type CheckboxGroupType =
 | 'Sounds' 
 
 export type {
-  Atom,
+  NumericAttribute,
   Range,
   CheckboxGroupType
 }
