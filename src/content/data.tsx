@@ -59,7 +59,7 @@ const singleSliders = {
     max: 480
   },
   restChance: {
-    label: 'Rest Chance', 
+    label: 'Rest', 
     value: 'restChance',
     inputType: 'SingleSlider',
     min: 0,

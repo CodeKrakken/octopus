@@ -39,19 +39,9 @@ export default function Input({
     default: <></>
   }
 
-  return (
-    <div className="row">
-      {
-        label ? (
-          <div className="label">
-            {label}
-          </div> 
-        ) : (
-          <></>
-        )
-      }
-
-      {input}
-    </div>
-  )
+  return <>
+    {label}
+    <br /> 
+    {input}
+  </>
 }

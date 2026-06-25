@@ -129,12 +129,6 @@ body {
 
 /* borders */
 
-.label,
-.slider,
-.delete,
-.notes,
-.octaves,
-.sounds,
-.intervals {
+.box {
   border: 1px dashed red
 }

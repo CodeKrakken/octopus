@@ -18,7 +18,7 @@ export default function Voice(
 <div className="voice">
 
   <div className="row">
-    <div className="label">
+    <div className="label box">
       <TextField 
         attrName  = {'label'}
         i         = {i}
@@ -27,38 +27,39 @@ export default function Voice(
       />
     </div>
 
-    <div className="slider">
-      Single slider
-      <br />
-      BPM
-    </div>
+    {
+      Object.keys(singleSliders).map(attrName => (
+        <div className="slider box">
+          <Input 
+            attrName={attrName}
+            i={i}
+            voices={voices}
+            setVoices={setVoices}
+          />
+        </div>
+      ))
+    }
 
-    <div className="slider">
-      Single slider
-      <br />
-      Rest
-    </div>
-
-    <div className="delete">
+    <div className="delete box">
       X
     </div>
   </div>
 
 
   <div className="row">
-    <div className="slider">
+    <div className="slider box">
       Double slider
       <br />
       Length
     </div>
 
-    <div className="slider">
+    <div className="slider box">
       Double slider
       <br />
       Offset
     </div>
 
-    <div className="slider">
+    <div className="slider box">
       Double slider
       <br />
       Detune
@@ -67,19 +68,19 @@ export default function Voice(
 
 
   <div className="row">
-    <div className="slider">
+    <div className="slider box">
       Double slider
       <br />
       Level
     </div>
 
-    <div className="slider">
+    <div className="slider box">
       Double slider
       <br />
       Attack
     </div>
 
-    <div className="slider">
+    <div className="slider box">
       Double slider
       <br />
       Decay
@@ -87,22 +88,22 @@ export default function Voice(
   </div>
 
 
-  <div className="notes">
+  <div className="notes box">
     Notes
   </div>
 
-  <div className="octaves">
+  <div className="octaves box">
     Octaves
   </div>
 
 
   <div className="bottom">
 
-    <div className="sounds">
+    <div className="sounds box">
       Sounds
     </div>
 
-    <div className="intervals">
+    <div className="intervals box">
       Intervals
     </div>
 
