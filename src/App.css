@@ -12,12 +12,19 @@ body {
   flex-direction: column
 }
 
+.checkboxes {
+  padding-top: 10px;
+}
+
 /* .row {
   display: flex;
   flex-direction: row;
 } */
 
-
+.bottom {
+  /* margin-top: 10px; */
+  justify-content: space-between;
+}
 
 .voice {
   border: 1px dotted red;
@@ -33,7 +40,7 @@ body {
   --name-w: calc(var(--u) * 2);
   --slider-w: calc(var(--u) * 3);
   --delete-w: calc(var(--u));
-  --label-w: calc(var(--u) * 2);
+  --label-w: calc(var(--u) * 1.5);
 
   --notes-w: calc(var(--u) * 9);
   --octaves-w: calc(var(--u) * 9);
@@ -103,17 +110,22 @@ body {
   /* aspect-ratio: 1 / 1; */
 }
 
-/* .checkbox-label {
-  /* width: var(--label-w); */
-  /* aspect-ratio: 1.5 / 1; */
-*/
+.checkbox-label {
+  width: var(--label-w);
+  text-align: left;
+}
+
+.slider-label {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
 
 
 /* full rows */
 
 .notes,
 .octaves {
-  width: var(--notes-w);
+  /* width: var(--notes-w); */
 
   /* aspect-ratio: 9 / 1; */
 
@@ -121,22 +133,9 @@ body {
 }
 
 
-/* bottom */
-
-.sounds {
-  width: var(--sounds-w);
-
-  /* aspect-ratio: 5 / 1; */
-}
-
-.intervals {
-  width: var(--intervals-w);
-
-  /* aspect-ratio: 4 / 1; */
-}
-
 /* borders */
 
-/* .box {
-  border: 1px dashed red
-} */
+.slider-box {
+  margin-left: 5px;
+  margin-right: 5px;
+}

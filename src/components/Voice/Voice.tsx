@@ -35,8 +35,8 @@ export default function Voice(
 
         {
           singleSliders.map(slider => (
-            <div className="slider box column">
-              <div className="label">{slider.label}</div>
+            <div className="slider slider-box column">
+              <div className="slider-label">{slider.label}</div>
               <div className="row">
                 <SingleSlider
                   slider={slider}
@@ -62,8 +62,8 @@ export default function Voice(
           <div className="row">
             {
               doubleSliders.filter(slider => slider.row === row).map(slider => (
-                <div className="slider box column">
-                  <div className="label row">{slider.label}</div>
+                <div className="slider slider-box column">
+                  <div className="slider-label row">{slider.label}</div>
                   <div className="row">
                     <DoubleSlider 
                       slider={slider}
@@ -79,26 +79,28 @@ export default function Voice(
         )
       }
 
-      {
-        [1,2,3,4].map(row => 
-          <div className="row">
-            {
-              checkboxGroups.filter(group => group.row === row).map(group =>
-                <div className={`row box ${group.className}`}>
-                  <div className="checkbox-label">{group.label}</div>
-                  <CheckboxGroup 
-                    group={group}
-                    voices={voices}
-                    i={i}
-                    setVoices={setVoices}
-                    key={group.label}
-                  />
-                </div>
-              )
-            }
-          </div>
-        )
-      }
+      <div className="checkboxes">
+        {
+          [1,2,3,4].map(row => 
+            <div className="row">
+              {
+                checkboxGroups.filter(group => group.row === row).map(group =>
+                  <div className={`row box ${group.className}`}>
+                    <div className="checkbox-label">{group.label}</div>
+                    <CheckboxGroup 
+                      group={group}
+                      voices={voices}
+                      i={i}
+                      setVoices={setVoices}
+                      key={group.label}
+                    />
+                  </div>
+                )
+              }
+            </div>
+          )
+        }
+      </div>
     </div>
   )
 }
