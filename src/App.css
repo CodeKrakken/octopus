@@ -103,10 +103,10 @@ body {
   /* aspect-ratio: 1 / 1; */
 }
 
-.checkbox-label {
-  width: var(--label-w);
+/* .checkbox-label {
+  /* width: var(--label-w); */
   /* aspect-ratio: 1.5 / 1; */
-}
+*/
 
 
 /* full rows */
@@ -137,6 +137,6 @@ body {
 
 /* borders */
 
-.box {
+/* .box {
   border: 1px dashed red
-}
+} */
