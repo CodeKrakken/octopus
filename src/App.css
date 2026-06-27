@@ -14,8 +14,10 @@ body {
 
 
 #delete-voice {
-  height: 29px
+  width: var(--delete-w);
+  text-align: right;
 }
+
 
 :root {
   --u: 40px;
@@ -50,9 +52,6 @@ body {
   justify-content: space-between;
 }
 
-#name,
-.slider,
-.delete,
 .notes,
 .octaves,
 .sounds,
@@ -90,10 +89,7 @@ body {
   margin: auto;
 }
 
-.delete {
-  width: var(--delete-w);
-  /* aspect-ratio: 1 / 1; */
-}
+
 
 .checkbox-label {
   width: var(--label-w);

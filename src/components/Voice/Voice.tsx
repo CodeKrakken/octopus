@@ -49,7 +49,7 @@ export default function Voice(
             ))
           }
 
-          <div className="delete">
+          <div id="delete-voice">
             <DeleteButton
               handleDelete={handleDelete}
               i={i}
@@ -62,8 +62,8 @@ export default function Voice(
             <div className="row">
               {
                 doubleSliders.filter(slider => slider.row === row).map(slider => (
-                  <div className="slider column">
-                    <div className="slider-label row">{slider.label}</div>
+                  <div className="column">
+                    <div className="slider-label">{slider.label}</div>
                     <div className="row">
                       <DoubleSlider 
                         slider={slider}

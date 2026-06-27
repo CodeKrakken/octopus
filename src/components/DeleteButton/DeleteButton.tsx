@@ -9,7 +9,6 @@ export default function DeleteButton ({...props}: DeleteButtonProps) {
 
   return <>
     <button 
-      id="delete-voice"
       onClick={() => handleDelete(i)}
     >
       X
