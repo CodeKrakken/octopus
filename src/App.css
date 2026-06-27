@@ -12,16 +12,6 @@ body {
   flex-direction: column
 }
 
-/* .row {
-  display: flex;
-  flex-direction: row;
-} */
-
-
-.voice {
-  border: 2px dotted red;
-  padding-bottom: 10px;
-}
 
 #delete-voice {
   height: 29px
@@ -44,18 +34,20 @@ body {
   --line: 1px;
 }
 
-.voice {
+#voice {
   width: fit-content;
 
   display: flex;
   flex-direction: column;
 
   font-size: calc(var(--u) * 0.35);
+  padding: 5px;
+  border: 2px dotted red;
 }
 
-.row,
-.bottom {
+.row {
   display: flex;
+  justify-content: space-between;
 }
 
 .name,

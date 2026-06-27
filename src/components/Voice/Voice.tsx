@@ -18,11 +18,11 @@ export default function Voice(
   
   return (
     <div 
-      className="voice"
+      id="voice"
       data-voice={i}
       data-attribute={dataAttribute}
     >
-      <div className="sliders">
+      <div>
         <div className="row">
           <div className="name box">
             <TextField 
@@ -80,7 +80,7 @@ export default function Voice(
         }
       </div>
       
-      <div className="checkboxes">
+      <div>
         {
           [1,2,3,4].map(row => 
             <div className="row">
