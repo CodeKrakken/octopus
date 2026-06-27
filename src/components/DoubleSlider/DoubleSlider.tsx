@@ -57,9 +57,5 @@ export default function DoubleSlider ({
     'data-attribute': slider.key
   }
   
-  return (  
-    <div className="slider">
-      <RangeSlider {...props} />   
-    </div>  
-  )  
+  return <RangeSlider {...props} />   
 }

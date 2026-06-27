@@ -37,7 +37,7 @@ export default function Voice(
             singleSliders.map(slider => (
               <div className="column">
                 <div className="slider-label">{slider.label}</div>
-                <div className="row">
+                <div className="single slider">    
                   <SingleSlider
                     slider={slider}
                     i={i}
@@ -64,7 +64,7 @@ export default function Voice(
                 doubleSliders.filter(slider => slider.row === row).map(slider => (
                   <div className="column">
                     <div className="slider-label">{slider.label}</div>
-                    <div className="row">
+                    <div className="slider">
                       <DoubleSlider 
                         slider={slider}
                         i={i}

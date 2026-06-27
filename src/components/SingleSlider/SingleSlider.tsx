@@ -42,16 +42,14 @@ export default function SingleSlider ({
   }    
   
   return (
-    <div className="single slider">    
-      <RangeSlider 
-        ref={sliderRef}   
-        min={min}  
-        max={max}  
-        value={[0, value]}  
-        thumbsDisabled={[true, false]}  
-        rangeSlideDisabled={true}  
-        onInput={handleInput}  
-      />
-    </div>
+    <RangeSlider 
+      ref={sliderRef}   
+      min={min}  
+      max={max}  
+      value={[0, value]}  
+      thumbsDisabled={[true, false]}  
+      rangeSlideDisabled={true}  
+      onInput={handleInput}  
+    />
   )
 }
