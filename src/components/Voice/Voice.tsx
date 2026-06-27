@@ -22,63 +22,64 @@ export default function Voice(
       data-voice={i}
       data-attribute={dataAttribute}
     >
+      <div className="sliders">
+        <div className="row">
+          <div className="name box">
+            <TextField 
+              attrName  = {'label'}
+              i         = {i}
+              voices    = {voices}
+              setVoices = {setVoices}
+            />
+          </div>
 
-      <div className="row">
-        <div className="name box">
-          <TextField 
-            attrName  = {'label'}
-            i         = {i}
-            voices    = {voices}
-            setVoices = {setVoices}
-          />
+          {
+            singleSliders.map(slider => (
+              <div className="slider-box column">
+                <div className="slider-label">{slider.label}</div>
+                <div className="row">
+                  <SingleSlider
+                    slider={slider}
+                    i={i}
+                    voices={voices}
+                    setVoices={setVoices}
+                  />
+                </div>
+              </div>
+            ))
+          }
+
+          <div className="delete box">
+            <DeleteButton
+              handleDelete={handleDelete}
+              i={i}
+            />
+          </div>
         </div>
 
         {
-          singleSliders.map(slider => (
-            <div className="slider slider-box column">
-              <div className="slider-label">{slider.label}</div>
-              <div className="row">
-                <SingleSlider
-                  slider={slider}
-                  i={i}
-                  voices={voices}
-                  setVoices={setVoices}
-                />
-              </div>
-            </div>
-          ))
-        }
-
-        <div className="delete box">
-          <DeleteButton
-            handleDelete={handleDelete}
-            i={i}
-          />
-        </div>
-      </div>
-
-      {
-        [1,2].map(row => 
-          <div className="row">
-            {
-              doubleSliders.filter(slider => slider.row === row).map(slider => (
-                <div className="slider slider-box column">
-                  <div className="slider-label row">{slider.label}</div>
-                  <div className="row">
-                    <DoubleSlider 
-                      slider={slider}
-                      i={i}
-                      voices={voices}
-                      setVoices={setVoices}
-                    />
+          [1,2].map(row => 
+            <div className="row">
+              {
+                doubleSliders.filter(slider => slider.row === row).map(slider => (
+                  <div className="slider slider-box column">
+                    <div className="slider-label row">{slider.label}</div>
+                    <div className="row">
+                      <DoubleSlider 
+                        slider={slider}
+                        i={i}
+                        voices={voices}
+                        setVoices={setVoices}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))
-            }
-          </div>
-        )
-      }
-
+                ))
+              }
+            </div>
+          )
+        }
+      </div>
+      
       <div className="checkboxes">
         {
           [1,2,3,4].map(row => 
