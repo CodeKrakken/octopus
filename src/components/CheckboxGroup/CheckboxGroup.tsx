@@ -25,7 +25,6 @@ export default function CheckboxGroup({
       group.boxes.map(checkbox => {
 
         const props: CheckboxProps = {
-          className: 'checkbox',
           'data-attribute': group.label,
           'data-voice': i,
           type: "checkbox",

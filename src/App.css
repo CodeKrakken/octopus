@@ -22,10 +22,6 @@ body {
 
 #voice {
   width: fit-content;
-
-  display: flex;
-  flex-direction: column;
-
   font-size: calc(var(--u) * 0.35);
   padding: 5px;
   border: 2px dotted red;
@@ -42,10 +38,6 @@ body {
 
 
 /* row 1 */
-
-#name {
-  width: fit-content;
-}
 
 
 .range-slider__thumb::after {  

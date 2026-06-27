@@ -1,7 +1,6 @@
 import { ChangeEventHandler } from "react"
 
 type CheckboxProps = {
-  className         : string  
   'data-voice'      : number
   'data-attribute'  : string
   type              : string
