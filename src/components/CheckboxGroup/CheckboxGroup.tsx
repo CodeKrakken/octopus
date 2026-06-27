@@ -31,10 +31,11 @@ export default function CheckboxGroup({
           type: "checkbox",
           value: checkbox,
           checked: voice[`active${group.label as CheckboxGroupType}`].includes(checkbox),
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateCheckbox(e, `active${group.label as CheckboxGroupType}`, voices, i, setVoices)
+          onChange: (e: React.ChangeEvent<HTMLInputElement>) => updateCheckbox(e, `active${group.label as CheckboxGroupType}`, voices, i, setVoices),
+          key: checkbox
         };
 
-        return <input {...props} key = {checkbox} />
+        return <input {...props} />
       })
     }
   </>

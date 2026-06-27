@@ -3,37 +3,21 @@ body {
   color: white;
 }
 
-.text-field {
-  width: 60px
-}
-
-.column {
-  column-width: auto;
-  flex-direction: column
-}
-
-
-#delete-voice {
-  width: var(--delete-w);
-  text-align: right;
-}
-
 
 :root {
   --u: 40px;
 
-  --name-w: calc(var(--u) * 2);
+  /* --name-w: calc(var(--u) * 2); */
   --slider-w: calc(var(--u) * 3);
-  --delete-w: calc(var(--u));
   --label-w: calc(var(--u) * 1.5);
 
-  --notes-w: calc(var(--u) * 9);
-  --octaves-w: calc(var(--u) * 9);
+  /* --notes-w: calc(var(--u) * 9); */
+  /* --octaves-w: calc(var(--u) * 9); */
 
-  --sounds-w: calc(var(--u) * 5);
-  --intervals-w: calc(var(--u) * 4);
+  /* --sounds-w: calc(var(--u) * 5); */
+  /* --intervals-w: calc(var(--u) * 4); */
 
-  --line: 1px;
+  /* --line: 1px; */
 }
 
 #voice {
@@ -52,30 +36,15 @@ body {
   justify-content: space-between;
 }
 
-.notes,
-.octaves,
-.sounds,
-.intervals {
-
+.checkbox-group {
   display: flex;
-  align-items: center;
-  justify-content: center;
-
-  text-align: center;
-
-  box-sizing: border-box;
-}
-
-.intervals {
-  margin-left: 3px;
 }
 
 
 /* row 1 */
 
 #name {
-  width: var(--name-w);
-  /* aspect-ratio: 2 / 1; */
+  width: fit-content;
 }
 
 
@@ -86,39 +55,15 @@ body {
   /* transform: translateX(50%);   */
   font-size: 12px;  
   white-space: nowrap;  
-  margin: auto;
+  /* margin: auto; */
 }
 
 
 
 .checkbox-label {
   width: var(--label-w);
-  text-align: left;
 }
 
-.checkboxes {
-  margin: auto;
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* gap: 5px; */
-}
-
-
-/* full rows */
-
-.notes,
-.octaves {
-  /* width: var(--notes-w); */
-
-  /* aspect-ratio: 9 / 1; */
-
-  align-self: center;
-}
-
-
-/* borders */
 
 .slider {
   width: var(--slider-w);
@@ -126,7 +71,7 @@ body {
   /* margin-right: 5px; */
   /* margin-top: 20px; */
   /* margin-bottom: 10px; */
-  margin: 10px;
+  margin: 10px 5px;
   text-align: center;
 }
 

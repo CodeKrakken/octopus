@@ -1,6 +1,7 @@
 import { updateTextField } from "../Inputs/Inputs.functions";
 import { NumericAttribute } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
+import './TextField.css'
 
 export default function TextField ({
 

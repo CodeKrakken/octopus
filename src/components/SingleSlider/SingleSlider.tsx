@@ -41,6 +41,7 @@ export default function SingleSlider ({
     setVoices(updatedVoices);
   }    
   
+  
   return (
     <RangeSlider 
       ref={sliderRef}   
