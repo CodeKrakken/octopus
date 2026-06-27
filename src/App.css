@@ -50,7 +50,9 @@ body {
   /* margin: auto; */
 }
 
-
+#sliders {
+  padding-bottom:5px;
+}
 
 .checkbox-label {
   width: var(--label-w);
@@ -69,4 +71,10 @@ body {
 
 .slider-label {
   text-align: center;
+}
+
+.range-slider .range-slider__thumb {  
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
 }

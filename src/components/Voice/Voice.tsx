@@ -22,7 +22,7 @@ export default function Voice(
       data-voice={i}
       data-attribute={dataAttribute}
     >
-      <div>
+      <div id="sliders">
         <div className="row">
           <div>
             <TextField 
