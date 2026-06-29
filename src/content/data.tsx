@@ -41,12 +41,6 @@ const ranges = [
 ] as const
 
 const checkboxGroups = [
-  { 
-    label: 'Notes', 
-    boxes: ['1','2','3','4','5','6','7','8','9','10','11','12','13'],
-    row: 1,
-    className: "notes"
-  },
   {
     label: 'Octaves',
     boxes: ['0','1','2','3','4','5','6','7','8','9','10'],

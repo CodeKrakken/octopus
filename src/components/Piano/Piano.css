@@ -1,0 +1,41 @@
+.keyboard {
+  display: flex;
+
+  position: relative;
+
+  height: 60px;
+}
+
+.key {
+  cursor: pointer;
+
+  border: 1px solid black;
+}
+
+.white {
+  width: 28px;
+
+  background: white;
+}
+
+.black {
+  width: 18px;
+
+  height: 60%;
+
+  background: black;
+  color: white;
+
+  margin-left: -9px;
+  margin-right: -9px;
+
+  z-index: 1;
+}
+
+.active {
+  background: orange;
+}
+
+.black.active {
+  background: red;
+}

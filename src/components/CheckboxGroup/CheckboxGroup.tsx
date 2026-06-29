@@ -1,4 +1,3 @@
-import { checkboxGroups } from "../../content/data";
 import { CheckboxProps } from "../Input/Input.types";
 import { updateCheckbox } from "../Inputs/Inputs.functions";
 import { CheckboxGroupType } from "../shared.types";

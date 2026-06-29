@@ -17,7 +17,7 @@ const updateTextField = (
 
 
 const updateCheckbox = (
-  e: React.ChangeEvent<HTMLInputElement>, 
+  e: React.MouseEvent<HTMLButtonElement>, 
   attribute: Compound, 
   voices: VoiceType[], 
   i: number, 
