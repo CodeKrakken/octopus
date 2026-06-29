@@ -39,7 +39,7 @@ export default function ButtonGroup({
         let imgSrc
 
         try {
-          imgSrc = require(`./images/${group.label}/${button}.png`) || ""
+          imgSrc = require(`./images/${button}.png`) || ""
 
         } catch (error) {
           console.log(error.message)
