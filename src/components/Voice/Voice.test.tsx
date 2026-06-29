@@ -5,7 +5,7 @@ import { VoiceType } from './Voice.types';
 
 jest.mock('../../content/data', () => ({
   fields: { bpm: { value: 'bpm' } },
-  checkboxGroups: {}
+  buttonGroups: {}
 }));
 
 describe('Voice', () => {

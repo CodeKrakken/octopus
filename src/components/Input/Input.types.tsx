@@ -1,6 +1,6 @@
 import { ChangeEventHandler } from "react"
 
-type CheckboxProps = {
+type ButtonProps = {
   'data-voice'      : number
   'data-attribute'  : string
   type              : string
@@ -13,5 +13,5 @@ type CheckboxProps = {
 }
 
 export type { 
-  CheckboxProps,
+  ButtonProps,
 }

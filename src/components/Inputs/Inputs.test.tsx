@@ -1,13 +1,13 @@
 import { render, screen, fireEvent }    from '@testing-library/react';
 import Inputs                           from './Inputs';
-import { updateTextField, updateCheckbox }  from './Inputs.functions';
+import { updateTextField, updateButton }  from './Inputs.functions';
 import { setUpVoice }                   from '../../components/Interface/Interface.functions';
 import { VoiceType }                    from '../Voice/Voice.types';
 
 
 jest.mock('./Inputs.functions', () => ({
   updateTextField: jest.fn(),
-  updateCheckbox: jest.fn()
+  updateButton: jest.fn()
 }));
 
 
@@ -49,15 +49,15 @@ describe('Inputs', () => {
   });
 
   
-  it('calls updateCheckbox when a checkbox changes', () => {
+  it('calls updateButton when a button changes', () => {
 
     renderInputs();
 
     fireEvent.click(screen.getByDisplayValue('square'));
 
-    expect(updateCheckbox).toHaveBeenCalledTimes(1);
+    expect(updateButton).toHaveBeenCalledTimes(1);
 
-    expect(updateCheckbox).toHaveBeenCalledWith(
+    expect(updateButton).toHaveBeenCalledWith(
       expect.any(Object),
       'activeSounds',
       voices,

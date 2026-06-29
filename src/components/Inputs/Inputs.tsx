@@ -1,6 +1,6 @@
-import { checkboxGroups, attributes }  from "../../content/data";
+import { buttonGroups, attributes }  from "../../content/data";
 import { InputsProps } from "./Inputs.types";
-import CheckboxGroup               from "../CheckboxGroup/CheckboxGroup";
+import ButtonGroup               from "../ButtonGroup/ButtonGroup";
 import "./Inputs.css";
 import Input from "../Input/Input";
 
@@ -29,13 +29,13 @@ export default function Inputs(
     <div className="row">
       <div className="column">
         {
-          Object.keys(checkboxGroups).map(checkboxGroup =>
-            <CheckboxGroup 
-              groupName={checkboxGroup}
+          Object.keys(buttonGroups).map(buttonGroup =>
+            <ButtonGroup 
+              groupName={buttonGroup}
               voices={voices}
               i={i}
               setVoices={setVoices}
-              key={checkboxGroup}
+              key={buttonGroup}
             />
           )
         }

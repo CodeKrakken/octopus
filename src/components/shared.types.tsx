@@ -8,7 +8,7 @@ type NumericAttribute =
 | `min${Range}`
 | `max${Range}`
 
-type CheckboxGroupType = 
+type ButtonGroupType = 
   'Notes' 
 | 'Octaves' 
 | 'Intervals'
@@ -27,6 +27,6 @@ type Slider = {
 export type {
   NumericAttribute,
   Range,
-  CheckboxGroupType,
+  ButtonGroupType,
   Slider
 }

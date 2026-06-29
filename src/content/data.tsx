@@ -1,7 +1,7 @@
 import snareFile  from './sounds/snare.wav';
 import kickFile   from './sounds/kick.wav';
 
-const title = "octopus"
+const title = "OCTOPUS"
 
 const addLabel = "Add Voice"
 
@@ -40,7 +40,7 @@ const ranges = [
   'Decay',
 ] as const
 
-const checkboxGroups = [
+const buttonGroups = [
   {
     label: 'Octaves',
     boxes: ['0','1','2','3','4','5','6','7','8','9','10'],
@@ -155,7 +155,7 @@ export {
   allFrequencies,
   waveforms,
   ranges,
-  checkboxGroups,
+  buttonGroups,
   singleSliders,
   doubleSliders,
   attributes,

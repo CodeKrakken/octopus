@@ -1,4 +1,4 @@
-import { updateCheckbox } from "../Inputs/Inputs.functions";
+import { updateButton } from "../Inputs/Inputs.functions";
 import { VoiceType } from "../Voice/Voice.types";
 import './Piano.css';
 
@@ -36,7 +36,7 @@ export default function Piano ({
             'data-voice': i,
             value: note,
             checked: voice.activeNotes.includes(note),
-            onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateCheckbox(e, 'activeNotes', voices, i, setVoices),
+            onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(e, 'activeNotes', voices, i, setVoices),
             key: note
           };
 

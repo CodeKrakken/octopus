@@ -1,10 +1,10 @@
 import { VoiceProps } from './Voice.types'
 import DeleteButton   from '../DeleteButton/DeleteButton'
 import TextField from '../TextField/TextField'
-import { checkboxGroups, doubleSliders, singleSliders } from '../../content/data'
+import { buttonGroups, doubleSliders, singleSliders } from '../../content/data'
 import DoubleSlider from '../DoubleSlider/DoubleSlider'
 import SingleSlider from '../SingleSlider/SingleSlider'
-import CheckboxGroup from '../CheckboxGroup/CheckboxGroup'
+import ButtonGroup from '../ButtonGroup/ButtonGroup'
 import Piano from '../Piano/Piano'
 
 export default function Voice(
@@ -83,8 +83,8 @@ export default function Voice(
 
       <div>
         <div className="row">
-          <div className="checkbox-group">
-            <div className="checkbox-label">Notes</div>
+          <div className="button-group">
+            <div className="button-label">Notes</div>
             <Piano 
               voices={voices}
               i={i}
@@ -99,10 +99,10 @@ export default function Voice(
           [2,3].map(row => 
             <div className="row">
               {
-                checkboxGroups.filter(group => group.row === row).map(group =>
-                  <div className="checkbox-group">
-                    <div className="checkbox-label">{group.label}</div>
-                    <CheckboxGroup 
+                buttonGroups.filter(group => group.row === row).map(group =>
+                  <div className="button-group">
+                    <div className="button-label">{group.label}</div>
+                    <ButtonGroup 
                       group={group}
                       voices={voices}
                       i={i}

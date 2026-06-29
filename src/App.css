@@ -32,7 +32,7 @@ body {
   justify-content: space-between;
 }
 
-.checkbox-group {
+.button-group {
   display: flex;
 }
 
@@ -54,7 +54,7 @@ body {
   padding-bottom:5px;
 }
 
-.checkbox-label {
+.button-label {
   width: var(--label-w);
 }
 

@@ -16,7 +16,7 @@ const updateTextField = (
 } 
 
 
-const updateCheckbox = (
+const updateButton = (
   e: React.MouseEvent<HTMLButtonElement>, 
   attribute: Compound, 
   voices: VoiceType[], 
@@ -43,6 +43,6 @@ const updateVoice = (voices: VoiceType[], i: number, setVoices: Function) => {
 
 
 export {
-  updateCheckbox,
+  updateButton,
   updateTextField
 }

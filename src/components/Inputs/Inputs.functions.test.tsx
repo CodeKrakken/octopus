@@ -1,4 +1,4 @@
-import { updateTextField, updateCheckbox } from './Inputs.functions';
+import { updateTextField, updateButton } from './Inputs.functions';
 import { setUpVoice } from '../Interface/Interface.functions';
 import { VoiceType } from '../Voice/Voice.types';
 import { ChangeEvent } from 'react';
@@ -33,24 +33,24 @@ describe('Inputs.functions', () => {
     });
   });
 
-  describe('updateCheckbox', () => {
+  describe('updateButton', () => {
     
-    it('preserves other values when adding a checkbox', () => {
+    it('preserves other values when adding a button', () => {
 
       const event = createEvent('square')
 
-      updateCheckbox(event, 'activeSounds', voices, 0, setVoices);
+      updateButton(event, 'activeSounds', voices, 0, setVoices);
 
       expect(voices[0].activeSounds).toContain('sine');
       expect(voices[0].activeSounds).toContain('square');
     });
 
-    it('preserves other values when removing a checkbox', () => {
+    it('preserves other values when removing a button', () => {
       
       voices[0].activeSounds = ['sine', 'square', 'triangle'];
       const event = createEvent('square')
 
-      updateCheckbox(event, 'activeSounds', voices, 0, setVoices);
+      updateButton(event, 'activeSounds', voices, 0, setVoices);
 
       expect(voices[0].activeSounds).toContain('sine');
       expect(voices[0].activeSounds).toContain('triangle');
