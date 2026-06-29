@@ -36,7 +36,20 @@ export default function ButtonGroup({
           key: button
         };
 
-        return <button {...props} />
+        let imgSrc
+
+        try {
+          imgSrc = require(`./${button}.png`) || ""
+
+        } catch (error) {
+          console.log(error.message)
+        }
+
+        return (
+          <button {...props}>
+            <img src={imgSrc} height="24" />
+          </button>
+        )       
       })
     }
   </>
