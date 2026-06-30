@@ -4,7 +4,12 @@ import { ButtonGroupType } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
 
 type ButtonGroupProps = {
-  group: {label: string, boxes: string[]}
+  group: {
+    label: string
+    boxes: string[]
+    row: number
+    className: string
+  }
   voices: VoiceType[]
   i: number
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
@@ -41,7 +46,7 @@ export default function ButtonGroup({
         let imgSrc
 
         try {
-          imgSrc = require(`./images/${button}.png`) || ""
+          imgSrc = require(`./images/${group.className}/${button}.png`) || ""
 
         } catch (error) {
           console.error(error instanceof Error ? error.message : "Unknown error", error)
