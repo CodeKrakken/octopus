@@ -36,6 +36,8 @@ export default function ButtonGroup({
           key: button
         };
 
+        console.log(group)
+
         let imgSrc
 
         try {
