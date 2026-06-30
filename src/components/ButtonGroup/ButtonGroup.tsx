@@ -52,9 +52,15 @@ export default function ButtonGroup({
           console.error(error instanceof Error ? error.message : "Unknown error", error)
         }
 
+        console.log('imgSrc')
+        console.log(imgSrc)
+
         return (
           <button {...props} style={{height: "28px", width: "28px"}}>
-            <img src={imgSrc} width="100%" height="100%" />
+            {
+              imgSrc ? <img src={imgSrc} width="100%" height="100%" />
+              : <>{button}</>
+            }
           </button>
         )       
       })
