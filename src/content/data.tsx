@@ -41,26 +41,27 @@ const ranges = [
 ] as const
 
 const buttonGroups = [
-  {
-    label: 'Octaves',
-    boxes: ['0','1','2','3','4','5','6','7','8','9','10'],
-    row: 2,
-    className: "octaves"
-  },
+  
   {
     label: 'Sounds', 
     boxes: [
       ...waveforms,
       ...Object.keys(samples)
     ],
-    row: 3,
+    row: 1,
     className: "sounds"
   },
   {
     label: 'Intervals',
     boxes: ['4', '2', '1','0.5','0.25','0.125'],
-    row: 3,
+    row: 1,
     className: "intervals"
+  },
+  {
+    label: 'Octaves',
+    boxes: ['0','1','2','3','4','5','6','7','8','9','10'],
+    row: 2,
+    className: "octaves"
   }
 ]
 
