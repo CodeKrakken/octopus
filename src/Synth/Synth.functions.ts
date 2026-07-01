@@ -91,7 +91,7 @@ const makeSound = (
       }
 
     } catch (error) {
-      console.error(error instanceof Error ? error.message : "Unknown error", error)
+      // console.error(error instanceof Error ? error.message : "Unknown error", error)
     }            
   }, offsetTime*1000)
 }

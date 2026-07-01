@@ -33,7 +33,6 @@ export default function Header ({
   }
 
   const handleSave = () => {
-    console.log(voices)
     localStorage.voices = JSON.stringify(voices)
   }
 

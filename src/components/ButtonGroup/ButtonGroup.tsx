@@ -32,7 +32,7 @@ export default function ButtonGroup({
   try {
     imgSrc = require(`./images/${group.className}/${group.className}.png`) || ""
   } catch (error) {
-    console.error(error instanceof Error ? error.message : "Unknown error", error)
+    // console.error(error instanceof Error ? error.message : "Unknown error", error)
   }
 
   const handleClick = () => {
@@ -77,7 +77,7 @@ export default function ButtonGroup({
               imgSrc = require(`./images/${group.className}/${button}.png`) || ""
 
             } catch (error) {
-              console.error(error instanceof Error ? error.message : "Unknown error", error)
+              // console.error(error instanceof Error ? error.message : "Unknown error", error)
             }
 
             return (
