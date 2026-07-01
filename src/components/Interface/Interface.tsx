@@ -59,7 +59,7 @@ function Interface() {
     setRunning(state)
   }
 
-  const disableStartStop = Boolean(voices.length === 0)
+  const disableButtons = Boolean(voices.length === 0)
 
   return <>
     <br />
@@ -67,7 +67,9 @@ function Interface() {
       handleStartStop   = {handleStartStop}
       running           = {running}
       handleAddVoice    = {handleAddVoice}
-      disableStartStop  = {disableStartStop}
+      disableButtons    = {disableButtons}
+      voices            = {voices}
+      setVoices         = {setVoices}
     />
     <div className="row">
       {
