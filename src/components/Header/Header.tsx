@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { title, addLabel } from '../../content/data'
 import { VoiceType } from '../Voice/Voice.types'
 import './Header.css'
@@ -23,13 +23,27 @@ export default function Header ({
 
 }) {
 
+  const [disableLoad, setDisableLoad] = useState(false)
+
   useEffect(() => {
     loadVoices()
   }, [])
 
+  useEffect(() => {
+    console.log('using effect')
+    if (localStorage.voices) {
+      setDisableLoad(false)
+    } else {
+      setDisableLoad(true)
+    }
+  }, [localStorage.voices])
+
   const loadVoices = () => {
-    voices = JSON.parse(localStorage.voices)
-    setVoices(voices)
+
+    if (localStorage.voices) {
+      voices = JSON.parse(localStorage.voices)
+      setVoices(voices)
+    }
   }
 
   const handleSave = () => {
@@ -60,6 +74,7 @@ export default function Header ({
     </button>
     <button
       onClick={loadVoices}
+      disabled={disableLoad as boolean}
     >
       {'Load'}
     </button>
