@@ -34,5 +34,7 @@ export const Synth = {
     })
   },
 
-  stop: () => Synth.voices.forEach(voice => voice.isActive = false)
+  stop: () => Synth.voices.forEach(voice => voice.isActive = false),
+
+  resumeContext: () => context = getContext(context)
 }

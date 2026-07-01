@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { MouseEventHandler, useEffect, useState } from 'react'
 import { title, addLabel } from '../../content/data'
 import { VoiceType } from '../Voice/Voice.types'
 import './Header.css'
@@ -10,7 +10,7 @@ export default function Header ({
   disableButtons,
   running,
   voices,
-  setVoices
+  loadVoices
 
 } : {
 
@@ -19,15 +19,10 @@ export default function Header ({
   disableButtons    : Boolean,
   running           : Boolean,
   voices            : VoiceType[],
-  setVoices         : React.Dispatch<React.SetStateAction<VoiceType[]>>
-
+  loadVoices        : MouseEventHandler<HTMLButtonElement>
 }) {
 
   const [disableLoad, setDisableLoad] = useState(false)
-
-  useEffect(() => {
-    loadVoices()
-  }, [])
 
   useEffect(() => {
     console.log('using effect')
@@ -38,13 +33,7 @@ export default function Header ({
     }
   }, [localStorage.voices])
 
-  const loadVoices = () => {
-
-    if (localStorage.voices) {
-      voices = JSON.parse(localStorage.voices)
-      setVoices(voices)
-    }
-  }
+  
 
   const handleSave = () => {
     localStorage.voices = JSON.stringify(voices)
