@@ -84,26 +84,8 @@ export default function Voice(
           setVoices={setVoices}
         />
           
-        <div className="column">
-          {
-            buttonGroups.filter(group => group.row === 1).map(group =>
-              <div className="button-group">
-                <ButtonGroup 
-                  group={group}
-                  voices={voices}
-                  i={i}
-                  setVoices={setVoices}
-                  key={group.label}
-                />
-              </div>
-            )
-          }
-        </div>
-      </div>
-      
-      <div className="row">
         {
-          buttonGroups.filter(group => group.row === 2).map(group =>
+          buttonGroups.map(group =>
             <div className="button-group">
               <ButtonGroup 
                 group={group}
