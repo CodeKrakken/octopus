@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { title, addLabel } from '../../content/data'
 import { VoiceType } from '../Voice/Voice.types'
 import './Header.css'
@@ -22,15 +23,18 @@ export default function Header ({
 
 }) {
 
+  useEffect(() => {
+    loadVoices()
+  })
+
+  const loadVoices = () => {
+    voices = JSON.parse(localStorage.voices)
+    setVoices(voices)
+  }
+
   const handleSave = () => {
     console.log(voices)
     localStorage.voices = JSON.stringify(voices)
-  }
-
-  const handleLoad = () => {
-    voices = JSON.parse(localStorage.voices)
-    console.log(voices)
-    setVoices(voices)
   }
 
   return <div className="header">
@@ -56,7 +60,7 @@ export default function Header ({
       {'Save'}
     </button>
     <button
-      onClick={handleLoad}
+      onClick={loadVoices}
     >
       {'Load'}
     </button>
