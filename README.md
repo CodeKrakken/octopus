@@ -19,7 +19,7 @@ To install
 ----------
 
 ```
-git clone https://github.com/CodeKrakken/random-noise-generator
+git clone https://github.com/CodeKrakken/octopus
 cd random-noise-generator
 npm install
 npx nodemon
