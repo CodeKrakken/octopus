@@ -86,19 +86,17 @@ const buttonGroups = [
 ]
 
 const singleSliders = [
-  { // used
+  {
     label: 'BPM',
     value: 'bpm',
     key: 'bpm', 
-    inputType: 'singleSlider', // used
-    min: 1, // used
-    max: 480 // used
+    min: 1,
+    max: 480
   },
   {
     label: 'Rest', 
     value: 'restChance',
     key: 'restChance',
-    inputType: 'singleSlider',
     min: 0,
     max: 100
   }
@@ -109,7 +107,6 @@ const doubleSliders = [
     label: 'Level',
     value: 'Level',  
     key: 'level',
-    inputType: 'doubleSlider',
     min: 0,
     max: 100,
     row: 1
@@ -118,7 +115,6 @@ const doubleSliders = [
     label: 'Length',
     value: 'Length',  
     key: 'length',  
-    inputType: 'doubleSlider',
     min: 0,
     max: 100,
     row: 2
@@ -127,7 +123,6 @@ const doubleSliders = [
     label: 'Offset',
     value: 'Offset',    
     key: 'offset',
-    inputType: 'doubleSlider',
     min: 0,
     max: 100,
     row: 2
@@ -136,7 +131,6 @@ const doubleSliders = [
     label: 'Detune',
     value: 'Detune',    
     key: 'detune',
-    inputType: 'doubleSlider',
     min: -100,
     max: 100,
     row: 2
@@ -145,7 +139,6 @@ const doubleSliders = [
     label: 'Attack',
     value: 'Attack',   
     key: 'attack', 
-    inputType: 'doubleSlider',
     min: 0,
     max: 100,
     row: 1
@@ -154,7 +147,6 @@ const doubleSliders = [
     label: 'Decay',
     value: 'Decay',    
     key: 'decay',
-    inputType: 'doubleSlider',
     min: 0,
     max: 100,
     row: 1

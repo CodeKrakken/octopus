@@ -7,6 +7,19 @@ import { VoiceType } from "./Voice/Voice.types"
     Synth.update(voice, i)
   }
 
+  const updateTextField = (
+    e: React.ChangeEvent<HTMLInputElement>, 
+    attribute: 'label',
+    voices: VoiceType[], 
+    i: number,
+    setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
+  ) => {
+
+    voices[i][attribute] = e.target!.value
+    updateVoice(voices, i, setVoices)
+  }
+
   export {
-    updateVoice
+    updateVoice,
+    updateTextField
   }

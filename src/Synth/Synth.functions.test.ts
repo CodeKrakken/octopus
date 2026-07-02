@@ -58,7 +58,7 @@ describe('runInterval', () => {
 
   it('plays a sample', () => {
 
-    const voice = { ...setUpVoice(), activeSounds: ['snare'] }
+    const voice = { ...setUpVoice([]), activeSounds: ['snare'] }
     const mockContext = createMockContext('running')
 
     runOneInterval(voice, mockContext)
@@ -76,7 +76,7 @@ describe('runInterval', () => {
     }
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       restChance: 0,
       activeSounds: ['sine']
     }
@@ -98,7 +98,7 @@ describe('runInterval', () => {
     }
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       restChance: 0,
       activeSounds: ['sine']
     };
@@ -110,7 +110,7 @@ describe('runInterval', () => {
   });
 
   it('schedules note end when noteLength is shorter than intervalLength', () => {
-    const voice = { ...setUpVoice(), minLength: 50, maxLength: 50 }
+    const voice = { ...setUpVoice([]), minLength: 50, maxLength: 50 }
     const mockContext = createMockContext('running', 10) as AudioContext
 
     runOneInterval(voice, mockContext)
@@ -124,7 +124,7 @@ describe('runInterval', () => {
     const mockContext = createMockContext('running') as AudioContext
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       activeOctaves: ['0'],
       minAttack: 20,
       maxAttack: 20,
@@ -142,7 +142,7 @@ describe('runInterval', () => {
   it('calls makeSound when isRest returns false', () => {
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       restChance: 0
     };
 
@@ -158,7 +158,7 @@ describe('runInterval', () => {
   it('uses "0" as fallback interval when activeIntervals is empty', () => {
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       activeIntervals: [],
       restChance: 0
     };
@@ -175,7 +175,7 @@ describe('runInterval', () => {
   it('skips makeSound when isRest returns true', () => {
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       restChance: 100
     };
 
@@ -198,7 +198,7 @@ describe('runInterval', () => {
     })
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       isActive: true
     }
 
@@ -221,7 +221,7 @@ describe('runInterval', () => {
   it('applies detune when cents are non-zero', () => {
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       minDetune: 50,
       maxDetune: 50
     }
@@ -239,7 +239,7 @@ describe('runInterval', () => {
   it('uses negative modifier when detune is negative', () => {
 
     const voice = {
-      ...setUpVoice(),
+      ...setUpVoice([]),
       activeOctaves: ['0'],
       activeNotes: ['2'], // 293.66, to be shifted down
       minDetune: -50,

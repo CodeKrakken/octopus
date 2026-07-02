@@ -29,7 +29,6 @@ export default function DoubleSlider ({
   });
   
   const {min, max} = slider
-  const attr = slider.key
 
   const rangeValue = [
     voices[i][`min${slider.value}` as NumericAttribute], 

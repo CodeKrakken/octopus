@@ -5,13 +5,16 @@ import Header from './Header';
 describe('Header', () => {
   const mockHandleAddVoice = jest.fn();
   const mockHandleStartStop = jest.fn();
+  const mockLoadVoices = jest.fn();
 
   const header = (state: Boolean) => (
     <Header
       handleAddVoice={mockHandleAddVoice}
       handleStartStop={mockHandleStartStop}
-      disableStartStop={false}
+      disableButtons={false}
       running={state}
+      voices={[]}
+      loadVoices={mockLoadVoices}
     />
   )
 

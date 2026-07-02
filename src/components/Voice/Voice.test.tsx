@@ -1,12 +1,19 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import Voice from './Voice';
 import { setUpVoice } from '../Interface/Interface.functions';
 import { VoiceType } from './Voice.types';
 
-jest.mock('../../content/data', () => ({
-  fields: { bpm: { value: 'bpm' } },
-  buttonGroups: {}
-}));
+jest.mock('../../content/data', () => ({  
+  singleSliders: [],  
+  doubleSliders: [],  
+  buttonGroups: []  
+}));  
+  
+// Also mock heavy child components to avoid their own import chains:  
+jest.mock('../Piano/Piano', () => () => <div data-testid="piano" />);  
+jest.mock('../SingleSlider/SingleSlider', () => () => <div />);  
+jest.mock('../DoubleSlider/DoubleSlider', () => () => <div />);  
+jest.mock('../ButtonGroup/ButtonGroup', () => () => <div />);  
 
 describe('Voice', () => {
   const mockHandleDelete = jest.fn();
@@ -22,17 +29,18 @@ describe('Voice', () => {
 
   beforeEach(() => { jest.clearAllMocks(); });
 
-  it('handles multiple voices with different indices', () => {
+  jest.mock('../../content/data', () => ({  
+    singleSliders: [],  
+    doubleSliders: [],  
+    buttonGroups: []  
+  }));  
     
-    const voices = [setUpVoice(), setUpVoice()];
-    
-    voices[0].bpm = 100;
-    voices[1].bpm = 150;
-
-    render(voice(0, voices));
-    render(voice(1, voices));
-
-    expect(screen.getByDisplayValue('100')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('150')).toBeInTheDocument();
-  });
+  it('renders a delete button and calls handleDelete', () => {  
+    const voices = [setUpVoice([]), setUpVoice([])];  
+    render(  
+      <Voice i={0} voices={voices} handleDelete={mockHandleDelete} setVoices={mockSetVoices} dataAttribute="Voices" />  
+    );  
+    fireEvent.click(screen.getByRole('button'));  
+    expect(mockHandleDelete).toHaveBeenCalledWith(0);  
+  });  
 });

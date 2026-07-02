@@ -18,7 +18,6 @@ type Slider = {
   label: string,
   value: string,    
   key: string,
-  inputType: string,
   min: number,
   max: number,
   row?: number

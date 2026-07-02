@@ -21,7 +21,7 @@ describe('Synth', () => {
 
     it('calls runInterval when running is true', () => {
 
-      const voice = setUpVoice();
+      const voice = setUpVoice([]);
       const running = true;
       const voicesRef = { current: [voice] };
 
@@ -36,8 +36,8 @@ describe('Synth', () => {
 
     it('calls runInterval for each voice with correct arguments', () => {
 
-      const voice1: VoiceType = setUpVoice()
-      const voice2: VoiceType = setUpVoice(voice1)
+      const voice1: VoiceType = setUpVoice([])
+      const voice2: VoiceType = setUpVoice([voice1])
       const running = false;
       const voicesRef = { current: [voice1, voice2] };
       const mockContext = createMockContext();
@@ -63,8 +63,8 @@ describe('Synth', () => {
 
     it('adds, updates, and deletes voices', () => {
 
-      const voice1 = setUpVoice();
-      const voice2 = setUpVoice();
+      const voice1 = setUpVoice([]);
+      const voice2 = setUpVoice([]);
       let running = false;
       const voicesRef = { current: [] };
 
