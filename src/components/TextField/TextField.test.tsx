@@ -14,7 +14,7 @@ jest.mock('../../content/data', () => ({
   extrema: ['min', 'max']
 }));
 
-jest.mock('../Inputs/Inputs.functions', () => ({
+jest.mock('../shared.functions', () => ({
   updateTextField: jest.fn()
 }));
 

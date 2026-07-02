@@ -1,6 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import Header from './Header';
 
+jest.mock('../../content/data', () => ({  
+  title: 'OCTOPUS',  
+  addLabel: 'Add Voice',  
+}));  
+  
+
 
 describe('Header', () => {
   const mockHandleAddVoice = jest.fn();

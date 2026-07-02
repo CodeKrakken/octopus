@@ -27,7 +27,7 @@ const waveforms = [
 ]
 
 const context = (
-  require as {
+  require as unknown as {
     context: (
       path: string,
       recursive?: boolean,
