@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ButtonProps } from "../Input/Input.types";
-import { updateButton } from "../Inputs/Inputs.functions";
 import { ButtonGroupType } from "../shared.types";
-import { VoiceType } from "../Voice/Voice.types";
+import { Compound, VoiceType } from "../Voice/Voice.types";
+import { updateVoice } from "../shared.functions";
+import { updateButton } from "./ButtonGroup.functions";
 
 
 export default function ButtonGroup({
@@ -25,6 +25,8 @@ export default function ButtonGroup({
   const [hidden, setHidden] = useState(true)
 
   const voice = voices[i]
+
+  
 
   let imgSrc
 
