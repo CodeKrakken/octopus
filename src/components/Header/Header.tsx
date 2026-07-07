@@ -38,7 +38,7 @@ export default function Header ({
       /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? <img alt="" src={require(`../../content/font-images/${letter.toUpperCase()}.png`)} height={height} />  : letter
     )
 
-    return <div>{imageArray.map(image => image)}</div>
+    return <div className="centred">{imageArray.map(image => image)}</div>
   }
 
   const handleSave = () => {
@@ -49,27 +49,32 @@ export default function Header ({
 
   return (
     <div className="column" id="header">
-      <div className="section">
+      <div id="title">
         {font(title, '50px')}
       </div>
-      <div className="section">
-        <button 
-          value={addLabel}
-          onClick={handleAddVoice}
-        >
-          {font(addLabel, buttonLabelHeight)}
-        </button>
-            
+      <div className="centred section">
+
         <button 
           onClick={handleStartStop}
           disabled={disableButtons as boolean}
+          className="header-button"
+
         >
           {font(running ? 'Stop' : 'Start', buttonLabelHeight)}
         </button>
+        
+        <button 
+          value={addLabel}
+          onClick={handleAddVoice}
+          className="header-button"
+        >
+          {font('Add', buttonLabelHeight)}
+        </button>            
 
         <button
           onClick={handleSave}
           disabled={disableButtons as boolean}
+          className="header-button"
         >
           <div style={{"margin": "auto auto;"}}></div>
           {font('Save', buttonLabelHeight)}
@@ -77,6 +82,7 @@ export default function Header ({
         <button
           onClick={loadVoices}
           disabled={disableLoad as boolean}
+          className="header-button"
         >
           {font('Load', buttonLabelHeight)}
         </button>
