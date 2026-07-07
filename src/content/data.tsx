@@ -116,6 +116,22 @@ const doubleSliders = [
     key: 'length',
     min: 0,
     max: 100,
+    row: 1
+  },
+  {
+    label: 'Attack',
+    value: 'Attack',
+    key: 'attack',
+    min: 0,
+    max: 100,
+    row: 2
+  },
+  {
+    label: 'Decay',
+    value: 'Decay',
+    key: 'decay',
+    min: 0,
+    max: 100,
     row: 2
   },
   {
@@ -124,7 +140,7 @@ const doubleSliders = [
     key: 'offset',
     min: 0,
     max: 100,
-    row: 2
+    row: 3
   },
   {
     label: 'Detune',
@@ -132,23 +148,7 @@ const doubleSliders = [
     key: 'detune',
     min: -100,
     max: 100,
-    row: 2
-  },
-  {
-    label: 'Attack',
-    value: 'Attack',
-    key: 'attack',
-    min: 0,
-    max: 100,
-    row: 1
-  },
-  {
-    label: 'Decay',
-    value: 'Decay',
-    key: 'decay',
-    min: 0,
-    max: 100,
-    row: 1
+    row: 3
   }
 ]
 

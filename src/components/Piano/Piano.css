@@ -33,9 +33,9 @@
 }
 
 .active {
-  background: orange;
+  background: green;
 }
 
 .black.active {
-  background: red;
+  background: darkgreen;
 }

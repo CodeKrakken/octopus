@@ -34,6 +34,17 @@ export default function Voice(
             />
           </div>
 
+          
+
+          <div>
+            <DeleteButton
+              handleDelete={handleDelete}
+              i={i}
+            />
+          </div>
+        </div>
+
+        <div className="row">
           {
             singleSliders.map(slider => <div>
               <div className="slider-label">{slider.label}</div>
@@ -47,18 +58,12 @@ export default function Voice(
               </div>
             </div>)
           }
-
-          <div>
-            <DeleteButton
-              handleDelete={handleDelete}
-              i={i}
-            />
-          </div>
         </div>
+        
 
         {
-          [1, 2].map(row => 
-            <div className="justified row">
+          [1, 2, 3].map(row => 
+            <div className="row">
               {
                 doubleSliders.filter(slider => slider.row === row).map(slider => <div>
                   <div className="slider-label">{slider.label}</div>
@@ -77,16 +82,17 @@ export default function Voice(
         }
       </div>
 
-      <div className="justified row">
+      <div className="row">
         <Piano 
           voices={voices}
           i={i}
           setVoices={setVoices}
         />
-          
+      </div>
+      <div className="row">
         {
           buttonGroups.map(group =>
-            <div className="button-group">
+            <div>
               <ButtonGroup 
                 group={group}
                 voices={voices}

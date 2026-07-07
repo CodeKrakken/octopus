@@ -29,6 +29,7 @@ button {
 
 #voice {
   width: fit-content;
+  height: fit-content;
   font-size: calc(var(--u) * 0.35);
   padding: 5px;
   border: 2px dotted red;
@@ -114,4 +115,9 @@ button img {
 
 .parent {
   position: relative;
+}
+
+.group-button {
+  height: 56px;
+  width: 56px;
 }

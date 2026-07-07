@@ -45,7 +45,7 @@ export default function ButtonGroup({
   return <>
 
     <button 
-      style={{height: "56px", width: "56px"}}
+      className="group-button"
       onClick={handleClick}
     >
       {
