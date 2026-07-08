@@ -151,7 +151,7 @@ const oscillate = (
   const overlap        = endOfAttack >= startOfDecay
   const startOfPeak    = overlap ? peakPoint : endOfAttack
   const endOfPeak      = overlap ? peakPoint : startOfDecay
-
+  console.log(level)
   gain.setValueAtTime(0, thisInterval)
   gain.linearRampToValueAtTime(level, startOfPeak)
   gain.setValueAtTime(level, endOfPeak)
@@ -167,7 +167,7 @@ const randomOneFrom = <T>(array: T[]): T => {
 const calculateLevel = (voice: VoiceType, voices: VoiceType[]) => {
 
   const { minLevel, maxLevel } = voice
-  const balancedLevel = ((minLevel + Math.random() * (maxLevel - minLevel))/100)/voices.length
+  const balancedLevel = ((minLevel + Math.random() * (maxLevel - minLevel))/100) // /voices.length
   
   return balancedLevel
 }

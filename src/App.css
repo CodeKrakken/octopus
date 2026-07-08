@@ -111,12 +111,8 @@ button img {
   right: 0;
 }
 
-#octaves {
+.right {
   right: 100;
-}
-
-.center {
-  transform: translateX(-33.33%);
 }
 
 .parent {

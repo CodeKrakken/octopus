@@ -65,13 +65,13 @@ const buttonGroups = [
     label: 'Octaves',
     boxes: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     id: "octaves",
-    className: "right"
+    className: "left"
   },
   {
     label: 'Intervals',
     boxes: ['4', '2', '1', '0.5', '0.25', '0.125'],
     id: "intervals",
-    className: "center"
+    className: ""
   },
   {
     label: 'Sounds',
@@ -80,7 +80,7 @@ const buttonGroups = [
       ...Object.keys(samples)
     ],
     id: "sounds",
-    className: "center"
+    className: "right"
   }
 ]
 
