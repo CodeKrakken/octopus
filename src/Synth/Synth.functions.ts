@@ -200,7 +200,7 @@ const getFadeLength = (percentage: number, noteLength: number) => noteLength * p
 
 const generateFrequency = (voice: VoiceType) => {
 
-  const randomFrequency = randomOneFrom(getActiveFrequencies(voice) as number[])
+  const randomFrequency = randomOneFrom(voice.activeFrequencies)
 
   return detune(randomFrequency as number, voice)
 }
@@ -217,23 +217,6 @@ const detune = (frequency: number, voice: VoiceType) => {
   const detunedFrequency = frequency + hzDiff / 100 * cents
   
   return detunedFrequency
-}
-
-
-
-const getActiveFrequencies = (voice: VoiceType) => {
-    
-  const { activeOctaves, activeNotes } = voice
-  
-  let allFrequenciesInOctaves = allFrequencies.filter(
-    (octave, j) => activeOctaves.includes(j.toString())
-  )
-  
-  let activeFrequencies = allFrequenciesInOctaves.map(octave =>
-    octave.filter((note, j) => activeNotes.includes((j+1).toString()))
-  )
-
-  return activeFrequencies.flat(Infinity)
 }
 
 
