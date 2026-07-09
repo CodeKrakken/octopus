@@ -3,12 +3,33 @@ import { OscGain, VoicesRef }                                     from './Synth.
 import { allFrequencies, extrema, oneMinute, samples, waveforms } from '../content/data';
 import { Range } from '../components/shared.types';
 
+const buffers: Record<string, AudioBuffer> = {}  
+
+let samplesLoading = false  
+  
+const loadSamples = (ctx: AudioContext) => {  
+  if (samplesLoading) return  
+  samplesLoading = true  
+  Promise.all(  
+    Object.entries(samples).map(async ([name, url]) => {  
+      try {  
+        const response = await fetch(url as string)  
+        const arrayBuffer = await response.arrayBuffer()  
+        buffers[name] = await ctx.decodeAudioData(arrayBuffer)  
+        console.log('Loaded sample:', name)   // remove once confirmed working  
+      } catch (e) {  
+        console.error('Failed to load sample:', name, e)  
+      }  
+    })  
+  )  
+}
+
 let freqArray: number[] | undefined  
 
 const getContext = (context: AudioContext = new AudioContext()) => {
 
   if (context.state === 'suspended') { context.resume() }
-  
+  loadSamples(context)
   return context
 }
 
@@ -118,13 +139,19 @@ const removeOscillator = (oscGain: OscGain) => {
   gainNode.disconnect()
 }
 
-const playSample = (
-  name: string, 
-  level: number,
-  context: AudioContext
-) => {
-  const sample = setUpSample(samples[name as keyof typeof samples], context, level)
-  sample.play()
+const playSample = (name: string, level: number, context: AudioContext) => {  
+  const buffer = buffers[name]  
+  if (!buffer) {  
+    console.warn('Buffer not ready for:', name)   // now you'll see if timing is the issue  
+    return  
+  }  
+  const source = context.createBufferSource()  
+  source.buffer = buffer  
+  const gain = context.createGain()  
+  gain.gain.setValueAtTime(level, 0)  
+  source.connect(gain)  
+  gain.connect(context.destination)  
+  source.start()  
 }
 
 const oscillate = (
@@ -172,22 +199,6 @@ const calculateLevel = (voice: VoiceType, voices: VoiceType[]) => {
   return balancedLevel
 }
 
-const setUpSample = (
-  file: string, 
-  context: AudioContext, 
-  level: number
-) => {
-
-  const sample = new Audio(file)
-  const sound = context.createMediaElementSource(sample);
-  const gain  = context.createGain()
-  
-  sound.connect(gain)
-  gain.gain.setValueAtTime(level, 0)
-  gain.connect(context.destination)
-
-  return sample
-}
 
 const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 
