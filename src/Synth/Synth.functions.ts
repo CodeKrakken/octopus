@@ -16,7 +16,6 @@ const loadSamples = (ctx: AudioContext) => {
         const response = await fetch(url as string)  
         const arrayBuffer = await response.arrayBuffer()  
         buffers[name] = await ctx.decodeAudioData(arrayBuffer)  
-        console.log('Loaded sample:', name)   // remove once confirmed working  
       } catch (e) {  
         console.error('Failed to load sample:', name, e)  
       }  
@@ -101,10 +100,9 @@ const makeSound = (
       const oscGain = setUpOscillator(context)
       oscGain.oscillator.type = randomSound
       const noteLength = generateNoteLength(voice, intervalLength)
-      console.log(context.currentTime)
       oscillate(voice, noteLength, level, oscGain)
 
-      setTimeout(() => removeOscillator(oscGain), ((intervalLength*1000)+offsetTime))
+      setTimeout(() => removeOscillator(oscGain), (intervalLength+offsetTime)*1000)
     } else {
       playSample(randomSound, level, context, voice.offsetInterval)
     }
@@ -147,6 +145,11 @@ const playSample = (name: string, level: number, context: AudioContext, time: nu
   source.connect(gain)  
   gain.connect(context.destination)  
   source.start(time)  
+
+  source.onended = () => {  
+    source.disconnect()  
+    gain.disconnect()  
+  }
 }
 
 const oscillate = (
