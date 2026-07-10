@@ -35,7 +35,7 @@ export default function Header ({
   const font = (string: string, height: string = "40px") => {
 
     const imageArray = string.split('').map(letter => 
-      /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? <img alt="" src={require(`../../content/font-images/${letter.toUpperCase()}.png`)} height={height} />  : letter
+      /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? <img alt="" src={require(`../../content/font-images/${letter.toUpperCase()}.png`)} height={height} key={letter} />  : letter
     )
 
     return <div className="centred">{imageArray.map(image => image)}</div>

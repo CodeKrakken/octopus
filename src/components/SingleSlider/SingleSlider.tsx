@@ -10,15 +10,13 @@ export default function SingleSlider ({
   slider,  
   i,    
   voices,  
-  setVoices
-
+  setVoices,
 } : {  
 
   slider: Slider,  
   i: number,  
   voices: VoiceType[],  
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
-
 }) {  
   
   const sliderRef = useRef<ReactRangeSliderInputRef>(null);  

@@ -46,7 +46,7 @@ export default function Voice(
 
         <div className="row">
           {
-            singleSliders.map(slider => <div>
+            singleSliders.map(slider => <div key={slider.key}>
               <div className="slider-label">{slider.label}</div>
               <div className="single slider">    
                 <SingleSlider
@@ -63,9 +63,9 @@ export default function Voice(
 
         {
           [1, 2, 3].map(row => 
-            <div className="row">
+            <div className="row" key={row}>
               {
-                doubleSliders.filter(slider => slider.row === row).map(slider => <div>
+                doubleSliders.filter(slider => slider.row === row).map(slider => <div key={slider.key}>
                   <div className="slider-label">{slider.label}</div>
                   <div className="slider">
                     <DoubleSlider 
@@ -92,13 +92,12 @@ export default function Voice(
       <div className="centred row">
         {
           buttonGroups.map(group =>
-            <div>
+            <div key={group.label}>
               <ButtonGroup 
                 group={group}
                 voices={voices}
                 i={i}
                 setVoices={setVoices}
-                key={group.label}
               />
             </div>
           )
