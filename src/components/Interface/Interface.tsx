@@ -90,10 +90,10 @@ function Interface() {
     />
     <div className="row section">
       {
-        voices.map((voice) => (
+        voices.map((voice, i) => (
           <div key = {voice.id}>
             <Voice
-              i             = {voices.indexOf(voice)} 
+              i             = {i} 
               setVoices     = {setVoices} 
               voices        = {voices}
               handleDelete  = {handleDelete}
