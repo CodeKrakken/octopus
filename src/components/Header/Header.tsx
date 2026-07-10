@@ -76,7 +76,7 @@ export default function Header ({
           disabled={disableButtons as boolean}
           className="header-button"
         >
-          <div style={{"margin": "auto auto;"}}></div>
+          <div style={{"margin": "auto auto"}}></div>
           {font('Save', buttonLabelHeight)}
         </button>
         <button
