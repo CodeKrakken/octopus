@@ -3,9 +3,30 @@ import { OscGain, VoicesRef }                                     from './Synth.
 import { allFrequencies, extrema, oneMinute, samples, waveforms } from '../content/data';
 import { Range } from '../components/shared.types';
 
-const buffers: Record<string, AudioBuffer> = {}  
+const buffers: Record<string, { buffer: AudioBuffer; frequency: number | null }> = {}  
 
 let samplesLoading = false  
+
+const detectPitch = (buffer: AudioBuffer, sampleRate: number): number | null => {  
+  const data = buffer.getChannelData(0)  
+  const SIZE = 2048  
+  const slice = data.slice(0, SIZE)  
+  // autocorrelation  
+  let bestOffset = -1, bestCorrelation = 0  
+  for (let offset = 20; offset < SIZE / 2; offset++) {  
+    let correlation = 0  
+    for (let i = 0; i < SIZE / 2; i++) {  
+      correlation += Math.abs(slice[i] - slice[i + offset])  
+    }  
+    correlation = 1 - correlation / (SIZE / 2)  
+    if (correlation > bestCorrelation) {  
+      bestCorrelation = correlation  
+      bestOffset = offset  
+    }  
+  }  
+  if (bestCorrelation < 0.9) return null  // not tonal enough  
+  return sampleRate / bestOffset  
+}
   
 const loadSamples = (ctx: AudioContext) => {  
   if (samplesLoading) return  
@@ -15,7 +36,11 @@ const loadSamples = (ctx: AudioContext) => {
       try {  
         const response = await fetch(url as string)  
         const arrayBuffer = await response.arrayBuffer()  
-        buffers[name] = await ctx.decodeAudioData(arrayBuffer)  
+        const decoded = await ctx.decodeAudioData(arrayBuffer)  
+        buffers[name] = {  
+          buffer: decoded,  
+          frequency: detectPitch(decoded, ctx.sampleRate)  
+        }
       } catch (e) {  
         console.error('Failed to load sample:', name, e)  
       }  
@@ -133,19 +158,20 @@ const removeOscillator = (oscGain: OscGain) => {
   gainNode.disconnect()
 }
 const playSample = (name: string, level: number, context: AudioContext, time: number, voice: VoiceType) => {  
-  const buffer = buffers[name]  
-  if (!buffer) {  
-    console.warn('Buffer not ready for:', name)   // now you'll see if timing is the issue  
+  console.log(buffers)
+  const { buffer: audioBuffer, frequency } = buffers[name]  
+  if (!audioBuffer) {  
+    console.warn('Buffer not ready for:', name)  
     return  
   }  
   const source = context.createBufferSource()  
-  source.buffer = buffer  
+  source.buffer = audioBuffer
   const gain = context.createGain()  
   gain.gain.setValueAtTime(level, 0)  
   source.connect(gain)  
   gain.connect(context.destination)
 
-  source.detune.value = ((+randomOneFrom(voice.activeNotes)-1) * 100) // + getRangeValue('Detune', voice)
+  source.detune.value = ((+randomOneFrom(voice.activeNotes)-1) * 100)
   source.start(time)  
 
   source.onended = () => {  
