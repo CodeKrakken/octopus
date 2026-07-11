@@ -9,23 +9,79 @@ let samplesLoading = false
 
 const detectPitch = (buffer: AudioBuffer, sampleRate: number): number | null => {  
   const data = buffer.getChannelData(0)  
-  const SIZE = 2048  
-  const slice = data.slice(0, SIZE)  
-  // autocorrelation  
-  let bestOffset = -1, bestCorrelation = 0  
-  for (let offset = 20; offset < SIZE / 2; offset++) {  
-    let correlation = 0  
-    for (let i = 0; i < SIZE / 2; i++) {  
-      correlation += Math.abs(slice[i] - slice[i + offset])  
-    }  
-    correlation = 1 - correlation / (SIZE / 2)  
-    if (correlation > bestCorrelation) {  
-      bestCorrelation = correlation  
-      bestOffset = offset  
+  const SIZE = 4096  
+  
+  // Skip silence at the start  
+  let startSample = 0  
+  for (let i = 0; i < data.length - SIZE; i++) {  
+    if (Math.abs(data[i]) > 0.05) { startSample = i; break }  
+  }  
+  
+  const slice = data.slice(startSample, startSample + SIZE)  
+  const halfSize = SIZE / 2  
+  
+  // Compute autocorrelation for all offsets up to halfSize  
+  const r0 = slice.slice(0, halfSize).reduce((sum, x) => sum + x * x, 0)  
+  if (r0 === 0) return null  
+  
+  const correlations: number[] = []  
+  for (let offset = 0; offset < halfSize; offset++) {  
+    let sum = 0  
+    for (let i = 0; i < halfSize; i++) sum += slice[i] * slice[i + offset]  
+    correlations.push(sum / r0)  
+  }  
+  
+  // Find the first zero crossing (autocorrelation goes negative)  
+  let firstZeroCrossing = -1  
+  for (let i = 1; i < halfSize; i++) {  
+    if (correlations[i - 1] > 0 && correlations[i] <= 0) {  
+      firstZeroCrossing = i  
+      break  
     }  
   }  
-  if (bestCorrelation < 0.9) return null  // not tonal enough  
-  return sampleRate / bestOffset  
+  if (firstZeroCrossing === -1) return null  // no zero crossing = no clear pitch  
+  
+  // Find the first local maximum after the zero crossing  
+  const maxOffset = Math.floor(sampleRate / 60)  // min 60 Hz  
+  let bestOffset = -1  
+  let bestCorrelation = 0  
+  
+  for (let offset = firstZeroCrossing; offset < Math.min(maxOffset, halfSize - 1); offset++) {  
+    if (  
+      correlations[offset] > correlations[offset - 1] &&  
+      correlations[offset] > correlations[offset + 1] &&  
+      correlations[offset] > bestCorrelation  
+    ) {  
+      bestCorrelation = correlations[offset]  
+      bestOffset = offset  
+      break  // take the FIRST local peak, not the global max  
+    }  
+  }  
+  
+  if (bestCorrelation < 0.3 || bestOffset === -1) {  
+    return detectPitchFFT(slice, sampleRate)  
+  }  
+  return sampleRate / bestOffset 
+}
+
+const detectPitchFFT = (slice: Float32Array, sampleRate: number): number | null => {  
+  const N = slice.length  
+  let bestFreq = -1  
+  let bestMag = 0  
+  const minBin = Math.floor(60 * N / sampleRate)   // 60 Hz floor  
+  const maxBin = Math.floor(8000 * N / sampleRate) // 8000 Hz ceiling  
+  
+  for (let k = minBin; k < maxBin; k++) {  
+    let re = 0, im = 0  
+    for (let n = 0; n < N; n++) {  
+      const angle = (2 * Math.PI * k * n) / N  
+      re += slice[n] * Math.cos(angle)  
+      im -= slice[n] * Math.sin(angle)  
+    }  
+    const mag = Math.sqrt(re * re + im * im)  
+    if (mag > bestMag) { bestMag = mag; bestFreq = k * sampleRate / N }  
+  }  
+  return bestFreq > 0 ? bestFreq : null  
 }
   
 const loadSamples = (ctx: AudioContext) => {  
