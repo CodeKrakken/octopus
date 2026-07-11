@@ -144,8 +144,8 @@ const playSample = (name: string, level: number, context: AudioContext, time: nu
   gain.gain.setValueAtTime(level, 0)  
   source.connect(gain)  
   gain.connect(context.destination)
-  const pitch = Math.pow(Math.pow(2, 1/12), Math.random() * +randomOneFrom(voice.activeNotes as string[])-1)
-  source.playbackRate.value = pitch
+
+  source.detune.value = ((+randomOneFrom(voice.activeNotes)-1) * 100) // + getRangeValue('Detune', voice)
   source.start(time)  
 
   source.onended = () => {  
