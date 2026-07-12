@@ -1,6 +1,6 @@
 import { VoiceType }                                              from '../components/Voice/Voice.types'
 import { OscGain, VoicesRef }                                     from './Synth.types'
-import { allFrequencies, extrema, oneMinute, samples, waveforms } from '../content/data';
+import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms } from '../content/data';
 import { Range } from '../components/shared.types';
 
 const buffers: Record<string, { 
@@ -111,6 +111,32 @@ const findNearestNote = (frequency: number): { octave: number; note: number; fre
     note: bestNote,  
     frequency: allFrequencies[bestOctave][bestNote]  
   }  
+}
+
+const findNearestSampleInFolder = (  
+  folder: string,  
+  targetOctave: number,  
+  targetNote: number  
+): string | null => {  
+  const keys = sampleFolders[folder]  
+  if (!keys?.length) return null  
+  
+  let bestKey: string | null = null  
+  let bestDistance = Infinity  
+  
+  for (const key of keys) {  
+    const buf = buffers[key]  
+    if (!buf || buf.octave === null || buf.note === null) continue  
+    const distance =  
+      Math.abs(targetNote - buf.note) +  
+      Math.abs(targetOctave - buf.octave) * 12  
+    if (distance < bestDistance) {  
+      bestDistance = distance  
+      bestKey = key  
+    }  
+  }  
+  
+  return bestKey  
 }
   
 const loadSamples = (ctx: AudioContext) => {  
@@ -260,37 +286,59 @@ const removeOscillator = (oscGain: OscGain) => {
   oscillator.disconnect()
   gainNode.disconnect()
 }
-const playSample = (name: string, level: number, context: AudioContext, time: number, voice: VoiceType) => {  
-  console.log(buffers)
-  const { buffer: audioBuffer } = buffers[name]  
-  if (!audioBuffer) {  
-    console.warn('Buffer not ready for:', name)  
+const playSample = (  
+  name: string,  
+  level: number,  
+  context: AudioContext,  
+  time: number,  
+  voice: VoiceType  
+) => {  
+  // Pick target note/octave first — needed for folder sample lookup  
+  let targetNote: number | null = null  
+  let targetOctave: number | null = null  
+  if (voice.activeNotes.length > 0 && voice.activeOctaves.length > 0) {  
+    targetNote   = +randomOneFrom(voice.activeNotes)  
+    targetOctave = +randomOneFrom(voice.activeOctaves)  
+  }  
+  
+  // Resolve which buffer to actually play  
+  let bufferKey = name  
+  if (sampleFolders[name]) {  
+    // name is a folder — find the nearest sample in it  
+    if (targetNote !== null && targetOctave !== null) {  
+      bufferKey = findNearestSampleInFolder(name, targetOctave, targetNote) ?? name  
+    } else {  
+      bufferKey = randomOneFrom(sampleFolders[name])  
+    }  
+  }  
+  
+  const buf = buffers[bufferKey]  
+  if (!buf?.buffer) {  
+    console.warn('Buffer not ready for:', bufferKey)  
     return  
   }  
+  
   const source = context.createBufferSource()  
-  source.buffer = audioBuffer
+  source.buffer = buf.buffer  
   const gain = context.createGain()  
   gain.gain.setValueAtTime(level, 0)  
   source.connect(gain)  
-  gain.connect(masterCompressor!)
+  gain.connect(masterCompressor!)  
   
-  if (voice.activeNotes.length > 0 && voice.activeOctaves.length > 0) {  
-    const targetNote   = +randomOneFrom(voice.activeNotes)    // 1-based  
-    const sampleNote   = buffers[name].note!                  // 1-based  
-    const targetOctave = +randomOneFrom(voice.activeOctaves)  // 0-based  
-    const sampleOctave = buffers[name].octave!                // 0-based  
-    
-    source.detune.value = 
-      (targetNote - sampleNote) * 100 +  
-      (targetOctave - sampleOctave) * 1200  
-  }
+  // Apply pitch shift: works for both folder samples (nearest note → target)  
+  // and non-folder samples (sample's detected pitch → target)  
+  if (targetNote !== null && targetOctave !== null &&  
+      buf.note !== null && buf.octave !== null) {  
+    source.detune.value =  
+      (targetNote   - buf.note)   * 100 +  
+      (targetOctave - buf.octave) * 1200  
+  }  
   
   source.start(time)  
-
   source.onended = () => {  
     source.disconnect()  
     gain.disconnect()  
-  }
+  }  
 }
 
 const oscillate = (

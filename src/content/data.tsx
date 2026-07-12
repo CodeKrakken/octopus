@@ -38,7 +38,7 @@ const context = (
   }
 ).context(
   './sounds',
-  false,
+  true,
   /\.wav$/
 );
 
@@ -50,6 +50,23 @@ const samples = Object.fromEntries(
     context(path),
   ])
 );
+
+// Group samples by folder (e.g. "piano" -> ["piano/C4", "piano/A3", ...])  
+
+const sampleFolders: Record<string, string[]> = {}  
+
+Object.keys(samples).forEach(key => {  
+  const slash = key.indexOf('/')  
+  if (slash !== -1) {  
+    const folder = key.substring(0, slash)  
+    if (!sampleFolders[folder]) sampleFolders[folder] = []  
+    sampleFolders[folder].push(key)  
+  }  
+})  
+
+// Separate top-level samples from folder samples  
+const folderSampleKeys = new Set(Object.values(sampleFolders).flat())  
+const nonFolderSamples = Object.keys(samples).filter(k => !folderSampleKeys.has(k))
 
 const ranges = [
   'Level',
@@ -77,7 +94,8 @@ const buttonGroups = [
     label: 'Sounds',
     boxes: [
       ...waveforms,
-      ...Object.keys(samples)
+      ...nonFolderSamples,
+      ...Object.keys(sampleFolders)
     ],
     id: "sounds",
     className: "right"
@@ -469,5 +487,6 @@ export {
   extrema,
   oneMinute,
   samples,
+  sampleFolders,
   demoVoices
 }
