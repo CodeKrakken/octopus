@@ -39,14 +39,13 @@ const context = (
 ).context(
   './sounds',
   true,
-  /\.wav$/
-);
+/\.(wav|mp3)$/);
 
 const samples = Object.fromEntries(
   context.keys().map((path) => [
     path
       .replace('./', '')
-      .replace('.wav', ''),
+      .replace(/\.(wav|mp3)$/, ''),
     context(path),
   ])
 );
