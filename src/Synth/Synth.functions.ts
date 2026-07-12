@@ -328,11 +328,11 @@ const playSample = (
   // Apply pitch shift: works for both folder samples (nearest note → target)  
   // and non-folder samples (sample's detected pitch → target)  
   if (targetNote !== null && targetOctave !== null &&  
-      buf.note !== null && buf.octave !== null) {  
+  buf.note !== null && buf.octave !== null) {  
     source.detune.value =  
-      (targetNote   - buf.note)   * 100 +  
-      (targetOctave - buf.octave) * 1200  
-  }  
+    (targetNote - 1 - buf.note) * 100 +  
+    (targetOctave - buf.octave) * 1200
+  }                                                 
   
   source.start(time)  
   source.onended = () => {  
