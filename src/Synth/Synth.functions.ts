@@ -47,22 +47,46 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number): number | null => 
   }  
   if (firstZeroCrossing === -1) return null  // no zero crossing = no clear pitch  
   
-  // Find the first local maximum after the zero crossing  
-  const maxOffset = Math.floor(sampleRate / 60)  // min 60 Hz  
+  const maxOffset = Math.floor(sampleRate / 27)  // min ~27 Hz, covers full piano range  
+  const searchEnd = Math.min(maxOffset, halfSize - 1)  
+    
+  // Pass 1: find the global max correlation in the search range  
+  let globalMax = 0  
+  for (let offset = firstZeroCrossing; offset < searchEnd; offset++) {  
+    if (correlations[offset] > globalMax) globalMax = correlations[offset]  
+  }  
+    
+  // Pass 2: find the FIRST local peak above the threshold  
+  const threshold = 0.87  // tune between 0.85–0.93 if needed  
   let bestOffset = -1  
   let bestCorrelation = 0  
-  
-  for (let offset = firstZeroCrossing; offset < Math.min(maxOffset, halfSize - 1); offset++) {  
+  for (let offset = firstZeroCrossing; offset < searchEnd; offset++) {  
     if (  
       correlations[offset] > correlations[offset - 1] &&  
       correlations[offset] > correlations[offset + 1] &&  
-      correlations[offset] > bestCorrelation  
+      correlations[offset] >= threshold * globalMax  
     ) {  
       bestCorrelation = correlations[offset]  
       bestOffset = offset  
-      break  // take the FIRST local peak, not the global max  
+      break  // first significant peak = fundamental  
     }  
-  }  
+  }
+
+  if (bestOffset !== -1) {  
+    const originalCorrelation = bestCorrelation  
+    for (const divisor of [2, 3, 4, 5, 6, 7, 8, 10, 12, 16]) {  
+      const candidateOffset = Math.round(bestOffset / divisor)  
+      if (candidateOffset <= firstZeroCrossing) break  
+      const c     = correlations[candidateOffset]     ?? -Infinity  
+      const cPrev = correlations[candidateOffset - 1] ?? -Infinity  
+      const cNext = correlations[candidateOffset + 1] ?? -Infinity  
+      // Only accept if it's a genuine local peak AND close in strength  
+      if (c > cPrev && c > cNext && c >= 0.9 * originalCorrelation) {  
+        bestOffset      = candidateOffset  
+        bestCorrelation = c  
+      }  
+    }  
+  }
   
   if (bestCorrelation < 0.3 || bestOffset === -1) {  
     return detectPitchFFT(slice, sampleRate)  
@@ -74,7 +98,7 @@ const detectPitchFFT = (slice: Float32Array, sampleRate: number): number | null 
   const N = slice.length  
   let bestFreq = -1  
   let bestMag = 0  
-  const minBin = Math.floor(60 * N / sampleRate)   // 60 Hz floor  
+  const minBin = Math.floor(27 * N / sampleRate)   // 60 Hz floor  
   const maxBin = Math.floor(8000 * N / sampleRate) // 8000 Hz ceiling  
   
   for (let k = minBin; k < maxBin; k++) {  
@@ -97,6 +121,7 @@ const findNearestNote = (frequency: number): { octave: number; note: number; fre
   
   allFrequencies.forEach((octave, octaveIndex) => {  
     octave.forEach((noteFreq, noteIndex) => {  
+      if (noteIndex === 12) return  // skip duplicate boundary note  
       const centsDiff = Math.abs(1200 * Math.log2(frequency / noteFreq))  
       if (centsDiff < bestCentsDiff) {  
         bestCentsDiff = centsDiff  
@@ -104,7 +129,7 @@ const findNearestNote = (frequency: number): { octave: number; note: number; fre
         bestNote = noteIndex  
       }  
     })  
-  })  
+  })
   
   return {  
     octave: bestOctave,  
@@ -307,11 +332,12 @@ const playSample = (
     // name is a folder — find the nearest sample in it  
     if (targetNote !== null && targetOctave !== null) {  
       bufferKey = findNearestSampleInFolder(name, targetOctave, targetNote) ?? name  
+      console.log(bufferKey)
     } else {  
       bufferKey = randomOneFrom(sampleFolders[name])  
     }  
   }  
-  
+  console.log(buffers)
   const buf = buffers[bufferKey]  
   if (!buf?.buffer) {  
     console.warn('Buffer not ready for:', bufferKey)  
