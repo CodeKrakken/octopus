@@ -130,7 +130,7 @@ button img {
   height: 28px
 }
 
-#intervals #octaves {
+#intervals, #octaves {
   width: 28px;
   height: 28px
 }
