@@ -88,7 +88,7 @@ export default function ButtonGroup({
               }
 
               return (
-                <button {...props} style={{height: "28px", width: "56px"}} key={button}>
+                <button {...props} key={button} id={group.id}>
                   {
                     imgSrc ? <img src={imgSrc} alt="" width="100%" height="100%" />
                     : <>{button}</>

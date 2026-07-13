@@ -121,6 +121,16 @@ button img {
 }
 
 .group-button {
-  height: 56px;
   width: 56px;
+  height: 56px;
+}
+
+#sounds {
+  width: 56px;
+  height: 28px
+}
+
+#intervals #octaves {
+  width: 28px;
+  height: 28px
 }
