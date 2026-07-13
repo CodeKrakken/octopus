@@ -18,8 +18,9 @@ const noteNameToIndex: Record<string, number> = {
 }  
   
 const parseNoteFromKey = (key: string): { octave: number; note: number; frequency: number } | null => {  
-  const match = key.match(/\/([A-G][b#]?)(\d+)$/)  
+  const match = key.match(/[/_]([A-G][b#]?)(\d+)(?:_|\.|$)/)
   if (!match) return null  
+  console.log(match)
   const noteName = match[1]  
   const octave   = parseInt(match[2], 10)  
   const note     = noteNameToIndex[noteName]  
