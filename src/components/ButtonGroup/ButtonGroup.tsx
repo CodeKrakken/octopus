@@ -25,8 +25,6 @@ export default function ButtonGroup({
 
   const voice = voices[i]
 
-  
-
   let imgSrc
 
   try {

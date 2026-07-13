@@ -20,7 +20,6 @@ const noteNameToIndex: Record<string, number> = {
 const parseNoteFromKey = (key: string): { octave: number; note: number; frequency: number } | null => {  
   const match = key.match(/[/_]([A-G][b#]?)(\d+)(?:_|\.|$)/)
   if (!match) return null  
-  console.log(match)
   const noteName = match[1]  
   const octave   = parseInt(match[2], 10)  
   const note     = noteNameToIndex[noteName]  
@@ -356,12 +355,10 @@ const playSample = (
     // name is a folder — find the nearest sample in it  
     if (targetNote !== null && targetOctave !== null) {  
       bufferKey = findNearestSampleInFolder(name, targetOctave, targetNote) ?? name  
-      console.log(bufferKey)
     } else {  
       bufferKey = randomOneFrom(sampleFolders[name])  
     }  
   }  
-  console.log(buffers)
   const buf = buffers[bufferKey]  
   if (!buf?.buffer) {  
     console.warn('Buffer not ready for:', bufferKey)  
