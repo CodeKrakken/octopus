@@ -92,14 +92,13 @@ export default function Voice(
       <div className="centred row">
         {
           buttonGroups.map(group =>
-            <div key={group.label}>
-              <ButtonGroup 
-                group={group}
-                voices={voices}
-                i={i}
-                setVoices={setVoices}
-              />
-            </div>
+            <ButtonGroup 
+              group={group}
+              voices={voices}
+              i={i}
+              setVoices={setVoices}
+              key={group.label}
+            />
           )
         }
       </div>

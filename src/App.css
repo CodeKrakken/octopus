@@ -123,6 +123,12 @@ button img {
 .group-button {
   width: 56px;
   height: 56px;
+  padding: 0
+}
+
+.group-button img {
+  width: 56px;
+  height: 56px;
 }
 
 #sounds {
