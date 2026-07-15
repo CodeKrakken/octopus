@@ -4,8 +4,9 @@ import TextField from '../TextField/TextField'
 import { buttonGroups, doubleSliders, singleSliders } from '../../content/data'
 import DoubleSlider from '../DoubleSlider/DoubleSlider'
 import SingleSlider from '../SingleSlider/SingleSlider'
-import ButtonGroup from '../ButtonGroup/ButtonGroup'
+import GroupButton from '../GroupButton/GroupButton'
 import Piano from '../Piano/Piano'
+import ButtonGrid from '../ButtonGrid/ButtonGrid'
 
 export default function Voice(
   {
@@ -92,12 +93,13 @@ export default function Voice(
       <div className="centred row">
         {
           buttonGroups.map(group =>
-            <ButtonGroup 
+            <GroupButton 
               group={group}
               voices={voices}
               i={i}
               setVoices={setVoices}
               key={group.label}
+              component={ButtonGrid}
             />
           )
         }

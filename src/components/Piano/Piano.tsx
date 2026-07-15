@@ -1,4 +1,4 @@
-import { updateButton } from "../ButtonGroup/ButtonGroup.functions";
+import { updateButton } from "../GroupButton/GroupButton.functions";
 import { VoiceType } from "../Voice/Voice.types";
 import './Piano.css';
 

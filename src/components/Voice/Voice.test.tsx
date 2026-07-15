@@ -13,7 +13,7 @@ jest.mock('../../content/data', () => ({
 jest.mock('../Piano/Piano', () => () => <div data-testid="piano" />);  
 jest.mock('../SingleSlider/SingleSlider', () => () => <div />);  
 jest.mock('../DoubleSlider/DoubleSlider', () => () => <div />);  
-jest.mock('../ButtonGroup/ButtonGroup', () => () => <div />);  
+jest.mock('../GroupButton/GroupButton', () => () => <div />);  
 
 describe('Voice', () => {
   const mockHandleDelete = jest.fn();
