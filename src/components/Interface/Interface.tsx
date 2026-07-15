@@ -88,18 +88,17 @@ function Interface() {
       voices            = {voices}
       loadVoices        = {loadVoices}
     />
-    <div className="row section">
+    <div className="row section" id="voices">
       {
         voices.map((voice, i) => (
-          <div key = {voice.id}>
-            <Voice
-              i             = {i} 
-              setVoices     = {setVoices} 
-              voices        = {voices}
-              handleDelete  = {handleDelete}
-              dataAttribute = "Voices"
-            />
-          </div>
+          <Voice
+            i             = {i} 
+            setVoices     = {setVoices} 
+            voices        = {voices}
+            handleDelete  = {handleDelete}
+            dataAttribute = "Voices"
+            key = {voice.id}
+          />
         ))
       }
     </div>
