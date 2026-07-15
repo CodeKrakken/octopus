@@ -1,7 +1,7 @@
 body {
   background-color: black;
   color: white;
-  padding-top: 120px;
+  padding-top: calc(var(--u) * 3);
 }
 
 button {
@@ -141,12 +141,39 @@ button img {
   height: 54px;
 }
 
-#sounds {
-  width: 56px;
+#intervals, #octaves, #sounds {
+  width: 28px;
   height: 28px;
 }
 
-#intervals, #octaves {
-  width: 28px;
-  height: 28px;
+#header {
+  text-align: center;
+  padding-top: calc(var(--u) * 0.25);
+  z-index: 100;  
+  background-color: black;
+  position: fixed;  
+  top: 0;  
+  left: 0;  
+  width: 100%;  
+}
+
+#title {
+  margin: 10px;
+}
+
+.centred {
+  display: flex;  
+  align-items: center;  
+  justify-content: center;  
+}
+
+.header-button {
+  background-color: black;
+  width: 100px;
+  margin: 0px 10px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
