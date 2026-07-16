@@ -1,19 +1,14 @@
 import { useState } from "react";
 import { Group, GroupButtonProps } from "../shared.types";
+import { getImgSrc } from "../shared.functions";
 
 
 
 export default function GroupButton(props: GroupButtonProps) {  
   const [hidden, setHidden] = useState(true)  
   const { group, component, voices, i, setVoices } = props  
-  
-  let imgSrc
+  const imgSrc = getImgSrc([group!.id, group!.id])
 
-  try {
-    imgSrc = require(`./images/${group!.id}/${group!.id}.png`) || ""
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : "Unknown error", error)
-  }
 
   const handleClick = () => {
     setHidden((prev) => !prev)

@@ -1,5 +1,6 @@
 import { allFrequencies } from "../content/data"
 import { Synth } from "../Synth/Synth"
+import { Group } from "./shared.types"
 import { VoiceType } from "./Voice/Voice.types"
 
   const getActiveFrequencies = (voice: VoiceType) => {
@@ -36,7 +37,20 @@ import { VoiceType } from "./Voice/Voice.types"
     updateVoice(voices, i, setVoices)
   }
 
+  const getImgSrc = (strings: string[]) => {
+    let imgSrc
+    
+    try {
+      imgSrc = require(`./images/${strings[0]}/${strings[1]}.png`) || ""
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : "Unknown error", error)
+    }
+    
+    return imgSrc
+  }
+
   export {
     updateVoice,
-    updateTextField
+    updateTextField,
+    getImgSrc
   }

@@ -1,5 +1,6 @@
 import { updateButton } from "../GroupButton/GroupButton.functions";
-import { ButtonGridProps, ButtonGroupType } from "../shared.types";
+import { getImgSrc } from "../shared.functions";
+import { ButtonGridProps, ButtonGroupType, Group } from "../shared.types";
 
 export default function ButtonGrid({
   group,
@@ -35,14 +36,7 @@ export default function ButtonGrid({
               title: button
             };
 
-            let imgSrc
-
-            try {
-              imgSrc = require(`./images/${group!.id}/${button}.png`) || ""
-
-            } catch (error) {
-              console.error(error instanceof Error ? error.message : "Unknown error", error)
-            }
+            const imgSrc = getImgSrc([group.id, button])
 
             return (
               <button {...props} key={button}>
