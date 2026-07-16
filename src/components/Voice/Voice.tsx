@@ -35,8 +35,6 @@ export default function Voice(
             />
           </div>
 
-          
-
           <div>
             <DeleteButton
               handleDelete={handleDelete}

@@ -37,11 +37,11 @@ import { VoiceType } from "./Voice/Voice.types"
     updateVoice(voices, i, setVoices)
   }
 
-  const getImgSrc = (strings: string[]) => {
+  const getImgSrc = (path: string) => {
     let imgSrc
     
     try {
-      imgSrc = require(`./images/${strings[0]}/${strings[1]}.png`) || ""
+      imgSrc = require(path) || ""
     } catch (error) {
       console.error(error instanceof Error ? error.message : "Unknown error", error)
     }
