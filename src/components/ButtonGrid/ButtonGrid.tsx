@@ -9,7 +9,7 @@ export default function ButtonGrid({
   setVoices
 }: ButtonGridProps) {
 
-  const columns = Math.floor(Math.sqrt(group!.boxes.length));  
+  const columns =  group.columns || Math.floor(Math.sqrt(group!.boxes.length));  
   const voice = voices[i]
   return <>
     <div className="parent">

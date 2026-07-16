@@ -30,7 +30,8 @@ type Group = {
   label: string  
   boxes: string[]  
   id: string  
-  className: string  
+  className: string
+  columns?: number  
 }  
   
 type PianoGroup = {  
