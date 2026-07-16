@@ -372,11 +372,14 @@ const playSample = (
   source.connect(gain)  
   gain.connect(masterCompressor!)  
   
+  console.log(voice)
+  const detune = getRangeValue('Detune', voice)
+  console.log(detune)
   // Apply pitch shift: works for both folder samples (nearest note → target)  
   // and non-folder samples (sample's detected pitch → target)  
   if (targetNote !== null && targetOctave !== null &&  
   buf.note !== null && buf.octave !== null) {  
-    source.detune.value =  
+    source.detune.value = detune +
     (targetNote - 1 - buf.note) * 100 +  
     (targetOctave - buf.octave) * 1200
   }                                                 
