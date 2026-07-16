@@ -301,10 +301,9 @@ const makeSound = (
 
       const oscGain = setUpOscillator(context)
       oscGain.oscillator.type = randomSound
-      const noteLength = generateNoteLength(voice, intervalLength)
       oscGain.oscillator.frequency.value = generateFrequency(voice)
       
-      shapeNote(oscGain.gainNode, voice, noteLength, level)
+      shapeNote(oscGain.gainNode, voice, intervalLength, level)
       setTimeout(() => removeOscillator(oscGain), (intervalLength+offsetTime)*1000)
     } else {
       playSample(randomSound, level, context, voice.offsetInterval, voice)
@@ -340,7 +339,7 @@ const playSample = (
   level: number,  
   context: AudioContext,  
   time: number,  
-  voice: VoiceType  
+  voice: VoiceType
 ) => {  
 
   // Pick target note/octave first — needed for folder sample lookup  
