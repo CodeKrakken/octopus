@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { ButtonGridProps, ButtonGroupType, Group, GroupButtonProps, PianoProps } from "../shared.types";
-import { VoiceType } from "../Voice/Voice.types";
-import { updateButton } from "./GroupButton.functions";
-import ButtonGrid from "../ButtonGrid/ButtonGrid";
+import { Group, GroupButtonProps } from "../shared.types";
+
 
 
 export default function GroupButton(props: GroupButtonProps) {  

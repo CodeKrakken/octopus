@@ -1,6 +1,5 @@
 import { updateButton } from "../GroupButton/GroupButton.functions";
-import { ButtonGridProps, ButtonGroupType, Group } from "../shared.types";
-import { VoiceType } from "../Voice/Voice.types";
+import { ButtonGridProps, ButtonGroupType } from "../shared.types";
 
 export default function ButtonGrid({
   group,
