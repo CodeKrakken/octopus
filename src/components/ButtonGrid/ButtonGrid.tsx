@@ -37,7 +37,7 @@ export default function ButtonGrid({
               title: button
             };
 
-            const imgPath = `./images/${group.id}/${button}.png`
+            const imgPath = `${group.id}/${button}`
 
             return (
               <Button
