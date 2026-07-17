@@ -1,5 +1,4 @@
 import { updateButton } from "../GroupButton/GroupButton.functions";
-import { getImgSrc } from "../shared.functions";
 import { ButtonGridProps, ButtonGroupType, Group } from "../shared.types";
 
 export default function ButtonGrid({
@@ -11,6 +10,7 @@ export default function ButtonGrid({
 
   const columns =  group.columns || Math.floor(Math.sqrt(group!.boxes.length));  
   const voice = voices[i]
+
   return <>
     <div className="parent">
       <div
@@ -36,7 +36,7 @@ export default function ButtonGrid({
               title: button
             };
 
-            const path = './images/${group.id}/${button}.png'
+            const path = `./images/${group.id}/${button}.png`
 
             let imgSrc
    
