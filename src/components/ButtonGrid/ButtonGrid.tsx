@@ -1,6 +1,6 @@
 import Button from "../Button/Button";
 import { updateButton } from "../GroupButton/GroupButton.functions";
-import { ButtonGridProps, ButtonGroupType, Group } from "../shared.types";
+import { ButtonGridProps, ButtonGroupType } from "../shared.types";
 
 export default function ButtonGrid({
   group,
