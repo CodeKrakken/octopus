@@ -7,7 +7,7 @@ import { getImgSrc } from "../shared.functions";
 export default function GroupButton(props: GroupButtonProps) {  
   const [hidden, setHidden] = useState(true)  
   const { group, component, voices, i, setVoices } = props
-  const path = `src/content/button-images/${group.id}/${group.id}.png`
+  const path = `./content/button-images/${group.id}/${group.id}.png`
   const imgSrc = getImgSrc(path)
 
 

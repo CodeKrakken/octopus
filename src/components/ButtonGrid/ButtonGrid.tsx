@@ -36,7 +36,7 @@ export default function ButtonGrid({
               title: button
             };
 
-            const path = `src/content/button-images/${group.id}/${button}.png`
+            const path = `./content/button-images/${group.id}/${button}.png`
             const imgSrc = getImgSrc(path)
             return (
               <button {...props} key={button}>
