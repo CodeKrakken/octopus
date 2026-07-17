@@ -7,9 +7,15 @@ import { getImgSrc } from "../shared.functions";
 export default function GroupButton(props: GroupButtonProps) {  
   const [hidden, setHidden] = useState(true)  
   const { group, component, voices, i, setVoices } = props
-  const path = `./content/button-images/${group.id}/${group.id}.png`
-  const imgSrc = getImgSrc(path)
-
+  const path = './images/${group.id}.png'
+  
+  let imgSrc
+   
+  try {
+    imgSrc = require(`${path}`) || ""
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : "Unknown error", error)
+  }
 
   const handleClick = () => {
     setHidden((prev) => !prev)

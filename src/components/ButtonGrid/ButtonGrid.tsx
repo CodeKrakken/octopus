@@ -36,8 +36,16 @@ export default function ButtonGrid({
               title: button
             };
 
-            const path = `./content/button-images/${group.id}/${button}.png`
-            const imgSrc = getImgSrc(path)
+            const path = './images/${group.id}/${button}.png'
+
+            let imgSrc
+   
+            try {
+              imgSrc = require(`${path}`) || ""
+            } catch (error) {
+              console.error(error instanceof Error ? error.message : "Unknown error", error)
+            }
+
             return (
               <button {...props} key={button}>
                 {
