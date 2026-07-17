@@ -1,34 +1,28 @@
 import { useState } from "react";
 import { Group, GroupButtonProps } from "./shared.types";
+import Button from "./Button/Button";
 
-
-
-export default function GroupButton(props: GroupButtonProps) {  
+export default function GroupButton({ group, component, voices, i, setVoices }: GroupButtonProps) {  
   const [hidden, setHidden] = useState(true)  
-  const { group, component, voices, i, setVoices } = props  
+
+  const imgPath = `${group!.id}/${group!.id}`
   
-  let imgSrc
-
-  try {
-    imgSrc = require(`../${group!.id}/${group!.id}.png`) || ""
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : "Unknown error", error)
-  }
-
   const handleClick = () => {
     setHidden((prev) => !prev)
   }
 
   const ComponentToRender = component;  
   
+  const props = {
+    className: "group-button",  
+    onClick: handleClick  
+  }
   return <>  
-    <button   
-      className="group-button"  
-      onClick={handleClick}  
-    >  
-      {imgSrc ? <img alt="" src={imgSrc} width="100%" height="100%" />  
-        : <>{group.label}</>}  
-    </button>  
+    <Button 
+      props={props}
+      label={group.label}
+      imgPath={imgPath}
+    />
   
     {!hidden && ComponentToRender && (  
       <ComponentToRender   

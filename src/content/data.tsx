@@ -23,6 +23,34 @@ const waveforms = [
   'square',
 ]
 
+// Load images
+
+const imageContext = (  
+  require as unknown as {  
+    context: (  
+      path: string,  
+      recursive?: boolean,  
+      match?: RegExp  
+    ) => {  
+      keys(): string[];  
+      (id: string): string;  
+    };  
+  }  
+).context(  
+  './button-images',  
+  true,  
+  /\.png$/  
+);  
+  
+const images = Object.fromEntries(  
+  imageContext.keys().map((path) => [  
+    path  
+      .replace('./', '')  
+      .replace(/\.png$/, ''),  
+    imageContext(path),  
+  ])  
+);
+
 // Load audio samples from folder
 
 const context = (
@@ -496,5 +524,6 @@ export {
   samples,
   sampleFolders,
   demoVoices,
-  piano
+  piano,
+  images
 }

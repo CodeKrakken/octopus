@@ -1,27 +1,20 @@
+import { images } from "../../content/data"
+
 export default function Button({
   props, 
   label,
   imgPath,
-  key
 }: {
   props: any
   label: string
   imgPath?: string
-  key?: string
 }) {
 
-  let imgSrc
-   
-  try {
-    imgSrc = require(`${imgPath}`) || ""
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : "Unknown error", error)
-  }
+  const imgSrc = images[imgPath!] || ""
 
   return <>  
     <button   
       {...props}
-      key={key}
     >  
       {
         imgSrc ? <img 
