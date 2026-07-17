@@ -1,3 +1,4 @@
+import Button from "../Button/Button";
 import { updateButton } from "../GroupButton/GroupButton.functions";
 import { ButtonGridProps, ButtonGroupType, Group } from "../shared.types";
 
@@ -36,23 +37,15 @@ export default function ButtonGrid({
               title: button
             };
 
-            const path = `./images/${group.id}/${button}.png`
-
-            let imgSrc
-   
-            try {
-              imgSrc = require(`${path}`) || ""
-            } catch (error) {
-              console.error(error instanceof Error ? error.message : "Unknown error", error)
-            }
+            const imgPath = `./images/${group.id}/${button}.png`
 
             return (
-              <button {...props} key={button}>
-                {
-                  imgSrc ? <img src={imgSrc} alt="" width="100%" height="100%" />
-                  : <>{button}</>
-                }
-              </button>
+              <Button
+                props={props}
+                imgPath={imgPath}
+                key={button}
+                label={button}
+              />
             )       
           })
         }
