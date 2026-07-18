@@ -5,7 +5,7 @@ import Button from "../Button/Button";
 export default function GroupButton({ group, component, voices, i, setVoices }: GroupButtonProps) {  
   const [hidden, setHidden] = useState(true)  
   
-  const imgPath = `./images/${group.id}.png`
+  const imgPath = `${group.id}`
   
   const handleClick = () => {
     setHidden((prev) => !prev)
