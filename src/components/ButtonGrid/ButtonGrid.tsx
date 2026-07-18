@@ -1,13 +1,19 @@
 import Button from "../Button/Button";
 import { updateButton } from "../GroupButton/GroupButton.functions";
-import { ButtonGridProps, ButtonGroupType } from "../shared.types";
+import { ButtonGroupType, Group } from "../shared.types";
+import { VoiceType } from "../Voice/Voice.types";
 
 export default function ButtonGrid({
   group,
   voices,
   i,
   setVoices
-}: ButtonGridProps) {
+} : {  
+  group: Group  
+  voices: VoiceType[]  
+  i: number  
+  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
+}) {
 
   const columns =  group.columns || Math.floor(Math.sqrt(group!.boxes.length));  
   const voice = voices[i]

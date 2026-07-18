@@ -57,13 +57,6 @@ type ButtonGroupProps = {
   
 type GroupButtonProps = PianoProps | ButtonGroupProps
 
-type ButtonGridProps = {  
-  group: Group  
-  voices: VoiceType[]  
-  i: number  
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
-}
-
 export type {
   NumericAttribute,
   Range,
@@ -72,5 +65,4 @@ export type {
   Group,
   GroupButtonProps,
   PianoProps,
-  ButtonGridProps
 }

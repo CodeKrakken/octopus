@@ -10,15 +10,10 @@ export default function Button({
   imgPath?: string
 }) {
 
-  console.log(imgPath)
-  console.log(images)
-  
   const imgSrc = images[imgPath!] || ""
 
   return <>  
-    <button   
-      {...props}
-    >  
+    <button {...props}>  
       {
         imgSrc ? <img 
           alt="" 
