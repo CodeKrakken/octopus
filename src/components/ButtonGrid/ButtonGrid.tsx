@@ -15,35 +15,36 @@ export default function ButtonGrid({
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
 }) {
 
-  const columns =  group.columns || Math.floor(Math.sqrt(group!.boxes.length));  
+  const { boxes, className, label, id} = group
+  const columns =  group.columns || Math.floor(Math.sqrt(boxes.length));  
   const voice = voices[i]
 
   return <>
     <div className="parent">
       <div
-        className={`button-grid ${group!.className}`}
+        className={`button-grid ${className}`}
         style={{
           gridTemplateColumns: `repeat(${columns}, 1fr)`,
         }}
       >
         {
-          group!.boxes.map(button => {
+          boxes.map(button => {
 
             const props = {
               className: `
                 key
-                ${voice[`active${group!.label as ButtonGroupType}`].includes(button) ? 'active' : ''}
+                ${voice[`active${label as ButtonGroupType}`].includes(button) ? 'active' : ''}
               `,
-              'data-attribute': group!.label,
+              'data-attribute': label,
               'data-voice': i,
               value: button,
-              checked: voice[`active${group!.label as ButtonGroupType}`].includes(button),
-              onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(e, `active${group!.label as ButtonGroupType}`, voices, i, setVoices),
-              id: group!.id,
+              checked: voice[`active${label as ButtonGroupType}`].includes(button),
+              onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(e, `active${label as ButtonGroupType}`, voices, i, setVoices),
+              id: id,
               title: button
             };
 
-            const imgPath = `${group.id}/${button}`
+            const imgPath = `${id}/${button}`
 
             return (
               <Button
