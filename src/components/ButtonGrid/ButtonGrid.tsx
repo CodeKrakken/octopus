@@ -23,9 +23,7 @@ export default function ButtonGrid({
     <div className="parent">
       <div
         className={`button-grid ${className}`}
-        style={{
-          gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        }}
+        style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}}
       >
         {
           buttons.map(button => {
@@ -39,7 +37,9 @@ export default function ButtonGrid({
               'data-voice': i,
               value: button,
               checked: voice[`active${label as ButtonGroupType}`].includes(button),
-              onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(e, `active${label as ButtonGroupType}`, voices, i, setVoices),
+              onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(
+                e, `active${label as ButtonGroupType}`, voices, i, setVoices
+              ),
               id: id,
               title: button
             };
