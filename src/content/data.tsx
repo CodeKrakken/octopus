@@ -112,21 +112,21 @@ const piano = {
 const buttonGroups = [
   {
     label: 'Octaves',
-    boxes: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    buttons: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     id: "octaves",
     className: "left",
     columns: 2
   },
   {
     label: 'Intervals',
-    boxes: ['4', '2', '1', '0.5', '0.25', '0.125'],
+    buttons: ['4', '2', '1', '0.5', '0.25', '0.125'],
     id: "intervals",
     className: "center",
     columns: 2
   },
   {
     label: 'Sounds',
-    boxes: [
+    buttons: [
       ...waveforms,
       ...nonFolderSamples,
       ...Object.keys(sampleFolders)

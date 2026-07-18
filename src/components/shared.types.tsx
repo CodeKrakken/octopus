@@ -28,7 +28,7 @@ type Slider = {
 
 type Group = {  
   label: string  
-  boxes: string[]  
+  buttons: string[]  
   id: string  
   className: string
   columns?: number  
