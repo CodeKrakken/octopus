@@ -18,6 +18,11 @@ export default function Voice(
     dataAttribute
   }: VoiceProps
 ) {
+
+  const props = {
+    props: { onClick: () => handleDelete(i) },
+    label: "X"
+  }
   
   return (
     <div 
@@ -37,13 +42,8 @@ export default function Voice(
           </div>
 
           <div>
-            {/* <DeleteButton
-              handleDelete={handleDelete}
-              i={i}
-            /> */}
             <Button
-              props={{onClick: handleDelete, value: i}}
-              label="X"
+              {...props}
             />
           </div>
         </div>

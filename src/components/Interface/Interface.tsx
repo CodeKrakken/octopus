@@ -41,13 +41,11 @@ function Interface() {
     Synth.add(newVoice, running, voicesRef)
   }
 
-  const handleDelete = (e: any) => {
-
-    const voice = voices[e.target.value]
-    voice.isActive = false
-    console.log(voice)
-    setVoices(voices => voices.filter((voice, j) => j !== +e.target.value))
-    Synth.delete(e.target.value)
+  const handleDelete = (i: number) => {  
+    const voice = voices[i]  
+    voice.isActive = false  
+    setVoices(voices => voices.filter((voice, j) => j !== i))  
+    Synth.delete(i)  
   }
 
   const handleStartStop = () => running ? stopAll() : start()
