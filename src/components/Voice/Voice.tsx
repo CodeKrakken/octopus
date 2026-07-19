@@ -1,5 +1,4 @@
 import { VoiceProps } from './Voice.types'
-import DeleteButton   from '../DeleteButton/DeleteButton'
 import TextField from '../TextField/TextField'
 import { buttonGroups, piano, doubleSliders, singleSliders } from '../../content/data'
 import DoubleSlider from '../DoubleSlider/DoubleSlider'
