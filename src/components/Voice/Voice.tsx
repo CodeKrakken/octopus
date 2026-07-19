@@ -7,6 +7,7 @@ import SingleSlider from '../SingleSlider/SingleSlider'
 import GroupButton from '../GroupButton/GroupButton'
 import Piano from '../Piano/Piano'
 import ButtonGrid from '../ButtonGrid/ButtonGrid'
+import Button from '../Button/Button'
 
 export default function Voice(
   {
@@ -36,9 +37,13 @@ export default function Voice(
           </div>
 
           <div>
-            <DeleteButton
+            {/* <DeleteButton
               handleDelete={handleDelete}
               i={i}
+            /> */}
+            <Button
+              props={{onClick: handleDelete, value: i}}
+              label="X"
             />
           </div>
         </div>

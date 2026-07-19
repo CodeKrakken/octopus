@@ -1,12 +1,12 @@
-import { DeleteButtonProps } from "./DeleteButton.types"
-
-export default function DeleteButton ({...props}: DeleteButtonProps) {
+export default function DeleteButton ({
+  handleDelete,
+  i
+} : {
+  handleDelete  : Function,
+  i             : number
+}) {
   
-  const {
-    handleDelete,
-    i
-  } = props
-
+  
   return <>
     <button 
       onClick={() => handleDelete(i)}
