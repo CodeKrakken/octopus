@@ -2,17 +2,17 @@ import { updateVoice } from "../shared.functions"
 import { Compound, VoiceType } from "../Voice/Voice.types"
 
 const updateButton = (
-  e: any, // React.MouseEvent<HTMLButtonElement>, 
+  e: React.MouseEvent<HTMLButtonElement>, 
   attribute: Compound, 
   voices: VoiceType[], 
   i: number, 
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 ) => {
 
-  if ((voices[i][attribute]).includes(e.target.value as any)) {
-    voices[i][attribute] = voices[i][attribute].filter(value => value !== e.target.value)
+  if ((voices[i][attribute]).includes(e.currentTarget.value as any)) {
+    voices[i][attribute] = voices[i][attribute].filter(value => value !== e.currentTarget.value)
   } else {
-    voices[i][attribute] = [voices[i][attribute], e.target.value].flat()
+    voices[i][attribute] = [voices[i][attribute], e.currentTarget.value].flat()
   }
   
   updateVoice(voices, i, setVoices)
