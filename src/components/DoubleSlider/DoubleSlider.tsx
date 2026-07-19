@@ -35,10 +35,7 @@ export default function DoubleSlider ({
   ] as [number, number]
   
   const handleRangeInput = ([lo, hi]: [number, number]) => {    
-    
-    sliderRef.current!.thumb.lower.dataset.label = String(lo);  
-    sliderRef.current!.thumb.upper.dataset.label = String(hi);  
-    
+
     const updatedVoices = [...voices] as VoiceType[];   
 
     updatedVoices[i][`min${slider.value}` as NumericAttribute] = lo;    
