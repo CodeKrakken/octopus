@@ -30,8 +30,6 @@ export default function SingleSlider ({
         
   const handleInput = ([lo, hi]: [number, number]) => {  
 
-    sliderRef.current!.thumb.upper.dataset.label = hi.toString();  
-
     const updatedVoices = [...voices];
 
     updatedVoices[i][key as NumericAttribute] = hi;  
