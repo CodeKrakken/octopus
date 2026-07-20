@@ -15,8 +15,10 @@ export default function ButtonGrid({
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
 }) {
 
-  const { buttons, className, label, id} = group
-  const columns =  group.columns || Math.floor(Math.sqrt(buttons.length));  
+  const { className, label, id} = group
+  const buttons = group.buttons as string[]
+  const columns = group.columns || Math.floor(Math.sqrt(buttons.length));  
+
   const voice = voices[i]
 
   return <>
