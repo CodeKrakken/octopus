@@ -9,7 +9,7 @@ const updateButton = (
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
 ) => {
 
-  if ((voices[i][attribute]).includes(e.currentTarget.value as any)) {
+  if (voices[i][attribute].includes(e.currentTarget.value as any)) {
     voices[i][attribute] = voices[i][attribute].filter(value => value !== e.currentTarget.value)
   } else {
     voices[i][attribute] = [voices[i][attribute], e.currentTarget.value].flat()
