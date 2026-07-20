@@ -15,11 +15,17 @@ export default function ButtonGrid({
   setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
 }) {
 
-  const { className, label, id} = group
+  const { className, label, id } = group
   const buttons = group.buttons as string[]
   const columns = group.columns || Math.floor(Math.sqrt(buttons.length));  
 
   const voice = voices[i]
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    updateButton(
+      e, `active${label as ButtonGroupType}`, voices, i, setVoices
+    )
+  }
 
   return <>
     <div className="parent">
@@ -39,9 +45,7 @@ export default function ButtonGrid({
               'data-voice': i,
               value: button,
               checked: voice[`active${label as ButtonGroupType}`].includes(button),
-              onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(
-                e, `active${label as ButtonGroupType}`, voices, i, setVoices
-              ),
+              onClick: handleClick,
               id: id,
               title: button
             };
