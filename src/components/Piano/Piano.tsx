@@ -1,14 +1,18 @@
 import { updateButton } from "../shared.functions";
-import { VoiceType } from "../Voice/Voice.types";
+import { VoiceType }    from "../Voice/Voice.types";
 
 export default function Piano ({
+
   voices,
   i,
   setVoices
+
 } : {
-  voices: VoiceType[]
-  i: number,
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
+  
+  voices    : VoiceType[]
+  i         : number,
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
+
 }) {
 
   const voice = voices[i]
@@ -20,26 +24,30 @@ export default function Piano ({
     ...whiteKeys, 
     ...blackKeys
   ].sort((a, b) => +a - +b)
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    updateButton(e, 'activeNotes', voices, i, setVoices)
+  }
   
   return (
     <div className="parent">
       <div className="button-grid keyboard">
         {
-          keys.map(note => {
+          keys.map(key => {
+
+            const colour = blackKeys.includes(key) ? 'black' : 'white'
+            const active = voice.activeNotes.includes(key) ? 'active' : ''
+
             const props = {
-              className: `
-                key
-                ${blackKeys.includes(note) ? 'black' : 'white'}
-                ${voice.activeNotes.includes(note) ? 'active' : ''}
-              `,
-              'data-attribute': 'Notes',
-              'data-voice': i,
-              value: note,
-              checked: voice.activeNotes.includes(note),
-              onClick: (e: React.MouseEvent<HTMLButtonElement>) => updateButton(e, 'activeNotes', voices, i, setVoices),
+              className         : `${active} ${colour} key`,
+              'data-attribute'  : 'Notes',
+              'data-voice'      : i,
+              value             : key,
+              checked           : voice.activeNotes.includes(key),
+              onClick           : handleClick
             };
 
-            return <button {...props} key={note} />
+            return <button {...props} key={key} />
           })
         }
       </div>
