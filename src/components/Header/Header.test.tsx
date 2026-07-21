@@ -17,7 +17,6 @@ describe('Header', () => {
     <Header
       handleAddVoice={mockHandleAddVoice}
       handleStartStop={mockHandleStartStop}
-      disableButtons={false}
       running={state}
       voices={[]}
       loadVoices={mockLoadVoices}
