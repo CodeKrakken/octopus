@@ -1,3 +1,6 @@
+import ButtonGrid from "../components/ButtonGrid/ButtonGrid";
+import Piano from "../components/Piano/Piano";
+
 const title = "OCTOPUS"
 
 const addLabel = "Add Voice"
@@ -104,25 +107,27 @@ const ranges = [
   'Decay',
 ] as const
 
-const piano = { 
-  label: 'Piano' as const, 
-  id: 'piano' as const 
-}
-
 const buttonGroups = [
+  { 
+    label: 'Piano' as const, 
+    id: 'piano' as const,
+    component: Piano
+  },
   {
     label: 'Octaves',
     buttons: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     id: "octaves",
     className: "left",
-    columns: 2
+    columns: 2,
+    component: ButtonGrid
   },
   {
     label: 'Intervals',
     buttons: ['4', '2', '1', '0.5', '0.25', '0.125'],
     id: "intervals",
     className: "center",
-    columns: 2
+    columns: 2,
+    component: ButtonGrid
   },
   {
     label: 'Sounds',
@@ -133,7 +138,8 @@ const buttonGroups = [
     ],
     id: "sounds",
     className: "right", 
-    columns: 5
+    columns: 5,
+    component: ButtonGrid
   }
 ]
 
@@ -519,6 +525,5 @@ export {
   samples,
   sampleFolders,
   demoVoices,
-  piano,
   buttonImages
 }
