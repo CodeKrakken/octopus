@@ -1,46 +1,52 @@
-import { allFrequencies } from "../content/data"
-import { Synth } from "../Synth/Synth"
-import { Compound, VoiceType } from "./Voice/Voice.types"
+import { allFrequencies }       from "../content/data"
+import { Synth }                from "../Synth/Synth"
+import { Compound, VoiceType }  from "./Voice/Voice.types"
 
 const getActiveFrequencies = (voice: VoiceType) => {
   
   const { activeOctaves, activeNotes } = voice
 
   let allFrequenciesInOctaves = allFrequencies.filter(
-    (octave, j) => activeOctaves.includes(j.toString())
+    (octave, i) => activeOctaves.includes(i.toString())
   )
 
   let activeFrequencies = allFrequenciesInOctaves.map(octave =>
-    octave.filter((note, j) => activeNotes.includes((j+1).toString()))
+    octave.filter((note, i) => activeNotes.includes((i+1).toString()))
   )
 
   return activeFrequencies.flat(Infinity)
 }
 
 const updateButton = (
-  e: React.MouseEvent<HTMLButtonElement>, 
-  attribute: Compound, 
-  voices: VoiceType[], 
-  i: number, 
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
+
+  e         : React.MouseEvent<HTMLButtonElement>, 
+  attribute : Compound, 
+  voices    : VoiceType[], 
+  i         : number, 
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
+
 ) => {
 
-  if (voices[i][attribute].includes(e.currentTarget.value as any)) {
-    voices[i][attribute] = voices[i][attribute].filter(value => value !== e.currentTarget.value)
-  } else {
-    voices[i][attribute] = [voices[i][attribute], e.currentTarget.value].flat()
-  }
+  voices[i][attribute].includes(e.currentTarget.value as any) 
+  ? voices[i][attribute] = voices[i][attribute].filter(value => value !== e.currentTarget.value)
+  : voices[i][attribute] = [voices[i][attribute], e.currentTarget.value].flat()
   
   updateVoice(voices, i, setVoices)
 }
 
-const updateVoice = (voices: VoiceType[], i: number, setVoices: Function) => {
+const updateVoice = (
+
+  voices: VoiceType[], 
+  i: number, 
+  setVoices: Function
+
+) => {
+
   const voice = voices[i]
   voice.activeFrequencies = getActiveFrequencies(voice) as number[]
   setVoices([voices.slice(0,i), voice, voices.slice(i+1)].flat())
   Synth.update(voice, i)
 }
-
 
 export {
   updateVoice,
