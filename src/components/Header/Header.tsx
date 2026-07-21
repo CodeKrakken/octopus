@@ -23,14 +23,21 @@ export default function Header ({
 
   const [disableLoad, setDisableLoad] = useState(false)
 
-  useEffect(() => {
-    setDisableLoad(localStorage.voices ? false : true)
-  }, [])
+  useEffect(() => { setDisableLoad(localStorage.voices ? false : true) }, [])
 
   const letterImages = (string: string, height: string = "40px") => {
 
     const imageArray = string.split('').map((letter, i) => 
-      /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? <img alt="" src={require(`../../content/letter-images/${letter.toUpperCase()}.png`)} height={height} key={`${letter}-${i}`} />  : letter
+      /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? (
+        <img 
+          alt     = "" 
+          src     = {require(`../../content/letter-images/${letter.toUpperCase()}.png`)} 
+          height  = {height} 
+          key     = {`${letter}-${i}`} 
+        />
+      )
+        : 
+      letter
     )
 
     return <div className="centred">{imageArray.map(image => image)}</div>
