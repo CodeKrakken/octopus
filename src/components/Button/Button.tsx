@@ -1,4 +1,4 @@
-import { images } from "../../content/data"
+import { buttonImages } from "../../content/data"
 
 export default function Button({
 
@@ -14,7 +14,7 @@ export default function Button({
 
 }) {
 
-  const imgSrc = images[imgPath!] || ""
+  const imgSrc = buttonImages[imgPath!] || ""
 
   return <>  
     <button {...props}>  

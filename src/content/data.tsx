@@ -42,7 +42,7 @@ const imageContext = (
   /\.png$/  
 );  
   
-const images = Object.fromEntries(  
+const buttonImages = Object.fromEntries(  
   imageContext.keys().map((path) => [  
     path  
       .replace('./', '')  
@@ -525,5 +525,5 @@ export {
   sampleFolders,
   demoVoices,
   piano,
-  images
+  buttonImages
 }
