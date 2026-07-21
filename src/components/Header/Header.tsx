@@ -27,7 +27,8 @@ export default function Header ({
 
   const letterImages = (string: string, height: string = "40px") => {
 
-    const imageArray = string.split('').map((letter, i) => 
+    const letterArray = string.split('').map((letter, i) => 
+
       /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? (
         <img 
           alt     = "" 
@@ -40,7 +41,7 @@ export default function Header ({
       letter
     )
 
-    return <div className="centred">{imageArray.map(image => image)}</div>
+    return <div className="centred">{letterArray.map(letter => letter)}</div>
   }
 
   const handleSave = () => {
@@ -51,10 +52,14 @@ export default function Header ({
   const buttonLabelHeight = "20px"
 
   return (
-    <div className="column" id="header">
+    <div 
+      className="column" 
+      id="header"
+    >
       <div id="title">
         {letterImages(title, '50px')}
       </div>
+
       <div className="centred section">
 
         <button 
@@ -79,7 +84,6 @@ export default function Header ({
           disabled={disableButtons as boolean}
           className="header-button"
         >
-          <div style={{"margin": "auto auto"}}></div>
           {letterImages('Save', buttonLabelHeight)}
         </button>
         <button
