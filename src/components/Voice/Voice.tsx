@@ -49,7 +49,7 @@ export default function Voice(
 
         <div className="row">
           {
-            singleSliders.map(slider => <div key={slider.key}>
+            singleSliders.map(slider => <div key={slider.attrName}>
               <div className="slider-label">{slider.label}</div>
               <div className="single slider">    
                 <SingleSlider
@@ -68,7 +68,7 @@ export default function Voice(
           [1, 2, 3].map(row => 
             <div className="row" key={row}>
               {
-                doubleSliders.filter(slider => slider.row === row).map(slider => <div key={slider.key}>
+                doubleSliders.filter(slider => slider.row === row).map(slider => <div key={slider.attrName}>
                   <div className="slider-label">{slider.label}</div>
                   <div className="slider">
                     <DoubleSlider 

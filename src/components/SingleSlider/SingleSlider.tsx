@@ -1,8 +1,8 @@
-import { NumericAttribute, Slider } from "../shared.types";  
-import { VoiceType } from "../Voice/Voice.types";  
-import RangeSlider, { ReactRangeSliderInputRef } from 'react-range-slider-input';  
+import { NumericAttribute, Slider }               from "../shared.types";  
+import { VoiceType }                              from "../Voice/Voice.types";  
+import RangeSlider, { ReactRangeSliderInputRef }  from 'react-range-slider-input';  
+import { useEffect, useRef }                      from "react";
 import 'react-range-slider-input/dist/style.css';  
-import { useEffect, useRef } from "react";
 import "./SingleSlider.css";
     
 export default function SingleSlider ({  
@@ -11,12 +11,14 @@ export default function SingleSlider ({
   i,    
   voices,  
   setVoices,
+
 } : {  
 
-  slider: Slider,  
-  i: number,  
-  voices: VoiceType[],  
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>
+  slider    : Slider
+  i         : number 
+  voices    : VoiceType[] 
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
+
 }) {  
   
   const sliderRef = useRef<ReactRangeSliderInputRef>(null);  
@@ -25,27 +27,29 @@ export default function SingleSlider ({
     sliderRef.current!.thumb.upper.dataset.label = String(value);  
   });
   
-  const {min, max, key} = slider
-  const value = voices[i][key as NumericAttribute]
+  const {min, max, attrName} = slider
+
+  const value = voices[i][attrName as NumericAttribute]
         
   const handleInput = ([lo, hi]: [number, number]) => {  
 
     const updatedVoices = [...voices];
 
-    updatedVoices[i][key as NumericAttribute] = hi;  
+    updatedVoices[i][attrName as NumericAttribute] = hi;  
     setVoices(updatedVoices);
   }    
   
   
   return (
+
     <RangeSlider 
-      ref={sliderRef}   
-      min={min}  
-      max={max}  
-      value={[0, value]}  
-      thumbsDisabled={[true, false]}  
-      rangeSlideDisabled={true}  
-      onInput={handleInput}  
+      ref                 = {sliderRef}   
+      min                 = {min}  
+      max                 = {max}  
+      value               = {[0, value]}  
+      thumbsDisabled      = {[true, false]}  
+      rangeSlideDisabled  = {true}  
+      onInput             = {handleInput}  
     />
   )
 }

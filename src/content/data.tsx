@@ -141,14 +141,14 @@ const singleSliders = [
   {
     label: 'BPM',
     value: 'bpm',
-    key: 'bpm',
+    attrName: 'bpm',
     min: 1,
     max: 480
   },
   {
     label: 'Rest',
     value: 'restChance',
-    key: 'restChance',
+    attrName: 'restChance',
     min: 0,
     max: 100
   }
@@ -158,7 +158,7 @@ const doubleSliders = [
   {
     label: 'Level',
     value: 'Level',
-    key: 'level',
+    attrName: 'level',
     min: 0,
     max: 100,
     row: 1
@@ -166,7 +166,7 @@ const doubleSliders = [
   {
     label: 'Length',
     value: 'Length',
-    key: 'length',
+    attrName: 'length',
     min: 0,
     max: 100,
     row: 1
@@ -174,7 +174,7 @@ const doubleSliders = [
   {
     label: 'Attack',
     value: 'Attack',
-    key: 'attack',
+    attrName: 'attack',
     min: 0,
     max: 100,
     row: 2
@@ -182,7 +182,7 @@ const doubleSliders = [
   {
     label: 'Decay',
     value: 'Decay',
-    key: 'decay',
+    attrName: 'decay',
     min: 0,
     max: 100,
     row: 2
@@ -190,7 +190,7 @@ const doubleSliders = [
   {
     label: 'Offset',
     value: 'Offset',
-    key: 'offset',
+    attrName: 'offset',
     min: 0,
     max: 100,
     row: 3
@@ -198,7 +198,7 @@ const doubleSliders = [
   {
     label: 'Detune',
     value: 'Detune',
-    key: 'detune',
+    attrName: 'detune',
     min: -100,
     max: 100,
     row: 3

@@ -10,7 +10,7 @@ export default function Piano ({
 } : {
   
   voices    : VoiceType[]
-  i         : number,
+  i         : number
   setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
 
 }) {

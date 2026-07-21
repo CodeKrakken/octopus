@@ -20,7 +20,7 @@ type ButtonGroupType =
 type Slider = {
   label: string,
   value: string,    
-  key: string,
+  attrName: string,
   min: number,
   max: number,
   row?: number

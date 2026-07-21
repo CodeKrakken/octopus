@@ -50,7 +50,7 @@ export default function DoubleSlider ({
     max               : max,    
     value             : rangeValue,  
     onInput           : handleRangeInput,
-    'data-attribute'  : slider.key
+    'data-attribute'  : slider.attrName
   }
   
   return <RangeSlider {...props} />   

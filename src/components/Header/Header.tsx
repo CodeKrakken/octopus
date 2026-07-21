@@ -51,7 +51,6 @@ export default function Header ({
 
   const disableButtons = Boolean(voices.length === 0)
 
-
   const buttons = [
     { 
       props: {
