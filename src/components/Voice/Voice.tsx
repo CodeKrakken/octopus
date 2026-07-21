@@ -1,12 +1,13 @@
 import { VoiceType }                                          from './Voice.types'
 import TextField                                              from '../TextField/TextField'
-import { buttonGroups, piano, doubleSliders, singleSliders }  from '../../content/data'
+import { buttonGroups, piano, sliders }  from '../../content/data'
 import DoubleSlider                                           from '../DoubleSlider/DoubleSlider'
 import SingleSlider                                           from '../SingleSlider/SingleSlider'
 import GroupButton                                            from '../GroupButton/GroupButton'
 import Piano                                                  from '../Piano/Piano'
 import ButtonGrid                                             from '../ButtonGrid/ButtonGrid'
 import Button                                                 from '../Button/Button'
+import { Slider } from '../shared.types'
 
 export default function Voice({
 
@@ -31,7 +32,7 @@ export default function Voice({
     label: "X"
   }
 
-  const rowNumbers = Array.from(new Set(doubleSliders.map(slider => slider.row)))
+  const sliderRows = Array.from(new Set(sliders.map(slider => slider.row)))
   
   return (
     <div 
@@ -52,40 +53,28 @@ export default function Voice({
           <Button {...deleteButtonProps} />
           
         </div>
-
-        <div className="row">
-          {
-            singleSliders.map(slider => 
-              <div key={slider.attrName}>
-                <div className="slider-label">{slider.label}</div>
-                <div className="single slider">    
-                  <SingleSlider
-                    slider    = {slider}
-                    i         = {i}
-                    voices    = {voices}
-                    setVoices = {setVoices}
-                  />
-                </div>
-              </div>
-            )
-          }
-        </div>
         
         {
-          rowNumbers.map(row => 
+          sliderRows.map(row => 
             <div className="row" key={row}>
               {
-                doubleSliders.filter(slider => slider.row === row).map(slider => <div key={slider.attrName}>
-                  <div className="slider-label">{slider.label}</div>
-                  <div className="slider">
-                    <DoubleSlider 
-                      slider={slider}
-                      i={i}
-                      voices={voices}
-                      setVoices={setVoices}
-                    />
-                  </div>
-                </div>)
+                sliders.filter(slider => slider.row === row).map((slider: Slider) => {
+                  
+                  const Component = slider.className === 'single' ? SingleSlider : DoubleSlider
+                  return (
+                    <div key={slider.attrName}>
+                      <div className="slider-label">{slider.label}</div>
+                      <div className={`${slider.className} slider`}>
+                        <Component 
+                          slider={slider}
+                          i={i}
+                          voices={voices}
+                          setVoices={setVoices}
+                        />
+                      </div>
+                    </div>
+                  )}
+                )
               }
             </div>
           )

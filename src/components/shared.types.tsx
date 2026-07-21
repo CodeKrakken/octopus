@@ -23,7 +23,8 @@ type Slider = {
   attrName: string,
   min: number,
   max: number,
-  row?: number
+  row?: number,
+  className?: string
 }
 
 type Group = {  

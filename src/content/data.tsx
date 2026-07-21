@@ -137,24 +137,26 @@ const buttonGroups = [
   }
 ]
 
-const singleSliders = [
+const sliders = [
   {
     label: 'BPM',
     value: 'bpm',
     attrName: 'bpm',
     min: 1,
-    max: 480
+    max: 480,
+    className: 'single',
+    row: 0
   },
   {
     label: 'Rest',
     value: 'restChance',
     attrName: 'restChance',
     min: 0,
-    max: 100
-  }
-]
+    max: 100,
+    className: 'single',
+    row: 0
+  },
 
-const doubleSliders = [
   {
     label: 'Level',
     value: 'Level',
@@ -204,11 +206,6 @@ const doubleSliders = [
     row: 3
   }
 ]
-
-const attributes = [
-  singleSliders,
-  doubleSliders
-].flat()
 
 const extrema = ['min', 'max']
 
@@ -516,9 +513,7 @@ export {
   waveforms,
   ranges,
   buttonGroups,
-  singleSliders,
-  doubleSliders,
-  attributes,
+  sliders,
   extrema,
   oneMinute,
   samples,
