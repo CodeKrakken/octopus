@@ -36,6 +36,7 @@ export default function SingleSlider ({
     const updatedVoices = [...voices];
 
     updatedVoices[i][attrName as NumericAttribute] = hi;  
+    
     setVoices(updatedVoices);
   }    
   
