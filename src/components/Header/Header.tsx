@@ -1,7 +1,6 @@
 import { MouseEventHandler, useEffect, useState } from 'react'
-import { title, addLabel } from '../../content/data'
-import { VoiceType } from '../Voice/Voice.types'
-import './Header.css'
+import { title, addLabel }                        from '../../content/data'
+import { VoiceType }                              from '../Voice/Voice.types'
 
 export default function Header ({
 
@@ -14,22 +13,18 @@ export default function Header ({
 
 } : {
 
-  handleAddVoice    : React.MouseEventHandler<HTMLButtonElement>,
-  handleStartStop   : React.MouseEventHandler<HTMLButtonElement>,
-  disableButtons    : Boolean,
-  running           : Boolean,
-  voices            : VoiceType[],
-  loadVoices        : MouseEventHandler<HTMLButtonElement>
+  handleAddVoice  : React.MouseEventHandler<HTMLButtonElement>
+  handleStartStop : React.MouseEventHandler<HTMLButtonElement>
+  disableButtons  : Boolean
+  running         : Boolean
+  voices          : VoiceType[]
+  loadVoices      : MouseEventHandler<HTMLButtonElement>
 }) {
 
   const [disableLoad, setDisableLoad] = useState(false)
 
   useEffect(() => {
-    if (localStorage.voices) {
-      setDisableLoad(false)
-    } else {
-      setDisableLoad(true)
-    }
+    setDisableLoad(localStorage.voices ? false : true)
   }, [])
 
   const font = (string: string, height: string = "40px") => {
