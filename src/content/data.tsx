@@ -532,5 +532,5 @@ export {
   samples,
   sampleFolders,
   demoVoices,
-  // buttonImages
+  buttonImages
 }
