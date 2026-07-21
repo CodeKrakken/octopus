@@ -1,24 +1,32 @@
-import { VoiceProps } from './Voice.types'
-import TextField from '../TextField/TextField'
-import { buttonGroups, piano, doubleSliders, singleSliders } from '../../content/data'
-import DoubleSlider from '../DoubleSlider/DoubleSlider'
-import SingleSlider from '../SingleSlider/SingleSlider'
-import GroupButton from '../GroupButton/GroupButton'
-import Piano from '../Piano/Piano'
-import ButtonGrid from '../ButtonGrid/ButtonGrid'
-import Button from '../Button/Button'
+import { VoiceType }                                          from './Voice.types'
+import TextField                                              from '../TextField/TextField'
+import { buttonGroups, piano, doubleSliders, singleSliders }  from '../../content/data'
+import DoubleSlider                                           from '../DoubleSlider/DoubleSlider'
+import SingleSlider                                           from '../SingleSlider/SingleSlider'
+import GroupButton                                            from '../GroupButton/GroupButton'
+import Piano                                                  from '../Piano/Piano'
+import ButtonGrid                                             from '../ButtonGrid/ButtonGrid'
+import Button                                                 from '../Button/Button'
 
-export default function Voice(
-  {
+export default function Voice({
+
     i, 
     voices,  
     handleDelete,
     setVoices,
     dataAttribute
-  }: VoiceProps
-) {
 
-  const props = {
+  } : {
+
+    i             : number, 
+    setVoices     : React.Dispatch<React.SetStateAction<VoiceType[]>>, 
+    voices        : VoiceType[], 
+    handleDelete  : Function
+    dataAttribute : string
+
+  }) {
+
+  const deleteButtonProps = {
     props: { onClick: () => handleDelete(i) },
     label: "X"
   }
@@ -31,20 +39,17 @@ export default function Voice(
     >
       <div id="sliders">
         <div className="justified row">
-          <div>
-            <TextField 
-              attrName  = {'label'}
-              i         = {i}
-              voices    = {voices}
-              setVoices = {setVoices}
-            />
-          </div>
 
-          <div>
-            <Button
-              {...props}
-            />
-          </div>
+          <TextField 
+            attrName  = {'label'}
+            i         = {i}
+            voices    = {voices}
+            setVoices = {setVoices}
+          />
+
+          <Button
+            {...deleteButtonProps}
+          />
         </div>
 
         <div className="row">

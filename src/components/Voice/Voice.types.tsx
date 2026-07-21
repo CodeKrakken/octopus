@@ -26,14 +26,6 @@ type VoiceType = {
   maxDecay          : number
 }
 
-type VoiceProps = {
-  i             : number, 
-  setVoices     : React.Dispatch<React.SetStateAction<VoiceType[]>>, 
-  voices        : VoiceType[], 
-  handleDelete  : Function
-  dataAttribute : string
-}
-
 type Compound = 
   'activeNotes'
 | 'activeOctaves'
@@ -42,6 +34,5 @@ type Compound =
 
 export type {
   VoiceType,
-  VoiceProps,
   Compound
 }
