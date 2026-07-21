@@ -2,11 +2,7 @@ import { VoiceType } from "../Voice/Voice.types"
 
 const setUpVoice = (voices: VoiceType[]) => {
 
-  let template: VoiceType | null = null
-  
-  if (voices.length) {
-    template = voices[voices.length - 1]
-  }
+  const template = voices[voices.length - 1]
   
   return {
     id                : crypto.randomUUID(),

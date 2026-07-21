@@ -31,7 +31,7 @@ export default function Header ({
 
       /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? (
         <img 
-          alt     = "" 
+          alt     = {letter} 
           src     = {require(`../../content/letter-images/${letter.toUpperCase()}.png`)} 
           height  = {height} 
           key     = {`${letter}-${i}`} 
