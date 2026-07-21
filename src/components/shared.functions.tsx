@@ -7,11 +7,11 @@ const getActiveFrequencies = (voice: VoiceType) => {
   const { activeOctaves, activeNotes } = voice
 
   let allFrequenciesInOctaves = allFrequencies.filter(
-    (octave, i) => activeOctaves.includes(i.toString())
+    (octave, i) => activeOctaves.includes(String(i))
   )
 
   let activeFrequencies = allFrequenciesInOctaves.map(octave =>
-    octave.filter((note, i) => activeNotes.includes((i+1).toString()))
+    octave.filter((note, i) => activeNotes.includes(String(i+1)))
   )
 
   return activeFrequencies.flat(Infinity)
