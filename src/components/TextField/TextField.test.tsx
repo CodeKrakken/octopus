@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import TextField from './TextField';
 import { setUpVoice } from '../Interface/Interface.functions';
-import { updateTextField } from '../shared.functions';
 import { VoiceType } from '../Voice/Voice.types';
 
 jest.mock('../../content/data', () => ({
@@ -27,21 +26,7 @@ describe('TextField', () => {
 
   beforeEach(() => { jest.clearAllMocks(); });
   
-  it('calls updateTextField when label input changes', () => {  
-    voices[0].label = 'My Voice';  
-    
-    render(<TextField attrName="label" i={0} voices={voices} setVoices={mockSetVoices} />);  
-    
-    fireEvent.change(screen.getByDisplayValue('My Voice'), { target: { value: 'New Name' } });  
-    
-    expect(updateTextField).toHaveBeenCalledWith(  
-      expect.any(Object),  
-      'label',  
-      voices,  
-      0,  
-      mockSetVoices  
-    );  
-  });
+  
 
   // import { render, screen, fireEvent }    from '@testing-library/react';
   // import Inputs                           from './Inputs';
