@@ -1,4 +1,4 @@
-import { updateVoice }  from "../shared.functions";
+import { updateVoice }      from "../shared.functions";
 import { NumericAttribute } from "../shared.types";
 import { VoiceType }        from "../Voice/Voice.types";
 import './TextField.css'
@@ -29,7 +29,7 @@ export default function TextField ({
     'data-voice'      : i,
     'data-attribute'  : {attrName},
     type              : 'text',
-    value             : voices[i][attrName as NumericAttribute],
+    value             : voices[i].label,
     onChange          : handleClick
   }
 
