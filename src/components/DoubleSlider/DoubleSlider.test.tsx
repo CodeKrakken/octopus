@@ -33,7 +33,7 @@ describe('DoubleSlider', () => {
   it('calls setVoices with updated min/max values', () => {  
     const mockSetVoices = jest.fn();  
     const voices: Partial<VoiceType>[] = [{ minLevel: 10, maxLevel: 50 }];  
-    const slider = { label: 'Level', value: 'Level', key: 'level', min: 0, max: 100, row: 1 };  
+    const slider = { label: 'Level', value: 'Level', attrName: 'level', min: 0, max: 100, row: 1 };  
   
     render(  
       <DoubleSlider  
