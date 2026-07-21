@@ -1,22 +1,26 @@
-import { useState } from "react";
-import { Group } from "../shared.types";
-import Button from "../Button/Button";
-import { VoiceType } from "../Voice/Voice.types";
-import ButtonGrid from "../ButtonGrid/ButtonGrid";
-import Piano from "../Piano/Piano";
+import { useState }   from "react";
+import { Group }      from "../shared.types";
+import Button         from "../Button/Button";
+import { VoiceType }  from "../Voice/Voice.types";
+import ButtonGrid     from "../ButtonGrid/ButtonGrid";
+import Piano          from "../Piano/Piano";
 
-export default function GroupButton({ 
+export default function GroupButton({
+
   group, 
   component, 
   voices, 
   i, 
   setVoices 
-}: {  
-  group: Group
-  voices: VoiceType[]  
-  i: number  
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
-  component: typeof ButtonGrid | typeof Piano
+
+} : {  
+  
+  group     : Group
+  voices    : VoiceType[]  
+  i         : number  
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>  
+  component : typeof ButtonGrid | typeof Piano
+
 }) {  
 
   const [hidden, setHidden] = useState(true)  
@@ -39,7 +43,7 @@ export default function GroupButton({
     <Button
       props={props}
       label={group.label}
-      imgPath={imgPath}
+      imgPath={group.id}
     />
       
     {!hidden && ComponentToRender && (  
