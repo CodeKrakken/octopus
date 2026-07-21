@@ -13,10 +13,10 @@ export default function DoubleSlider ({
 
 }: {  
 
-  slider: Slider,  
-  i: number,  
-  voices: VoiceType[],  
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>,
+  slider    : Slider  
+  i         : number  
+  voices    : VoiceType[]  
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
 
 }) {  
 

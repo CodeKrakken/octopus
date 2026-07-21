@@ -4,15 +4,19 @@ import { ButtonGroupType, Group } from "../shared.types";
 import { VoiceType } from "../Voice/Voice.types";
 
 export default function ButtonGrid({
+
   group,
   voices,
   i,
   setVoices
+
 } : {  
-  group: Group  
-  voices: VoiceType[]  
-  i: number  
-  setVoices: React.Dispatch<React.SetStateAction<VoiceType[]>>  
+
+  group     : Group  
+  voices    : VoiceType[]  
+  i         : number  
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>  
+  
 }) {
 
   const { className, label, id } = group
@@ -49,7 +53,6 @@ export default function ButtonGrid({
               id: id,
               title: button
             };
-
             const imgPath = `${id}/${button}`
 
             return (

@@ -1,13 +1,17 @@
 import { images } from "../../content/data"
 
 export default function Button({
+
   props, 
   label,
-  imgPath,
+  imgPath
+
 }: {
-  props: any
-  label: string
-  imgPath?: string
+
+  props     : any
+  label     : string
+  imgPath?  : string
+
 }) {
 
   const imgSrc = images[imgPath!] || ""
