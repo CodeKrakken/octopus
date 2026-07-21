@@ -30,6 +30,8 @@ export default function Voice({
     props: { onClick: () => handleDelete(i) },
     label: "X"
   }
+
+  const rowNumbers = Array.from(new Set(doubleSliders.map(slider => slider.row)))
   
   return (
     <div 
@@ -47,30 +49,30 @@ export default function Voice({
             setVoices = {setVoices}
           />
 
-          <Button
-            {...deleteButtonProps}
-          />
+          <Button {...deleteButtonProps} />
+          
         </div>
 
         <div className="row">
           {
-            singleSliders.map(slider => <div key={slider.attrName}>
-              <div className="slider-label">{slider.label}</div>
-              <div className="single slider">    
-                <SingleSlider
-                  slider={slider}
-                  i={i}
-                  voices={voices}
-                  setVoices={setVoices}
-                />
+            singleSliders.map(slider => 
+              <div key={slider.attrName}>
+                <div className="slider-label">{slider.label}</div>
+                <div className="single slider">    
+                  <SingleSlider
+                    slider    = {slider}
+                    i         = {i}
+                    voices    = {voices}
+                    setVoices = {setVoices}
+                  />
+                </div>
               </div>
-            </div>)
+            )
           }
         </div>
         
-
         {
-          [1, 2, 3].map(row => 
+          rowNumbers.map(row => 
             <div className="row" key={row}>
               {
                 doubleSliders.filter(slider => slider.row === row).map(slider => <div key={slider.attrName}>
