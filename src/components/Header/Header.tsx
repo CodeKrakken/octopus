@@ -51,6 +51,41 @@ export default function Header ({
 
   const buttonLabelHeight = "20px"
 
+  const buttons = [
+    { 
+      props: {
+        onClick   : handleStartStop,
+        disabled  : disableButtons as boolean,
+        className : "header-button"
+      },
+      label: letterImages(running ? 'Stop' : 'Start', buttonLabelHeight)
+    },
+    {
+      props: {
+        value: addLabel,
+        onClick: handleAddVoice,
+        className: "header-button"
+      },
+      label: letterImages('Add', buttonLabelHeight)
+    },
+    {
+      props: {
+        onClick   : handleSave,
+        disabled  : disableButtons as boolean,
+        className : "header-button"
+      },
+      label: letterImages('Save', buttonLabelHeight)
+    },
+    {
+      props: {
+        onClick   : loadVoices,
+        disabled  : disableLoad as boolean,
+        className : "header-button"
+      },
+      label: letterImages('Load', buttonLabelHeight)
+    }
+  ]
+
   return (
     <div 
       className="column" 
@@ -61,38 +96,13 @@ export default function Header ({
       </div>
 
       <div className="centred section">
-
-        <button 
-          onClick={handleStartStop}
-          disabled={disableButtons as boolean}
-          className="header-button"
-
-        >
-          {letterImages(running ? 'Stop' : 'Start', buttonLabelHeight)}
-        </button>
-        
-        <button 
-          value={addLabel}
-          onClick={handleAddVoice}
-          className="header-button"
-        >
-          {letterImages('Add', buttonLabelHeight)}
-        </button>            
-
-        <button
-          onClick={handleSave}
-          disabled={disableButtons as boolean}
-          className="header-button"
-        >
-          {letterImages('Save', buttonLabelHeight)}
-        </button>
-        <button
-          onClick={loadVoices}
-          disabled={disableLoad as boolean}
-          className="header-button"
-        >
-          {letterImages('Load', buttonLabelHeight)}
-        </button>
+        {
+          buttons.map(button => 
+            <button {...button.props}>
+              {button.label}
+            </button>
+          )
+        }
       </div>
     </div>
   )
