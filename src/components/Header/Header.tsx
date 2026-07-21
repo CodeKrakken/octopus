@@ -27,10 +27,10 @@ export default function Header ({
     setDisableLoad(localStorage.voices ? false : true)
   }, [])
 
-  const font = (string: string, height: string = "40px") => {
+  const letterImages = (string: string, height: string = "40px") => {
 
     const imageArray = string.split('').map((letter, i) => 
-      /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? <img alt="" src={require(`../../content/font-images/${letter.toUpperCase()}.png`)} height={height} key={`${letter}-${i}`} />  : letter
+      /^[A-Z0-9]*$/.test(letter.toUpperCase()) ? <img alt="" src={require(`../../content/letter-images/${letter.toUpperCase()}.png`)} height={height} key={`${letter}-${i}`} />  : letter
     )
 
     return <div className="centred">{imageArray.map(image => image)}</div>
@@ -46,7 +46,7 @@ export default function Header ({
   return (
     <div className="column" id="header">
       <div id="title">
-        {font(title, '50px')}
+        {letterImages(title, '50px')}
       </div>
       <div className="centred section">
 
@@ -56,7 +56,7 @@ export default function Header ({
           className="header-button"
 
         >
-          {font(running ? 'Stop' : 'Start', buttonLabelHeight)}
+          {letterImages(running ? 'Stop' : 'Start', buttonLabelHeight)}
         </button>
         
         <button 
@@ -64,7 +64,7 @@ export default function Header ({
           onClick={handleAddVoice}
           className="header-button"
         >
-          {font('Add', buttonLabelHeight)}
+          {letterImages('Add', buttonLabelHeight)}
         </button>            
 
         <button
@@ -73,14 +73,14 @@ export default function Header ({
           className="header-button"
         >
           <div style={{"margin": "auto auto"}}></div>
-          {font('Save', buttonLabelHeight)}
+          {letterImages('Save', buttonLabelHeight)}
         </button>
         <button
           onClick={loadVoices}
           disabled={disableLoad as boolean}
           className="header-button"
         >
-          {font('Load', buttonLabelHeight)}
+          {letterImages('Load', buttonLabelHeight)}
         </button>
       </div>
     </div>
