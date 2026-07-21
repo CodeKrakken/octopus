@@ -24,16 +24,14 @@ export default function GroupButton({
 }) {  
 
   const [hidden, setHidden] = useState(true)  
-  
-  const imgPath = `${group.id}`
-  
+    
   const handleClick = () => {
     setHidden((prev) => !prev)
   }
 
   const props = {
-    className:  "group-button",  
-    onClick:  handleClick
+    className : "group-button",  
+    onClick   : handleClick
   }
 
   const ComponentToRender = component;  
@@ -41,18 +39,22 @@ export default function GroupButton({
   return <>  
 
     <Button
-      props={props}
-      label={group.label}
-      imgPath={group.id}
+      props   = {props}
+      label   = {group.label}
+      imgPath = {group.id}
     />
       
-    {!hidden && ComponentToRender && (  
-      <ComponentToRender   
-        group={group as Group}  
-        voices={voices}  
-        i={i}  
-        setVoices={setVoices}  
-      />  
-    )}  
+    {
+      !hidden && ComponentToRender ? (  
+        <ComponentToRender   
+          group={group as Group}  
+          voices={voices}  
+          i={i}  
+          setVoices={setVoices}  
+        />  
+      ) 
+        : 
+      <></>
+    }  
   </>  
 }

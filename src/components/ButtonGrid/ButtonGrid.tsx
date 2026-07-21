@@ -1,5 +1,5 @@
 import Button                     from "../Button/Button";
-import { updateButton }           from "../GroupButton/GroupButton.functions";
+import { updateButton }           from "../shared.functions";
 import { ButtonGroupType, Group } from "../shared.types";
 import { VoiceType }              from "../Voice/Voice.types";
 

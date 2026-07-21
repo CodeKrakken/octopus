@@ -1,4 +1,4 @@
-import { updateButton } from "../GroupButton/GroupButton.functions";
+import { updateButton } from "../shared.functions";
 import { VoiceType } from "../Voice/Voice.types";
 
 export default function Piano ({
