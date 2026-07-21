@@ -31,17 +31,17 @@ const setUpVoice = (voices: VoiceType[]) => {
   }
 }
 
-const generateNewLabel = (template: VoiceType | null, voices: VoiceType[]) => {
+const generateNewLabel = (
+  template: VoiceType | null, 
+  voices: VoiceType[]
+) => {
 
   let newLabel: string
 
   if (!template) {
-
     newLabel = '1'
-
   } else if (+template.label) {
-    newLabel = String(+template.label+1)
-    
+    newLabel = String(+template.label+1)  
   } else {
     newLabel = String(
       voices.map(voice => +voice.label).filter(

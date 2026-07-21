@@ -21,6 +21,10 @@ function Interface() {
 
   // effect
 
+  useEffect(() => {
+    Synth.resumeContext()
+  }, [])
+  
   useEffect(() => { 
 
     voicesRef.current = voices
@@ -28,10 +32,6 @@ function Interface() {
 
   }, [voices])
 
-  useEffect(() => {
-    Synth.resumeContext()
-  }, [])
-  
 
   // functions
 
@@ -67,24 +67,21 @@ function Interface() {
 
   const loadVoices = () => {
 
-    if (localStorage.voices) {
-      const loadedVoices = JSON.parse(localStorage.voices)
-      setVoices(loadedVoices)
-      Synth.voices = []
-      loadedVoices.forEach((voice: VoiceType) => {
-        Synth.add(voice, running, voicesRef)
-      })
-    }
+    const loadedVoices = JSON.parse(localStorage.voices)
+    setVoices(loadedVoices)
+    Synth.voices = []
+
+    loadedVoices.forEach((voice: VoiceType) => {
+      Synth.add(voice, running, voicesRef)
+    })
   }
 
-  const disableButtons = Boolean(voices.length === 0)
 
   return <>
     <Header 
       handleStartStop   = {handleStartStop}
       running           = {running}
       handleAddVoice    = {handleAddVoice}
-      disableButtons    = {disableButtons}
       voices            = {voices}
       loadVoices        = {loadVoices}
     />

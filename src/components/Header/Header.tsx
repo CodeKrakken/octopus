@@ -6,7 +6,6 @@ export default function Header ({
 
   handleAddVoice,
   handleStartStop,
-  disableButtons,
   running,
   voices,
   loadVoices
@@ -15,7 +14,6 @@ export default function Header ({
 
   handleAddVoice  : React.MouseEventHandler<HTMLButtonElement>
   handleStartStop : React.MouseEventHandler<HTMLButtonElement>
-  disableButtons  : Boolean
   running         : Boolean
   voices          : VoiceType[]
   loadVoices      : MouseEventHandler<HTMLButtonElement>
@@ -50,6 +48,9 @@ export default function Header ({
   }
 
   const buttonLabelHeight = "20px"
+
+  const disableButtons = Boolean(voices.length === 0)
+
 
   const buttons = [
     { 
