@@ -336,10 +336,10 @@ const isRest = (voice: VoiceType) => {
 }
 
 const makeSound = (
-  voice: VoiceType, 
-  intervalLength: number, 
-  voicesRef: VoicesRef, 
-  context: AudioContext
+  voice           : VoiceType, 
+  intervalLength  : number, 
+  voicesRef       : VoicesRef, 
+  context         : AudioContext
 ) => {
 
   const { activeSounds, thisInterval } = voice
@@ -348,7 +348,7 @@ const makeSound = (
 
   try {
     const randomSound = randomOneFrom(activeSounds) as OscillatorType
-    const level = calculateLevel(voice, voicesRef.current)
+    const level = calculateLevel(voice)
     voice.offsetInterval = thisInterval! + offsetTime
 
     if (waveforms.includes(randomSound)) {
@@ -390,11 +390,11 @@ const removeOscillator = (oscGain: OscGain) => {
 }
 const playSample = (  
 
-  name: string,  
-  level: number,  
-  context: AudioContext,  
-  time: number,  
-  voice: VoiceType
+  name    : string,  
+  level   : number,  
+  context : AudioContext,  
+  time    : number,  
+  voice   : VoiceType
 
 ) => {  
   
@@ -456,10 +456,10 @@ const playSample = (
 
 const shapeNote = (
 
-  gainNode: GainNode, 
-  voice: VoiceType, 
-  intervalLength: number, 
-  level: number
+  gainNode        : GainNode, 
+  voice           : VoiceType, 
+  intervalLength  : number, 
+  level           : number
 
 ) => {
   
@@ -468,18 +468,22 @@ const shapeNote = (
 
   const thisInterval = voice.offsetInterval!
   const attackPercentage = getRangeValue('Attack', voice)
-  const decayPercentage = getRangeValue('Decay', voice)
+  const decayPercentage  = getRangeValue('Decay', voice)
 
   const attackLength = getFadeLength(attackPercentage , noteLength)
-  const decayLength = getFadeLength(decayPercentage, noteLength)
+  const decayLength  = getFadeLength(decayPercentage, noteLength)
 
-  const endOfAttack = thisInterval + attackLength
+  const endOfAttack  = thisInterval + attackLength
   const startOfDecay = thisInterval + noteLength - decayLength
-  const peakPoint = thisInterval + noteLength * attackPercentage / (attackPercentage + decayPercentage)
-  const overlap = endOfAttack >= startOfDecay
-  
+
+  const peakPoint = (
+    thisInterval + noteLength * attackPercentage / 
+    (attackPercentage + decayPercentage)
+  )
+
+  const overlap     = endOfAttack >= startOfDecay
   const startOfPeak = overlap ? peakPoint : endOfAttack
-  const endOfPeak = overlap ? peakPoint : startOfDecay
+  const endOfPeak   = overlap ? peakPoint : startOfDecay
 
   gain.setValueAtTime(0, thisInterval)
   gain.linearRampToValueAtTime(level, startOfPeak)
@@ -488,11 +492,10 @@ const shapeNote = (
 }
 
 const randomOneFrom = <T>(array: T[]): T => {
-
   return array[Math.floor(Math.random() * array.length)]
 }
 
-const calculateLevel = (voice: VoiceType, voices: VoiceType[]) => {
+const calculateLevel = (voice: VoiceType) => {
 
   const { minLevel, maxLevel } = voice
   const balancedLevel = ((minLevel + Math.random() * (maxLevel - minLevel))/100) // /voices.length
