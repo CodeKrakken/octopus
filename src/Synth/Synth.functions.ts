@@ -249,13 +249,14 @@ const loadSamples = (context: AudioContext) => {
         }
   
         buffers[name] = {  
-          buffer: decoded,  
-          detectedFrequency: detected,  
-          nearestFrequency: nearest?.frequency ?? null,  
-          octave: nearest?.octave ?? null,  
-          note: nearest?.note ?? null,  
+          buffer            : decoded,  
+          detectedFrequency : detected,  
+          nearestFrequency  : nearest?.frequency ?? null,  
+          octave            : nearest?.octave ?? null,  
+          note              : nearest?.note ?? null,  
         }
       } catch (e) {  
+
         console.error('Failed to load sample:', name, e)  
       }  
     })  
