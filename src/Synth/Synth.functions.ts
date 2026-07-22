@@ -175,7 +175,7 @@ const findNearestNote = (frequency: number) => {
       const centsDiff = Math.abs(1200 * Math.log2(frequency / noteFreq))  
 
       if (centsDiff < bestCentsDiff) {  
-        
+
         bestCentsDiff = centsDiff  
         bestOctave    = octaveIndex  
         bestNote      = noteIndex  
@@ -190,11 +190,13 @@ const findNearestNote = (frequency: number) => {
   }  
 }
 
-const findNearestSampleInFolder = (  
+const findNearestSampleInFolder = ( 
+
   folder: string,  
   targetOctave: number,  
   targetNote: number  
-): string | null => {  
+
+) => {  
   const keys = sampleFolders[folder]  
   if (!keys?.length) return null  
   
