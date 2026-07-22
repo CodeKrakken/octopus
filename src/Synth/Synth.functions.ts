@@ -286,9 +286,11 @@ const getContext = (context: AudioContext = new AudioContext()) => {
 }
 
 const runInterval = (
-  voice: VoiceType, 
-  voicesRef: VoicesRef, 
-  context: AudioContext
+
+  voice     : VoiceType, 
+  voicesRef : VoicesRef, 
+  context   : AudioContext
+
 ) => {
 
   voice.thisInterval = voice.nextInterval
@@ -311,14 +313,14 @@ const runInterval = (
 
 // private functions
 
-const getFreqArray = (): number[] => freqArray ??= [...new Set(allFrequencies.flat())]
+const getFreqArray = () => freqArray ??= [...new Set(allFrequencies.flat())]
 
 const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
 
 const getIntervalLength = (voice: VoiceType) => {
 
-  const {activeIntervals, bpm} = voice
-  const interval = (randomOneFrom(activeIntervals) || '0.5') as string
+  const { activeIntervals, bpm } = voice
+  const interval = randomOneFrom(activeIntervals) || '0.5'
   const intervalLength  = oneMinute / bpm * parseFloat(interval)
 
   return intervalLength
