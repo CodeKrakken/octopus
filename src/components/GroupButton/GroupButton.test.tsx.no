@@ -2,7 +2,7 @@
 // import Inputs                           from './Inputs';
 // import { updateTextField, updateButton }  from './Inputs.functions';
 // import { setUpVoice }                   from '../../components/Interface/Interface.functions';
-// import { VoiceType }                    from '../Voice/Voice.types';
+// import { VoiceType }                    from '../shared.types';
 
 
 // jest.mock('./Inputs.functions', () => ({
@@ -47,7 +47,7 @@
 
 // import { updateTextField, updateButton } from './Inputs.functions';
 // import { setUpVoice } from '../Interface/Interface.functions';
-// import { VoiceType } from '../Voice/Voice.types';
+// import { VoiceType } from '../shared.types';
 // import { ChangeEvent } from 'react';
 
 

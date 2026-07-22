@@ -1,11 +1,10 @@
-import { VoiceType }                                          from './Voice.types'
-import TextField                                              from '../TextField/TextField'
+import { VoiceType, Slider }      from '../shared.types'
+import TextField                  from '../TextField/TextField'
 import { buttonGroups, sliders }  from '../../content/data'
-import DoubleSlider                                           from '../DoubleSlider/DoubleSlider'
-import SingleSlider                                           from '../SingleSlider/SingleSlider'
-import GroupButton                                            from '../GroupButton/GroupButton'
-import Button                                                 from '../Button/Button'
-import { Slider } from '../shared.types'
+import DoubleSlider               from '../DoubleSlider/DoubleSlider'
+import SingleSlider               from '../SingleSlider/SingleSlider'
+import GroupButton                from '../GroupButton/GroupButton'
+import Button                     from '../Button/Button'
 
 export default function Voice({
 

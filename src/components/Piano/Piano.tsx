@@ -1,5 +1,5 @@
 import { updateButton } from "../shared.functions";
-import { VoiceType }    from "../Voice/Voice.types";
+import { VoiceType }    from "../shared.types";
 
 export default function Piano ({
 

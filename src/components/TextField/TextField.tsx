@@ -1,5 +1,5 @@
 import { updateVoice }      from "../shared.functions";
-import { VoiceType }        from "../Voice/Voice.types";
+import { VoiceType }        from "../shared.types";
 import './TextField.css'
 
 export default function TextField ({

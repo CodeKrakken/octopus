@@ -1,6 +1,5 @@
 import { useEffect, useRef }                      from "react";
-import { NumericAttribute, Slider }               from "../shared.types";  
-import { VoiceType }                              from "../Voice/Voice.types";  
+import { NumericAttribute, Slider, VoiceType }    from "../shared.types";  
 import RangeSlider, { ReactRangeSliderInputRef }  from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
 

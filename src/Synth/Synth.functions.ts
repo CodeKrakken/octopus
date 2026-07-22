@@ -1,4 +1,4 @@
-import { VoiceType }                                                              from '../components/Voice/Voice.types'
+import { VoiceType }                                                              from '../components/shared.types'
 import { OscGain, VoicesRef }                                                     from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms }  from '../content/data';
 import { Range }                                                                  from '../components/shared.types';

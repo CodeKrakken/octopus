@@ -1,4 +1,4 @@
-import { VoiceType } from "../components/Voice/Voice.types"
+import { VoiceType } from "../components/shared.types"
 
 type VoicesRef = { current: VoiceType[] }
 

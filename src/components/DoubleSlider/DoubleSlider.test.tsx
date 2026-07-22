@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";  
-import { VoiceType } from "../Voice/Voice.types";  
+import { VoiceType } from "../shared.types";  
 import DoubleSlider from "./DoubleSlider";  
   
 // jest.mock() MUST be at the top level, not inside describe()  

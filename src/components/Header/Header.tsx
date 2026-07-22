@@ -1,6 +1,6 @@
 import { MouseEventHandler, useEffect, useState } from 'react'
 import { title, addLabel }                        from '../../content/data'
-import { VoiceType }                              from '../Voice/Voice.types'
+import { VoiceType }                              from '../shared.types'
 
 export default function Header ({
 

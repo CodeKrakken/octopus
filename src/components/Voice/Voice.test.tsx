@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import Voice from './Voice';
 import { setUpVoice } from '../Interface/Interface.functions';
-import { VoiceType } from './Voice.types';
+import { VoiceType } from '../shared.types';
 
 jest.mock('../../content/data', () => ({  
   singleSliders: [],  

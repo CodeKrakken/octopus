@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import TextField from './TextField';
 import { setUpVoice } from '../Interface/Interface.functions';
-import { VoiceType } from '../Voice/Voice.types';
+import { VoiceType } from '../shared.types';
 
 jest.mock('../../content/data', () => ({
   fields: {
@@ -32,7 +32,7 @@ describe('TextField', () => {
   // import Inputs                           from './Inputs';
   // import { updateTextField, updateButton }  from './Inputs.functions';
   // import { setUpVoice }                   from '../../components/Interface/Interface.functions';
-  // import { VoiceType }                    from '../Voice/Voice.types';
+  // import { VoiceType }                    from '../shared.types';
   
   
   // jest.mock('./Inputs.functions', () => ({
@@ -81,7 +81,7 @@ describe('TextField', () => {
 
   // import { updateTextField, updateButton } from './Inputs.functions';
   // import { setUpVoice } from '../Interface/Interface.functions';
-  // import { VoiceType } from '../Voice/Voice.types';
+  // import { VoiceType } from '../shared.types';
   // import { ChangeEvent } from 'react';
   
   

@@ -1,4 +1,4 @@
-import { VoiceType } from "../components/Voice/Voice.types";
+import { VoiceType } from "../components/shared.types";
 import { runInterval } from "./Synth.functions";
 
 const createMockContext = (state = 'running', currentTime = 0) => (

@@ -1,6 +1,6 @@
 import { allFrequencies }       from "../content/data"
 import { Synth }                from "../Synth/Synth"
-import { Compound, VoiceType }  from "./Voice/Voice.types"
+import { Compound, VoiceType }  from "./shared.types"
 
 const getActiveFrequencies = (voice: VoiceType) => {
   

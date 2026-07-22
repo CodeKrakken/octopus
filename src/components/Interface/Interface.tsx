@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState }  from 'react';
 import Voice                            from '../Voice/Voice';
-import { VoiceType }                    from '../Voice/Voice.types'
+import { VoiceType }                    from '../shared.types'
 import Header                           from '../Header/Header';
 import { setUpVoice }                   from './Interface.functions';
 import { Synth }                        from '../../Synth/Synth';

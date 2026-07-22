@@ -1,4 +1,4 @@
-import { VoiceType }                from '../components/Voice/Voice.types'
+import { VoiceType }                from '../components/shared.types'
 import { VoicesRef }                from './Synth.types'
 import { getContext, runInterval }  from './Synth.functions'
 import { demoVoices }               from '../content/data'

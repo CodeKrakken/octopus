@@ -1,7 +1,12 @@
 import { ranges } from "../content/data"
 import ButtonGrid from "./ButtonGrid/ButtonGrid"
 import Piano from "./Piano/Piano"
-import { VoiceType } from "./Voice/Voice.types"
+
+type Compound = 
+  'activeNotes'
+| 'activeOctaves'
+| 'activeIntervals'
+| 'activeSounds'
 
 type Range = typeof ranges[number]
 
@@ -35,10 +40,40 @@ type Group = {
   columns?: number  
 }  
   
+type VoiceType = {
+  id                : string
+  isActive          : boolean
+  label             : string
+  thisInterval?     : number
+  offsetInterval?   : number
+  nextInterval      : number
+  bpm               : number
+  minLevel          : number
+  maxLevel          : number
+  activeNotes       : string[]
+  activeOctaves     : string[]
+  activeIntervals   : string[]
+  activeSounds      : string[]
+  activeFrequencies : number[]
+  restChance        : number
+  minLength         : number
+  maxLength         : number
+  minOffset         : number
+  maxOffset         : number
+  minDetune         : number
+  maxDetune         : number
+  minAttack         : number
+  maxAttack         : number
+  minDecay          : number
+  maxDecay          : number
+}
+
 export type {
   NumericAttribute,
   Range,
   ButtonGroupType,
   Slider,
-  Group
+  Group,
+  VoiceType, 
+  Compound
 }

@@ -1,6 +1,6 @@
 import { Synth } from './Synth';
 import { setUpVoice } from '../components/Interface/Interface.functions';
-import { VoiceType } from '../components/Voice/Voice.types';
+import { VoiceType } from '../components/shared.types';
 import { runInterval, getContext } from './Synth.functions';
 import { createMockContext } from './Synth.test.functions';
 
