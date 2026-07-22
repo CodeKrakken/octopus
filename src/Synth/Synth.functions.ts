@@ -136,7 +136,8 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   return sampleRate / bestOffset 
 }
 
-const detectPitchFFT = (slice: Float32Array, sampleRate: number): number | null => {  
+const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {  
+  
   const N = slice.length  
   let bestFreq = -1  
   let bestMag = 0  
