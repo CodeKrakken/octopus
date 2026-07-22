@@ -42,7 +42,9 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   const size = 4096  
   
   // Skip silence at the start  
+
   let startSample = 0  
+
   for (let i = 0; i < data.length - size; i++) {  
     if (Math.abs(data[i]) > 0.05) { startSample = i; break }  
   }  
@@ -51,10 +53,12 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   const halfSize = size / 2  
   
   // Compute autocorrelation for all offsets up to halfSize  
+
   const r0 = slice.slice(0, halfSize).reduce((sum, x) => sum + x * x, 0)  
   if (r0 === 0) return null  
   
   const correlations = []  
+
   for (let offset = 0; offset < halfSize; offset++) {  
     let sum = 0  
     for (let i = 0; i < halfSize; i++) sum += slice[i] * slice[i + offset]  
@@ -62,29 +66,37 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   }  
   
   // Find the first zero crossing (autocorrelation goes negative)  
+
   let firstZeroCrossing = -1  
+  
   for (let i = 1; i < halfSize; i++) {  
     if (correlations[i - 1] > 0 && correlations[i] <= 0) {  
       firstZeroCrossing = i  
       break  
     }  
   }  
+
   if (firstZeroCrossing === -1) return null  // no zero crossing = no clear pitch  
   
   const maxOffset = Math.floor(sampleRate / 27)  // min ~27 Hz, covers full piano range  
   const searchEnd = Math.min(maxOffset, halfSize - 1)  
     
   // Pass 1: find the global max correlation in the search range  
+
   let globalMax = 0  
+
   for (let offset = firstZeroCrossing; offset < searchEnd; offset++) {  
     if (correlations[offset] > globalMax) globalMax = correlations[offset]  
   }  
     
   // Pass 2: find the FIRST local peak above the threshold  
+
   const threshold = 0.5  // tune between 0.85–0.93 if needed  
   let bestOffset = -1  
   let bestCorrelation = 0  
+
   for (let offset = firstZeroCrossing; offset < searchEnd; offset++) {  
+
     if (  
       correlations[offset] > correlations[offset - 1] &&  
       correlations[offset] > correlations[offset + 1] &&  
@@ -98,13 +110,18 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
 
   if (bestOffset !== -1) {  
     const originalCorrelation = bestCorrelation  
+
     for (const divisor of [2, 3, 4, 5, 6, 7, 8, 10, 12, 16]) {  
+
       const candidateOffset = Math.round(bestOffset / divisor)  
       if (candidateOffset <= firstZeroCrossing) break  
+
       const c     = correlations[candidateOffset]     ?? -Infinity  
       const cPrev = correlations[candidateOffset - 1] ?? -Infinity  
       const cNext = correlations[candidateOffset + 1] ?? -Infinity  
+      
       // Only accept if it's a genuine local peak AND close in strength  
+
       if (c > cPrev && c > cNext && c >= 0.9 * originalCorrelation) {  
         bestOffset      = candidateOffset  
         bestCorrelation = c  
@@ -115,6 +132,7 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   if (bestCorrelation < 0.3 || bestOffset === -1) {  
     return detectPitchFFT(slice, sampleRate)  
   }  
+  
   return sampleRate / bestOffset 
 }
 
