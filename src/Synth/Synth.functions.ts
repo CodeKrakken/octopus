@@ -145,7 +145,7 @@ const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {
   const maxBin = Math.floor(8000 * N / sampleRate) // 8000 Hz ceiling  
   
   for (let k = minBin; k < maxBin; k++) {  
-    
+
     let re = 0, im = 0  
 
     for (let n = 0; n < N; n++) {  
@@ -161,19 +161,24 @@ const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {
   return bestFreq > 0 ? bestFreq : null  
 }
 
-const findNearestNote = (frequency: number): { octave: number; note: number; frequency: number } => {  
+const findNearestNote = (frequency: number) => {  
+
   let bestOctave = 0  
   let bestNote = 0  
   let bestCentsDiff = Infinity  
   
   allFrequencies.forEach((octave, octaveIndex) => {  
     octave.forEach((noteFreq, noteIndex) => {  
+
       if (noteIndex === 12) return  // skip duplicate boundary note  
+
       const centsDiff = Math.abs(1200 * Math.log2(frequency / noteFreq))  
+
       if (centsDiff < bestCentsDiff) {  
+        
         bestCentsDiff = centsDiff  
-        bestOctave = octaveIndex  
-        bestNote = noteIndex  
+        bestOctave    = octaveIndex  
+        bestNote      = noteIndex  
       }  
     })  
   })
