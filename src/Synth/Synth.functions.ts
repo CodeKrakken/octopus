@@ -223,24 +223,28 @@ const findNearestSampleInFolder = (
   return bestKey  
 }
   
-const loadSamples = (ctx: AudioContext) => {  
+const loadSamples = (context: AudioContext) => {  
+
   if (samplesLoading) return  
   samplesLoading = true  
+
   Promise.all(  
     Object.entries(samples).map(async ([name, url]) => {  
+
       try {  
-        const response = await fetch(url as string)  
+        const response    = await fetch(url as string)  
         const arrayBuffer = await response.arrayBuffer()  
-        const decoded = await ctx.decodeAudioData(arrayBuffer)  
-        const parsed = parseNoteFromKey(name)  
-        let detected: number | null = null  
+        const decoded     = await context.decodeAudioData(arrayBuffer)  
+        const parsed      = parseNoteFromKey(name)
+
+        let detected = null  
         let nearest: { octave: number; note: number; frequency: number } | null = null  
           
         if (parsed) {  
           detected = parsed.frequency  
           nearest  = parsed  
         } else {  
-          detected = detectPitch(decoded, ctx.sampleRate)  
+          detected = detectPitch(decoded, context.sampleRate)  
           nearest  = detected ? findNearestNote(detected) : null  
         }
   
