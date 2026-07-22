@@ -1,14 +1,14 @@
-import { VoiceType }                                              from '../components/Voice/Voice.types'
-import { OscGain, VoicesRef }                                     from './Synth.types'
-import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms } from '../content/data';
-import { Range } from '../components/shared.types';
+import { VoiceType }                                                              from '../components/Voice/Voice.types'
+import { OscGain, VoicesRef }                                                     from './Synth.types'
+import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms }  from '../content/data';
+import { Range }                                                                  from '../components/shared.types';
 
 const buffers: Record<string, { 
-  buffer: AudioBuffer; 
-  detectedFrequency: number | null 
-  nearestFrequency: number | null
-  octave: number | null
-  note: number | null
+  buffer            : AudioBuffer; 
+  detectedFrequency : number | null 
+  nearestFrequency  : number | null
+  octave            : number | null
+  note              : number | null
 }> = {}  
 
 let samplesLoading = false  
@@ -17,17 +17,26 @@ const noteNameToIndex: Record<string, number> = {
   C:0, Db:1, D:2, Eb:3, E:4, F:5, Gb:6, G:7, Ab:8, A:9, Bb:10, B:11  
 }  
   
-const parseNoteFromKey = (key: string): { octave: number; note: number; frequency: number } | null => {  
+const parseNoteFromKey = (key: string) => {  
+
   const match = key.match(/[/_]([A-G][b#]?)(\d+)(?:_|\.|$)/)
+  
   if (!match) return null  
+
   const noteName = match[1]  
   const octave   = parseInt(match[2], 10)  
   const note     = noteNameToIndex[noteName]  
-  if (note === undefined || octave < 0 || octave >= allFrequencies.length) return null  
+
+  if (
+    note === undefined || 
+    octave < 0 || 
+    octave >= allFrequencies.length
+  ) return null  
+
   return { octave, note, frequency: allFrequencies[octave][note] }  
 }
 
-const detectPitch = (buffer: AudioBuffer, sampleRate: number): number | null => {  
+const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {  
   const data = buffer.getChannelData(0)  
   const SIZE = 4096  
   

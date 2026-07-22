@@ -1,5 +1,4 @@
 import { updateVoice }      from "../shared.functions";
-import { NumericAttribute } from "../shared.types";
 import { VoiceType }        from "../Voice/Voice.types";
 import './TextField.css'
 
