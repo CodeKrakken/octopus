@@ -4,11 +4,13 @@ import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms }
 import { Range }                                                                  from '../components/shared.types';
 
 const buffers: Record<string, { 
+
   buffer            : AudioBuffer; 
   detectedFrequency : number | null 
   nearestFrequency  : number | null
   octave            : number | null
   note              : number | null
+  
 }> = {}  
 
 let samplesLoading = false  
@@ -388,6 +390,7 @@ const removeOscillator = (oscGain: OscGain) => {
   oscillator.disconnect()
   gainNode.disconnect()
 }
+
 const playSample = (  
 
   name    : string,  
@@ -498,51 +501,51 @@ const randomOneFrom = <T>(array: T[]): T => {
 const calculateLevel = (voice: VoiceType) => {
 
   const { minLevel, maxLevel } = voice
-  const balancedLevel = ((minLevel + Math.random() * (maxLevel - minLevel))/100) // /voices.length
+
+  const balancedLevel = (
+    (minLevel + Math.random() * (maxLevel - minLevel))/100
+  )
   
   return balancedLevel
 }
 
 
 const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
-
   const noteLengthPercentage  = getRangeValue('Length', voice)
-
   return intervalLength / 100 * noteLengthPercentage
 }
 
 const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
 
 const generateFrequency = (voice: VoiceType) => {
-
   const randomFrequency = randomOneFrom(voice.activeFrequencies)
-
   return detune(randomFrequency as number, voice)
 }
 
 const detune = (frequency: number, voice: VoiceType) => {
-
   const cents = getRangeValue('Detune', voice)
-
   if (!cents) return frequency
     
   const modifier = cents < 0 ? -1 : 1
   const nextFreq = getFreqArray()[freqArray!.indexOf(frequency) + modifier]
   const hzDiff = Math.max(nextFreq, frequency) - Math.min(nextFreq, frequency)
-  const detunedFrequency = frequency + hzDiff / 100 * cents
-  
-  return detunedFrequency
+
+  return frequency + hzDiff / 100 * cents
 }
 
 
 const getRangeValue = (key: Range, voice: VoiceType) => {
     
-  const [min, max] = extrema.map(prefix => voice[prefix + key as keyof VoiceType])
+  const [min, max] = extrema.map(
+    prefix => voice[prefix + key as keyof VoiceType]
+  )
 
   const rangeValue = (
-    min as number + (Math.random() * (
-      max as number - (min as number)
-    ))
+    min as number + 
+    (
+      Math.random() * 
+      (max as number - (min as number))
+    )
   )
 
   return rangeValue
