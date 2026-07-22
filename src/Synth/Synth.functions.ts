@@ -463,23 +463,23 @@ const shapeNote = (
 
 ) => {
   
-  const gain         = gainNode.gain
+  const gain = gainNode.gain
   const noteLength = generateNoteLength(voice, intervalLength)
 
   const thisInterval = voice.offsetInterval!
-  const attackPercentage  = getRangeValue('Attack', voice)
+  const attackPercentage = getRangeValue('Attack', voice)
   const decayPercentage = getRangeValue('Decay', voice)
 
-  const attackLength  = getFadeLength(attackPercentage , noteLength)
+  const attackLength = getFadeLength(attackPercentage , noteLength)
   const decayLength = getFadeLength(decayPercentage, noteLength)
 
-  const endOfAttack    = thisInterval + attackLength
-  const startOfDecay  = thisInterval + noteLength - decayLength
-  const peakPoint      = thisInterval + noteLength * attackPercentage / (attackPercentage + decayPercentage)
-  const overlap        = endOfAttack >= startOfDecay
+  const endOfAttack = thisInterval + attackLength
+  const startOfDecay = thisInterval + noteLength - decayLength
+  const peakPoint = thisInterval + noteLength * attackPercentage / (attackPercentage + decayPercentage)
+  const overlap = endOfAttack >= startOfDecay
   
-  const startOfPeak    = overlap ? peakPoint : endOfAttack
-  const endOfPeak      = overlap ? peakPoint : startOfDecay
+  const startOfPeak = overlap ? peakPoint : endOfAttack
+  const endOfPeak = overlap ? peakPoint : startOfDecay
 
   gain.setValueAtTime(0, thisInterval)
   gain.linearRampToValueAtTime(level, startOfPeak)
