@@ -336,19 +336,17 @@ const isRest = (voice: VoiceType) => {
 }
 
 const makeSound = (
-
-  voice           : VoiceType, 
-  intervalLength  : number, 
-  voicesRef       : VoicesRef, 
-  context         : AudioContext
-  
+  voice: VoiceType, 
+  intervalLength: number, 
+  voicesRef: VoicesRef, 
+  context: AudioContext
 ) => {
 
   const { activeSounds, thisInterval } = voice
+
   const offsetTime = getRangeValue('Offset', voice) / 100 * intervalLength
 
   try {
-    
     const randomSound = randomOneFrom(activeSounds) as OscillatorType
     const level = calculateLevel(voice, voicesRef.current)
     voice.offsetInterval = thisInterval! + offsetTime
@@ -361,9 +359,7 @@ const makeSound = (
       
       shapeNote(oscGain.gainNode, voice, intervalLength, level)
       setTimeout(() => removeOscillator(oscGain), (intervalLength+offsetTime)*1000)
-
     } else {
-
       playSample(randomSound, level, context, voice.offsetInterval, voice)
     }
 
@@ -392,21 +388,18 @@ const removeOscillator = (oscGain: OscGain) => {
   oscillator.disconnect()
   gainNode.disconnect()
 }
-
 const playSample = (  
-
-  name    : string,  
-  level   : number,  
-  context : AudioContext,  
-  time    : number,  
-  voice   : VoiceType
-
+  name: string,  
+  level: number,  
+  context: AudioContext,  
+  time: number,  
+  voice: VoiceType
 ) => {  
 
   // Pick target note/octave first — needed for folder sample lookup  
   let targetNote: number | null = null  
   let targetOctave: number | null = null
-  let targetInterval
+  let targetInterval: number | null = null  
   
   if (voice.activeNotes.length > 0 && voice.activeOctaves.length > 0 && voice.activeIntervals.length > 0) {  
     targetNote     = +randomOneFrom(voice.activeNotes)  
