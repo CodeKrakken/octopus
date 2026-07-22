@@ -10,7 +10,7 @@ const buffers: Record<string, {
   nearestFrequency  : number | null
   octave            : number | null
   note              : number | null
-  
+
 }> = {}  
 
 let samplesLoading = false  
@@ -303,7 +303,7 @@ const runInterval = (
     const intervalLength = getIntervalLength(voice)
     voice.nextInterval += intervalLength
   
-    if (!isRest(voice)) makeSound(voice, intervalLength, voicesRef, context)
+    if (!isRest(voice)) makeSound(voice, intervalLength, context)
   } 
 
   if (!voice.isActive) return
@@ -340,7 +340,6 @@ const isRest = (voice: VoiceType) => {
 const makeSound = (
   voice           : VoiceType, 
   intervalLength  : number, 
-  voicesRef       : VoicesRef, 
   context         : AudioContext
 ) => {
 
@@ -519,6 +518,7 @@ const getFadeLength = (percentage: number, noteLength: number) => noteLength * p
 
 const generateFrequency = (voice: VoiceType) => {
   const randomFrequency = randomOneFrom(voice.activeFrequencies)
+
   return detune(randomFrequency as number, voice)
 }
 
