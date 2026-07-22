@@ -389,35 +389,44 @@ const removeOscillator = (oscGain: OscGain) => {
   gainNode.disconnect()
 }
 const playSample = (  
+
   name: string,  
   level: number,  
   context: AudioContext,  
   time: number,  
   voice: VoiceType
-) => {  
 
-  // Pick target note/octave first — needed for folder sample lookup  
+) => {  
+  
   let targetNote: number | null = null  
   let targetOctave: number | null = null
   let targetInterval: number | null = null  
   
-  if (voice.activeNotes.length > 0 && voice.activeOctaves.length > 0 && voice.activeIntervals.length > 0) {  
+  if (
+    voice.activeNotes.length > 0 && 
+    voice.activeOctaves.length > 0 && 
+    voice.activeIntervals.length > 0
+  ) {  
     targetNote     = +randomOneFrom(voice.activeNotes)  
     targetOctave   = +randomOneFrom(voice.activeOctaves)  
     targetInterval = +randomOneFrom(voice.activeIntervals)
   }  
   
   // Resolve which buffer to actually play  
+
   let bufferKey = name  
+
   if (sampleFolders[name]) {  
-    // name is a folder — find the nearest sample in it  
+
     if (targetNote !== null && targetOctave !== null) {  
       bufferKey = findNearestSampleInFolder(name, targetOctave, targetNote) ?? name  
     } else {  
       bufferKey = randomOneFrom(sampleFolders[name])  
     }  
   }  
+
   const buf = buffers[bufferKey]  
+
   if (!buf?.buffer) {  
     console.warn('Buffer not ready for:', bufferKey)  
     return  
@@ -432,23 +441,28 @@ const playSample = (
   gain.connect(masterCompressor!)  
   
   const detune = getRangeValue('Detune', voice)
-  // Apply pitch shift: works for both folder samples (nearest note → target)  
-  // and non-folder samples (sample's detected pitch → target)  
-  if (targetNote !== null && targetOctave !== null &&  
-  buf.note !== null && buf.octave !== null) {  
-    source.detune.value = detune +
-    (targetNote - 1 - buf.note) * 100 +  
-    (targetOctave - buf.octave) * 1200
-  }                                                 
-  
+
+  source.detune.value = detune +
+  (targetNote! - 1 - buf.note!) * 100 +  
+  (targetOctave! - buf.octave!) * 1200
+    
   source.start(time)  
+
   source.onended = () => {  
     source.disconnect()  
     gain.disconnect()  
   }  
 }
 
-const shapeNote = (gainNode: GainNode, voice: VoiceType, intervalLength: number, level: number) => {
+const shapeNote = (
+
+  gainNode: GainNode, 
+  voice: VoiceType, 
+  intervalLength: number, 
+  level: number
+
+) => {
+  
   const gain         = gainNode.gain
   const noteLength = generateNoteLength(voice, intervalLength)
 
