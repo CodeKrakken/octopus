@@ -54,7 +54,7 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   const r0 = slice.slice(0, halfSize).reduce((sum, x) => sum + x * x, 0)  
   if (r0 === 0) return null  
   
-  const correlations: number[] = []  
+  const correlations = []  
   for (let offset = 0; offset < halfSize; offset++) {  
     let sum = 0  
     for (let i = 0; i < halfSize; i++) sum += slice[i] * slice[i + offset]  
