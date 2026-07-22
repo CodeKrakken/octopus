@@ -267,11 +267,12 @@ let freqArray: number[]
 let masterCompressor: DynamicsCompressorNode
   
 const getContext = (context: AudioContext = new AudioContext()) => {  
+
   if (context.state === 'suspended') { context.resume() }  
   
   if (!masterCompressor) {  
     masterCompressor = context.createDynamicsCompressor()  
-    masterCompressor.threshold.value = -6   // dBFS — starts compressing at -6 dB  
+    masterCompressor.threshold.value  = -6   // dBFS — starts compressing at -6 dB  
     masterCompressor.knee.value       = 3   // soft knee  
     masterCompressor.ratio.value      = 20  // 20:1 ≈ hard limiter  
     masterCompressor.attack.value     = 0.001  
@@ -280,6 +281,7 @@ const getContext = (context: AudioContext = new AudioContext()) => {
   }  
   
   loadSamples(context)  
+  
   return context  
 }
 
