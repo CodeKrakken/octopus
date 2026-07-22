@@ -263,7 +263,7 @@ const loadSamples = (context: AudioContext) => {
   )  
 }
 
-let freqArray: number[] | undefined  
+let freqArray
 let masterCompressor: DynamicsCompressorNode | null = null  
   
 const getContext = (context: AudioContext = new AudioContext()) => {  
