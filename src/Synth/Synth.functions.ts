@@ -264,7 +264,7 @@ const loadSamples = (context: AudioContext) => {
 }
 
 let freqArray: number[] | undefined  
-let masterCompressor: DynamicsCompressorNode | null = null  
+let masterCompressor: DynamicsCompressorNode | null
   
 const getContext = (context: AudioContext = new AudioContext()) => {  
   if (context.state === 'suspended') { context.resume() }  
