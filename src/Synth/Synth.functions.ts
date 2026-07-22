@@ -356,7 +356,8 @@ const makeSound = (
 
       const oscGain = setUpOscillator(context)
       oscGain.oscillator.type = randomSound
-      oscGain.oscillator.frequency.value = generateFrequency(voice)
+      oscGain.oscillator.frequency.value = randomOneFrom(voice.activeFrequencies)
+      oscGain.oscillator.detune.value = getRangeValue('Detune', voice)
       
       shapeNote(oscGain.gainNode, voice, intervalLength, level)
       setTimeout(() => removeOscillator(oscGain), (intervalLength+offsetTime)*1000)
@@ -519,20 +520,8 @@ const getFadeLength = (percentage: number, noteLength: number) => noteLength * p
 const generateFrequency = (voice: VoiceType) => {
   const randomFrequency = randomOneFrom(voice.activeFrequencies)
 
-  return detune(randomFrequency as number, voice)
+  return randomFrequency
 }
-
-const detune = (frequency: number, voice: VoiceType) => {
-  const cents = getRangeValue('Detune', voice)
-  if (!cents) return frequency
-    
-  const modifier = cents < 0 ? -1 : 1
-  const nextFreq = getFreqArray()[freqArray!.indexOf(frequency) + modifier]
-  const hzDiff = Math.max(nextFreq, frequency) - Math.min(nextFreq, frequency)
-
-  return frequency + hzDiff / 100 * cents
-}
-
 
 const getRangeValue = (key: Range, voice: VoiceType) => {
     
