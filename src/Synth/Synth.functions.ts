@@ -320,6 +320,7 @@ const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTi
 const getIntervalLength = (voice: VoiceType) => {
 
   const { activeIntervals, bpm } = voice
+
   const interval = randomOneFrom(activeIntervals) || '0.5'
   const intervalLength  = oneMinute / bpm * parseFloat(interval)
 
@@ -327,11 +328,10 @@ const getIntervalLength = (voice: VoiceType) => {
 }
 
 const isRest = (voice: VoiceType) => {  
-  const { restChance, activeOctaves, activeNotes, activeSounds } = voice  
-  
-  if (!activeOctaves.length || !activeNotes.length || !activeSounds.length) return true  
-  
+  const { restChance, activeOctaves, activeNotes, activeSounds } = voice    
+  if (!activeOctaves.length || !activeNotes.length || !activeSounds.length) return true    
   const diceRoll = Math.random()  
+
   return diceRoll < restChance / 100  
 }
 
