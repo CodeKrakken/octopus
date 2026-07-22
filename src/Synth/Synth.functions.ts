@@ -197,18 +197,23 @@ const findNearestSampleInFolder = (
   targetNote: number  
 
 ) => {  
+
   const keys = sampleFolders[folder]  
   if (!keys?.length) return null  
   
-  let bestKey: string | null = null  
+  let bestKey = null  
   let bestDistance = Infinity  
   
   for (const key of keys) {  
+
     const buf = buffers[key]  
     if (!buf || buf.octave === null || buf.note === null) continue  
-    const distance =  
-      Math.abs(targetNote - buf.note) +  
+
+    const distance = (
+      Math.abs(targetNote - buf.note) + 
       Math.abs(targetOctave - buf.octave) * 12  
+    )
+
     if (distance < bestDistance) {  
       bestDistance = distance  
       bestKey = key  
