@@ -235,10 +235,10 @@ const loadSamples = (context: AudioContext) => {
         const response    = await fetch(url as string)  
         const arrayBuffer = await response.arrayBuffer()  
         const decoded     = await context.decodeAudioData(arrayBuffer)  
-        const parsed      = parseNoteFromKey(name)
 
+        const parsed = parseNoteFromKey(name)
         let detected = null  
-        let nearest: { octave: number; note: number; frequency: number } | null = null  
+        let nearest
           
         if (parsed) {  
           detected = parsed.frequency  
