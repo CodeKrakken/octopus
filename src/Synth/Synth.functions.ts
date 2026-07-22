@@ -137,7 +137,7 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
 }
 
 const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {  
-  
+
   const N = slice.length  
   let bestFreq = -1  
   let bestMag = 0  
@@ -145,12 +145,16 @@ const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {
   const maxBin = Math.floor(8000 * N / sampleRate) // 8000 Hz ceiling  
   
   for (let k = minBin; k < maxBin; k++) {  
+    
     let re = 0, im = 0  
+
     for (let n = 0; n < N; n++) {  
+
       const angle = (2 * Math.PI * k * n) / N  
       re += slice[n] * Math.cos(angle)  
       im -= slice[n] * Math.sin(angle)  
     }  
+
     const mag = Math.sqrt(re * re + im * im)  
     if (mag > bestMag) { bestMag = mag; bestFreq = k * sampleRate / N }  
   }  
