@@ -37,17 +37,18 @@ const parseNoteFromKey = (key: string) => {
 }
 
 const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {  
+
   const data = buffer.getChannelData(0)  
-  const SIZE = 4096  
+  const size = 4096  
   
   // Skip silence at the start  
   let startSample = 0  
-  for (let i = 0; i < data.length - SIZE; i++) {  
+  for (let i = 0; i < data.length - size; i++) {  
     if (Math.abs(data[i]) > 0.05) { startSample = i; break }  
   }  
   
-  const slice = data.slice(startSample, startSample + SIZE)  
-  const halfSize = SIZE / 2  
+  const slice = data.slice(startSample, startSample + size)  
+  const halfSize = size / 2  
   
   // Compute autocorrelation for all offsets up to halfSize  
   const r0 = slice.slice(0, halfSize).reduce((sum, x) => sum + x * x, 0)  
