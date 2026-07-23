@@ -1,4 +1,9 @@
 import { ranges } from "../content/data"
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 2c980ecb49dd993cc673bf1b939ac093d46639c6
 
 type Range = typeof ranges[number]
 
