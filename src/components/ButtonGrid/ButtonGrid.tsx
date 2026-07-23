@@ -52,15 +52,15 @@ export default function ButtonGrid({
               id                : id,
               title             : button
             };
-            
+
             const imgPath = `${id}/${button}`
 
             return (
               <Button
-                props={props}
-                imgPath={imgPath}
-                key={button}
-                label={button}
+                props   = {props}
+                imgPath = {imgPath}
+                key     = {button}
+                label   = {button}
               />
             )       
           })
