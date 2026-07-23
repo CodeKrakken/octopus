@@ -39,19 +39,20 @@ export default function ButtonGrid({
         {
           buttons.map(button => {
 
+            const active = voice[`active${label as ButtonGroupKey}`].includes(button) ? 'active' : ''
+            const checked = Boolean(active)
+
             const props = {
-              className: `
-                key
-                ${voice[`active${label as ButtonGroupKey}`].includes(button) ? 'active' : ''}
-              `,
-              'data-attribute': label,
-              'data-voice': i,
-              value: button,
-              checked: voice[`active${label as ButtonGroupKey}`].includes(button),
-              onClick: handleClick,
-              id: id,
-              title: button
+              className         : `${active} key`,
+              'data-attribute'  : label,
+              'data-voice'      : i,
+              value             : button,
+              checked           : checked,
+              onClick           : handleClick,
+              id                : id,
+              title             : button
             };
+            
             const imgPath = `${id}/${button}`
 
             return (
