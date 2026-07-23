@@ -1,6 +1,6 @@
 import { allFrequencies }       from "../content/data"
 import { Synth }                from "../Synth/Synth"
-import { Compound, VoiceType }  from "./shared.types"
+import { ActiveButtonGroupKey, VoiceType }  from "./shared.types"
 
 const getActiveFrequencies = (voice: VoiceType) => {
   
@@ -20,7 +20,7 @@ const getActiveFrequencies = (voice: VoiceType) => {
 const updateButton = (
 
   e         : React.MouseEvent<HTMLButtonElement>, 
-  attribute : Compound, 
+  attribute : ActiveButtonGroupKey, 
   voices    : VoiceType[], 
   i         : number, 
   setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
