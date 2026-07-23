@@ -1,6 +1,6 @@
 import Button                                 from "../Button/Button";
 import { updateButton }                       from "../shared.functions";
-import { ButtonGroupType, Group, VoiceType }  from "../shared.types";
+import { ButtonGroupKey, Group, VoiceType }  from "../shared.types";
 
 export default function ButtonGrid({
 
@@ -26,7 +26,7 @@ export default function ButtonGrid({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     updateButton(
-      e, `active${label as ButtonGroupType}`, voices, i, setVoices
+      e, `active${label as ButtonGroupKey}`, voices, i, setVoices
     )
   }
 
@@ -42,12 +42,12 @@ export default function ButtonGrid({
             const props = {
               className: `
                 key
-                ${voice[`active${label as ButtonGroupType}`].includes(button) ? 'active' : ''}
+                ${voice[`active${label as ButtonGroupKey}`].includes(button) ? 'active' : ''}
               `,
               'data-attribute': label,
               'data-voice': i,
               value: button,
-              checked: voice[`active${label as ButtonGroupType}`].includes(button),
+              checked: voice[`active${label as ButtonGroupKey}`].includes(button),
               onClick: handleClick,
               id: id,
               title: button

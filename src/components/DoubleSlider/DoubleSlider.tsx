@@ -1,5 +1,5 @@
 import { useEffect, useRef }                      from "react";
-import { NumericAttribute, Slider, VoiceType }    from "../shared.types";  
+import { NumericAttributeKey, Slider, VoiceType }    from "../shared.types";  
 import RangeSlider, { ReactRangeSliderInputRef }  from 'react-range-slider-input';  
 import 'react-range-slider-input/dist/style.css';  
 
@@ -29,16 +29,16 @@ export default function DoubleSlider ({
   const {min, max} = slider
 
   const rangeValue = [
-    voices[i][`min${slider.value}` as NumericAttribute], 
-    voices[i][`max${slider.value}` as NumericAttribute]
+    voices[i][`min${slider.value}` as NumericAttributeKey], 
+    voices[i][`max${slider.value}` as NumericAttributeKey]
   ] as [number, number]
   
   const handleRangeInput = ([lo, hi]: [number, number]) => {    
 
     const updatedVoices = [...voices] as VoiceType[];   
 
-    updatedVoices[i][`min${slider.value}` as NumericAttribute] = lo;    
-    updatedVoices[i][`max${slider.value}` as NumericAttribute] = hi;    
+    updatedVoices[i][`min${slider.value}` as NumericAttributeKey] = lo;    
+    updatedVoices[i][`max${slider.value}` as NumericAttributeKey] = hi;    
 
     setVoices(updatedVoices);    
   };

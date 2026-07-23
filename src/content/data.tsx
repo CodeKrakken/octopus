@@ -1,8 +1,6 @@
 import ButtonGrid from "../components/ButtonGrid/ButtonGrid";
 import Piano      from "../components/Piano/Piano";
 
-// Media data
-
 
 // Load images
 
@@ -81,11 +79,8 @@ const nonFolderSamples = Object.keys(samples).filter(k => !folderSampleKeys.has(
 // Native data
 
 const title = "OCTOPUS"
-
 const addLabel = "Add Voice"
-
 const extrema = ['min', 'max']
-
 const oneMinute = 60
 
 const waveforms = [
