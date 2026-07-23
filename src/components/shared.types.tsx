@@ -28,11 +28,11 @@ type Slider = {
 }
 
 type Group = {  
-  label: string  
-  buttons?: string[]  
-  id: string  
-  className?: string
-  columns?: number  
+  label       : string
+  id          : string  
+  buttons?    : string[]  
+  className?  : string
+  columns?    : number  
 }  
   
 type VoiceType = {
@@ -64,11 +64,11 @@ type VoiceType = {
 }
 
 export type {
-  NumericAttributeKey,
   RangeKey,
+  NumericAttributeKey,
   ButtonGroupKey,
+  ActiveButtonGroupKey,
   Slider,
   Group,
-  VoiceType, 
-  ActiveButtonGroupKey
+  VoiceType
 }
