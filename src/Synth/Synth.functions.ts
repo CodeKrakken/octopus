@@ -270,7 +270,6 @@ const loadSamples = (context: AudioContext) => {
   )  
 }
 
-let freqArray: number[]
 let masterCompressor: DynamicsCompressorNode
   
 const getContext = (context: AudioContext = new AudioContext()) => {  
@@ -319,8 +318,6 @@ const runInterval = (
 }
 
 // private functions
-
-const getFreqArray = () => freqArray ??= [...new Set(allFrequencies.flat())]
 
 const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
 
@@ -521,12 +518,6 @@ const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 }
 
 const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
-
-const generateFrequency = (voice: VoiceType) => {
-  const randomFrequency = randomOneFrom(voice.activeFrequencies)
-
-  return randomFrequency
-}
 
 const getRangeValue = (key: Range, voice: VoiceType) => {
     
