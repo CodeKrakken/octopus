@@ -1,7 +1,12 @@
 import { VoiceType }                                                              from '../components/shared.types'
-import { OscGain, VoicesRef }                                                     from './Synth.types'
+import { VoicesRef }                                                              from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms }  from '../content/data';
 import { Range }                                                                  from '../components/shared.types';
+
+type OscGain = {
+  oscillator  : OscillatorNode, 
+  gainNode    : GainNode
+}
 
 const buffers: Record<string, { 
 
