@@ -1,17 +1,12 @@
 import { ranges } from "../content/data"
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 2c980ecb49dd993cc673bf1b939ac093d46639c6
-
-type Range = typeof ranges[number]
+type RangeKey = typeof ranges[number]
 
 type NumericAttributeKey = 
   'bpm'
 | 'restChance'
-| `min${Range}`
-| `max${Range}`
+| `min${RangeKey}`
+| `max${RangeKey}`
 
 type ButtonGroupKey = 
   'Notes' 
@@ -70,7 +65,7 @@ type VoiceType = {
 
 export type {
   NumericAttributeKey,
-  Range,
+  RangeKey,
   ButtonGroupKey,
   Slider,
   Group,

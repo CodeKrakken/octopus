@@ -1,7 +1,7 @@
 import { VoiceType }                                                              from '../components/shared.types'
 import { VoicesRef }                                                              from './Synth.types'
 import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms }  from '../content/data';
-import { Range }                                                                  from '../components/shared.types';
+import { RangeKey }                                                                  from '../components/shared.types';
 
 type OscGain = {
   oscillator  : OscillatorNode, 
@@ -519,7 +519,7 @@ const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
 
 const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
 
-const getRangeValue = (key: Range, voice: VoiceType) => {
+const getRangeValue = (key: RangeKey, voice: VoiceType) => {
     
   const [min, max] = extrema.map(
     prefix => voice[prefix + key as keyof VoiceType]
