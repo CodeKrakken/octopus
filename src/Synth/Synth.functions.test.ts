@@ -1,8 +1,7 @@
-import { detectPitch, getContext, parseNoteFromKey, refineFundamental, runInterval, getDetectedFrequency, detectPitchFFT, findNearestNote, findNearestSampleInFolder, loadSamples, resetSampleState }  from './Synth.functions';  
-import { VoiceType }                      from '../components/shared.types';  
+import { detectPitch, getContext, parseNoteFromKey, refineFundamental, runInterval, getDetectedFrequency, detectPitchFFT, findNearestNote, findNearestSampleInFolder, loadSamples, resetSampleState, playHit, buffers } from './Synth.functions';
+import { HitType, VoiceType } from '../components/shared.types';
 import { runOneInterval }                 from './Synth.test.functions';  
 import { allFrequencies, sampleFolders }  from '../content/data';
-import { buffers }                        from './Synth.functions';
 import { makeVoice }                      from '../shared.test.functions';
 
 jest.mock('../content/data', () => ({  
@@ -62,11 +61,12 @@ const createMockContext = (state = 'running', currentTime = 0) => (
       ratio:     { value: 0 },  
       attack:    { value: 0 },  
       release:   { value: 0 },  
-      connect:   jest.fn()  
+      connect:   jest.fn().mockReturnThis()
     }),  
     createBufferSource: jest.fn().mockReturnValue({  
       connect:    jest.fn(),  
       start:      jest.fn(),  
+      stop:       jest.fn(),
       disconnect: jest.fn(),  
       detune:     { value: 0 },  
       buffer:     null,  
@@ -76,7 +76,23 @@ const createMockContext = (state = 'running', currentTime = 0) => (
     decodeAudioData: jest.fn().mockResolvedValue({})  
   } as unknown as Partial<AudioContext>  
 )  
-  
+
+const makeHit = (sound: string): HitType => ({
+  sound,
+  frequency: 440,
+  detune: 0,
+  note: 1,
+  octave: 0,
+  startTime: 2.5,
+  endTime: 3.25,
+  peakStart: 2.6,
+  peakEnd: 3.1,
+  level: 0.5,
+  voiceId: 'test-voice',
+  style: {},
+  key: 'test-hit'
+})
+
   
 describe('getContext', () => {  
   
@@ -259,6 +275,54 @@ describe('runInterval', () => {
     runOneInterval(voice, mockContext)  
     const mockOscillator = mockContext.createOscillator()  
     expect(mockOscillator.detune.value).toBe(-50)  
+  })
+})
+
+describe('playHit timing', () => {
+  const context = createMockContext() as AudioContext
+  let consoleError: jest.SpyInstance
+
+  beforeAll(() => {
+    consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+    getContext({
+      context,
+      masterGain: context.createGain()
+    })
+  })
+
+  afterAll(() => {
+    consoleError.mockRestore()
+  })
+
+  afterEach(() => {
+    delete buffers.snare
+  })
+
+  it('schedules oscillators at the hit start and end times in context seconds', () => {
+    const hit = makeHit('sine')
+
+    playHit(hit, context, 10)
+
+    const source = context.createOscillator()
+    expect(source.start).toHaveBeenCalledWith(12.5)
+    expect(source.stop).toHaveBeenCalledWith(13.25)
+  })
+
+  it('schedules samples to stop at their absolute end time in context seconds', () => {
+    const hit = makeHit('snare')
+    buffers.snare = {
+      buffer: {} as AudioBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: 0,
+      note: 0
+    }
+
+    playHit(hit, context, 10)
+
+    const source = context.createBufferSource()
+    expect(source.start).toHaveBeenCalledWith(12.5)
+    expect(source.stop).toHaveBeenCalledWith(13.25)
   })
 })
 
