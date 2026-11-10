@@ -7,15 +7,17 @@ export default function ButtonGrid({
   group,
   voices,
   i,
-  setVoices
+  setVoices,
+  props
 
 } : {  
 
   group     : Group  
   voices    : VoiceType[]  
   i         : number  
-  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>  
-  
+  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
+  props?     : { [key: string]: string }
+    
 }) {
 
   const { className, label, id } = group
@@ -31,9 +33,9 @@ export default function ButtonGrid({
   }
 
   return <>
-    <div className="parent">
+    <div className="button-grid-parent">
       <div
-        className={`button-grid ${className}`}
+        className={`${className} button-grid`}
         style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}}
       >
         {
@@ -43,13 +45,12 @@ export default function ButtonGrid({
             const checked = Boolean(active)
 
             const props = {
-              className         : `${active} key`,
+              className         : `${active} ${className} key`,
               'data-attribute'  : label,
               'data-voice'      : i,
               value             : button,
               checked           : checked,
               onClick           : handleClick,
-              id                : id,
               title             : button
             };
 

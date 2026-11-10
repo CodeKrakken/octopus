@@ -70,6 +70,7 @@ const makeVoice = (): VoiceType => ({
   maxAttack:        100,  
   minDecay:         100,  
   maxDecay:         100,  
+  colour:            '#ff0000',
 })  
   
 describe('Voice', () => {  
@@ -92,7 +93,7 @@ describe('Voice', () => {
       />  
     );  
     fireEvent.click(screen.getByText('X'));  
-    expect(mockHandleDelete).toHaveBeenCalledWith(0);  
+    expect(mockHandleDelete).toHaveBeenCalledWith('test-id');
   });  
 
   it('shows Piano controls when Piano button is clicked', async () => {

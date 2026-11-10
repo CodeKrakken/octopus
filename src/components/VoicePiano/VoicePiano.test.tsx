@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';  
-import Piano from './Piano'
+import Piano from './VoicePiano'
 import * as shared from '../shared.functions';
 
 describe('Piano', () => {
@@ -7,7 +7,7 @@ describe('Piano', () => {
   it('runs updateButton upon click', () => {
 
     const voices = [{
-      activeNotes: ['C'],
+      activeNotes: ['1'],
       activeOctaves: ['1']
     }] as any;
 
@@ -23,7 +23,7 @@ describe('Piano', () => {
       />
     )
 
-    const button = document.querySelector('#voice-0-note-1') as HTMLButtonElement;
+    const button = document.querySelector('#voice-0-key-1') as HTMLButtonElement;
     fireEvent.click(button);  
     expect(updateButtonSpy).toHaveBeenCalled();  
   })
@@ -45,7 +45,7 @@ describe('Piano', () => {
     );
 
     const activeKey = document.querySelector(
-      '#voice-0-note-1'
+      '#voice-0-key-1'
     );
 
     expect(activeKey).toHaveClass('active');

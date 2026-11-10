@@ -57,7 +57,10 @@ const runOneInterval = (
   runInterval(
     voice,
     voicesRef,
-    context as AudioContext
+    context as AudioContext,
+    [], 
+    0, 
+    jest.fn()
   )
 
   voice.isActive = false

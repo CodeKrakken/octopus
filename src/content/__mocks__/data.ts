@@ -1,6 +1,9 @@
 export const allFrequencies = [[261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25, 698.46, 783.99, 880.00]]  
+export const reversedNoteNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+export const noteNameToIndex = { C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11 }
 export const extrema = ['min', 'max']  
 export const oneMinute = 60  
+export const ranges = ['Level', 'Length', 'Offset', 'Detune', 'Attack', 'Decay']
 export const samples = { '/piano_A1.wav': 'piano_A1.wav', 'snare': 'snare.wav' }  
 export const sampleFolders = { 'piano': ['/piano_A1.wav'] }  
 export const waveforms = ['sine', 'square', 'sawtooth', 'triangle']  

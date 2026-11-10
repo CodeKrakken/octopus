@@ -16,8 +16,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "react-scripts test",
+    "test:watch": "react-scripts test --watchAll",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
@@ -45,8 +45,6 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.0",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
     "@types/webpack-env": "^1.18.8",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",

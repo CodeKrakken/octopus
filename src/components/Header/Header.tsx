@@ -1,6 +1,6 @@
-import { MouseEventHandler, useEffect, useState } from 'react'
+import { ButtonHTMLAttributes, DetailedHTMLProps, MouseEventHandler, useEffect, useState } from 'react'
 import { title, addLabel }                        from '../../content/data'
-import { VoiceType }                              from '../shared.types'
+import { VoiceType, HitType }                              from '../shared.types'
 
 const letterImages = (string: string, height: string = "40px") => {
 
@@ -18,31 +18,35 @@ const letterImages = (string: string, height: string = "40px") => {
     letter
   )
 
-  return <div className="centred">{letterArray.map(letter => letter)}</div>
+  return <div className="centred row">{letterArray.map(letter => letter)}</div>
 }
 
 export default function Header ({
 
   handleAddVoice,
-  handleStartStop,
-  running,
+  handleImprov,
+  improvising,
+  replaying,
   voices,
-  loadVoices
+  loadVoices,
+  handlePlayback,
+  recordedHits
 
 } : {
 
   handleAddVoice  : React.MouseEventHandler<HTMLButtonElement>
-  handleStartStop : React.MouseEventHandler<HTMLButtonElement>
-  running         : Boolean
+  handleImprov    : React.MouseEventHandler<HTMLButtonElement>
+  improvising     : Boolean
+  replaying       : Boolean
   voices          : VoiceType[]
-  loadVoices      : MouseEventHandler<HTMLButtonElement>
+  loadVoices      : MouseEventHandler<HTMLButtonElement>,
+  handlePlayback  : MouseEventHandler<HTMLButtonElement>
+  recordedHits    : HitType[]
 }) {
 
   const [disableLoad, setDisableLoad] = useState(false)
 
   useEffect(() => { setDisableLoad(localStorage.voices ? false : true) }, [])
-
-  
 
   const handleSave = () => {
     setDisableLoad(false)
@@ -56,11 +60,11 @@ export default function Header ({
   const buttons = [
     { 
       props: {
-        onClick   : handleStartStop,
-        disabled  : disableButtons as boolean,
+        onClick   : handleImprov,
+        disabled  : disableButtons as boolean || replaying,
         className : "header-button"
       },
-      label: letterImages(running ? 'Stop' : 'Start', buttonLabelHeight)
+      label: letterImages(improvising ? 'Stop' : 'Start', buttonLabelHeight)
     },
     {
       props: {
@@ -85,22 +89,34 @@ export default function Header ({
         className : "header-button"
       },
       label: letterImages('Load', buttonLabelHeight)
+    },
+    {
+      props: {
+        onClick   : handlePlayback,
+        className : "header-button",
+        disabled  : improvising || !recordedHits.length
+      },
+      label: letterImages(replaying ? 'Stop' : 'Replay', buttonLabelHeight)
     }
   ]
 
   return (
-    <div 
-      className="column" 
-      id="header"
-    >
+    <div id="header">
       <div id="title">
         {letterImages(title, '50px')}
       </div>
-
-      <div className="centred section">
+    
+      <div className="centred">
         {
           buttons.map((button, i) => 
-            <button {...button.props} key={`${button.label} ${i}`}>
+            <button 
+              {
+                ...button.props as DetailedHTMLProps<
+                  ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement
+                >
+              } 
+              key={`${button.label} ${i}`}
+            >
               {button.label}
             </button>
           )

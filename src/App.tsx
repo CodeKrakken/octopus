@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState }  from 'react';
 import { Synth }                        from './Synth/Synth';
-import { VoiceType }                    from './components/shared.types';
+import { VoiceType, HitType }           from './components/shared.types';
 import { demoVoices }                   from './content/data';
 import Voice                            from './components/Voice/Voice';
 import Header                           from './components/Header/Header';
 import './App.css';
+import Timeline from './components/Timeline/Timeline';
 
 function App() {
 
@@ -12,46 +13,99 @@ function App() {
     Synth.resumeContext()
   }, [])
 
-  const [voices,  setVoices] = useState<VoiceType[]>(demoVoices)
-  const [running, setRunning] = useState<boolean>(false)
+  const [voices,           setVoices] = useState<VoiceType[]>(demoVoices)
+  const [improvising, setImprovising] = useState<boolean>(false)
+  const [replaying,     setReplaying] = useState<boolean>(false)
+  const [recordedHits, setRecordedHits] = useState<HitType[]>([])
 
-  const runningRef = useRef(running)
+  useEffect(() => {
+    Synth.setRecordedHits = setRecordedHits
+  }, [])
+
+  const improvisingRef = useRef(improvising)
   const voicesRef = useRef(voices)
 
   useEffect(() => { 
 
     voicesRef.current = voices
-    if (!voices.length) toggleRunning(false)   
+    if (!voices.length) toggleImprovising(false)   
 
   }, [voices])
+
+  useEffect(() => {
+
+    const voices = document.querySelector('#voices')
+
+    if (!voices) return
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      voices.scrollLeft += e.deltaX + e.deltaY
+    }
+    
+
+    voices.addEventListener('wheel' as any, handleWheel, { passive: false })     // Fix this later
+
+    const header = document.querySelector('#header')
+
+    if (!header) return
+
+    const handleHeaderWheel = (e: WheelEvent) => {
+      e.preventDefault()
+    }
+
+    header.addEventListener('wheel' as any, handleHeaderWheel, { passive: false })    // Fix this later
+    
+    return () => {
+
+      voices.removeEventListener('wheel' as any, handleWheel)    // Fix this later
+      header.removeEventListener('wheel' as any, handleHeaderWheel)    // Fix this later
+    }
+
+  }, [])
 
 
   const handleAddVoice = () => {
     const newVoice = setUpVoice(voices)
     setVoices(voices => [voices, newVoice].flat())
-    Synth.add(newVoice, running, voicesRef)
+    Synth.add(newVoice, improvising, voicesRef)
   }
 
-  const handleDelete = (i: number) => {  
-    const voice = voices[i]  
+  const handleDelete = (id: string) => {  
+    const voice = voices.find(v => v.id === id)  
+    if (!voice) return  
     voice.isActive = false  
-    setVoices(voices => voices.filter((voice, j) => j !== i))  
-    Synth.delete(i)  
+    setVoices(voices => voices.filter((voice, j) => voice.id !== id))  
+    Synth.delete(voice.id)  
   }
 
-  const start = () => {
-    toggleRunning(true)
+  const startImprovising = () => {
+    toggleImprovising(true)
     Synth.start(voicesRef)
   }
 
-  const stopAll = () => {
-    toggleRunning(false)
+  const stopImprovising = () => {
+    toggleImprovising(false)
     Synth.stop()
   }
 
-  const toggleRunning = (state: boolean) => {
-    runningRef.current = state
-    setRunning(state)
+  const stopPlayback = () => {
+    toggleReplaying(false)
+    Synth.stop()
+  }
+
+  const startPlayback = () => {
+    toggleReplaying(true)
+    Synth.replay(setReplaying)
+  }
+
+  const toggleReplaying = (state: boolean) => {
+    setReplaying(state)
+  }
+
+  const toggleImprovising = (state: boolean) => {
+    improvisingRef.current = state
+    setImprovising(state)
   }
 
   const loadVoices = () => {
@@ -61,12 +115,14 @@ function App() {
     Synth.voices = []
 
     loadedVoices.forEach((voice: VoiceType) => {
-      Synth.add(voice, running, voicesRef)
+      Synth.add(voice, improvising, voicesRef)
     })
   }
 
-  const handleStartStop = () => running ? stopAll() : start()
+  const handleImprov = () => improvising ? stopImprovising() : startImprovising()
 
+  const handlePlayback = () => replaying ? stopPlayback() : startPlayback()
+  
   const setUpVoice = (voices: VoiceType[]) => {
 
     const template = voices[voices.length - 1]
@@ -94,9 +150,19 @@ function App() {
       minAttack         : template?.minAttack         ??  100,
       maxAttack         : template?.maxAttack         ??  100,
       minDecay          : template?.minDecay          ??  100,
-      maxDecay          : template?.maxDecay          ??  100
+      maxDecay          : template?.maxDecay          ??  100,
+      colour            : randomColour()
     }
   }
+
+  const randomColour = () => {
+
+  const r = Math.floor(Math.random() * 256)
+  const g = Math.floor(Math.random() * 256)
+  const b = Math.floor(Math.random() * 256)
+
+  return `rgba(${r}, ${g}, ${b})`
+}
 
   const generateNewLabel = (
     template: VoiceType | null, 
@@ -120,34 +186,45 @@ function App() {
     return newLabel
   }
 
+
   return <>
+
     <Header 
-      handleStartStop   = {handleStartStop}
-      running           = {running}
-      handleAddVoice    = {handleAddVoice}
-      voices            = {voices}
-      loadVoices        = {loadVoices}
+      handleImprov    = {handleImprov}
+      improvising     = {improvising}
+      replaying       = {replaying}
+      handleAddVoice  = {handleAddVoice}
+      voices          = {voices}
+      loadVoices      = {loadVoices}
+      handlePlayback  = {handlePlayback}
+      recordedHits    = {Synth.recordedHits}
     />
     
     <div 
-      className="row section" 
-      id="voices"
+      id="voices-container"
     >
-      {
-        voices.map((voice, i) => 
+      <div id="voices">
+        <div className="row">
+          {
+            voices.map((voice, i) => {
+              return <Voice
+                i             = {i} 
+                setVoices     = {setVoices} 
+                voices        = {voices}
+                handleDelete  = {handleDelete}
+                dataAttribute = "Voices"
+                key           = {voice.id}
+              />
+            })
+          }
+        </div>
+      </div>
+    </div>
 
-          <Voice
-            i             = {i} 
-            setVoices     = {setVoices} 
-            voices        = {voices}
-            handleDelete  = {handleDelete}
-            dataAttribute = "Voices"
-            key           = {voice.id}
-          />
-        )
-      }
+    <div>
+      <Timeline hits={recordedHits} />    
     </div>
   </>
-}
+} 
 
 export default App;

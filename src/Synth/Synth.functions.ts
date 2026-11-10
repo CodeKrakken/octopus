@@ -1,67 +1,12 @@
-import { VoiceType, RangeKey }                                                    from '../components/shared.types'
-import { VoicesRef }                                                              from './Synth.types'
-import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms }  from '../content/data';
+import { VoiceType, HitType, RangeKey }                                                    from '../components/shared.types'
+import { SourceGain, VoicesRef }                                                         from './Synth.types'
+import { allFrequencies, extrema, oneMinute, samples, sampleFolders, waveforms, noteNameToIndex, pixelsPerSecond }  from '../content/data';
+import { Synth } from './Synth';
 
 
-type OscGain = {
-  oscillator  : OscillatorNode, 
-  gainNode    : GainNode
-}
+// variables
 
 let masterCompressor: DynamicsCompressorNode
-  
-const getContext = (context: AudioContext = new AudioContext()) => {  
-
-  if (context.state === 'suspended') { context.resume() }  
-  
-  if (!masterCompressor) {  
-    masterCompressor = context.createDynamicsCompressor()  
-    masterCompressor.threshold.value  = -6   // dBFS — starts compressing at -6 dB  
-    masterCompressor.knee.value       = 3   // soft knee  
-    masterCompressor.ratio.value      = 20  // 20:1 ≈ hard limiter  
-    masterCompressor.attack.value     = 0.001  
-    masterCompressor.release.value    = 0.1  
-    masterCompressor.connect(context.destination)  
-  }  
-  
-  loadSamples(context)  
-  
-  return context  
-}
-
-const runInterval = (
-
-  voice     : VoiceType, 
-  voicesRef : VoicesRef, 
-  context   : AudioContext
-
-) => {
-
-  voice.thisInterval = voice.nextInterval
-  const thisInterval = voice.thisInterval
-
-  if (isTimeFor(thisInterval, context)) {
-    
-    const intervalLength = getIntervalLength(voice)
-    voice.nextInterval += intervalLength
-  
-    if (!isRest(voice)) makeSound(voice, intervalLength, context)
-  } 
-
-  if (!voice.isActive) return
-
-  setTimeout(() => {
-    runInterval(voice, voicesRef, context)
-  }, (voice.nextInterval - context.currentTime)*1000)    
-}
-
-// test helper
-
-const resetSampleState = () => {
-  samplesLoading = false;
-};
-
-// private functions
 
 const buffers: Record<string, { 
 
@@ -75,10 +20,77 @@ const buffers: Record<string, {
 
 let samplesLoading = false  
 
-const noteNameToIndex: Record<string, number> = {  
-  C:0, Db:1, D:2, Eb:3, E:4, F:5, Gb:6, G:7, Ab:8, A:9, Bb:10, B:11  
-}  
+// functions
   
+const getContext = (
+  setup: {
+    context: undefined | AudioContext,
+    masterGain: undefined | GainNode
+  }
+) => {  
+
+  let { context, masterGain } = setup
+
+  if (!context) { context = new AudioContext() }
+  if (!masterGain) { masterGain = context.createGain() }
+
+  if (context.state === 'suspended') { context.resume() }  
+  
+  if (!masterCompressor) {  
+    masterCompressor = context.createDynamicsCompressor()  
+    masterCompressor.threshold.value  = -6   // dBFS — starts compressing at -6 dB  
+    masterCompressor.knee.value       = 3   // soft knee  
+    masterCompressor.ratio.value      = 20  // 20:1 ≈ hard limiter  
+    masterCompressor.attack.value     = 0.001  
+    masterCompressor.release.value    = 0.1  
+    masterCompressor.connect(masterGain).connect(context.destination)  
+  }  
+  
+  loadSamples(context)  
+  
+  return {masterGain, context}  
+}
+
+const loadSamples = (context: AudioContext) => {  
+
+  if (samplesLoading) return  Promise.resolve();
+  samplesLoading = true  
+
+  return Promise.all(  
+    Object.entries(samples).map(async ([name, url]) => {  
+
+      try {  
+        const response    = await fetch(url as string)  
+        const arrayBuffer = await response.arrayBuffer()  
+        const decoded     = await context.decodeAudioData(arrayBuffer)  
+
+        const parsed = parseNoteFromKey(name)
+        let detected = null  
+        let nearest
+          
+        if (parsed) {  
+          detected = parsed.frequency  
+          nearest  = parsed  
+        } else {  
+          detected = detectPitch(decoded, context.sampleRate)  
+          nearest  = detected ? findNearestNote(detected) : null  
+        }
+  
+        buffers[name] = {  
+          buffer            : decoded,  
+          detectedFrequency : detected,  
+          nearestFrequency  : nearest?.frequency ?? null,  
+          octave            : nearest?.octave ?? null,  
+          note              : nearest?.note ?? null,  
+        }
+      } catch (e) {  
+
+        console.error('Failed to load sample:', name, e)  
+      }  
+    })  
+  )  
+}
+
 const parseNoteFromKey = (key: string) => {  
   
   const match = key.match(/[/_]([A-G][b#]?)(\d+)(?:_|\.|$)/)
@@ -189,19 +201,6 @@ const detectPitch = (buffer: AudioBuffer, sampleRate: number) => {
   );
 }
 
-const getDetectedFrequency = (
-  slice: Float32Array,
-  sampleRate: number,
-  bestOffset: number,
-  bestCorrelation: number
-) => {
-  if (shouldUseFFTFallback(bestOffset, bestCorrelation)) {
-    return detectPitchFFT(slice, sampleRate);
-  }
-
-  return sampleRate / bestOffset;
-};
-
 const refineFundamental = (
   correlations: number[],
   firstZeroCrossing: number,
@@ -233,6 +232,24 @@ const refineFundamental = (
   return { bestOffset, bestCorrelation };
 };
 
+const getDetectedFrequency = (
+  slice: Float32Array,
+  sampleRate: number,
+  bestOffset: number,
+  bestCorrelation: number
+) => {
+  if (shouldUseFFTFallback(bestOffset, bestCorrelation)) {
+    return detectPitchFFT(slice, sampleRate);
+  }
+
+  return sampleRate / bestOffset;
+};
+
+const shouldUseFFTFallback = (
+  bestOffset: number,
+  bestCorrelation: number
+) => bestOffset === -1 || bestCorrelation < 0.3;
+
 const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {  
 
   const N = slice.length  
@@ -257,11 +274,6 @@ const detectPitchFFT = (slice: Float32Array, sampleRate: number) => {
   }  
   return bestFreq > 0 ? bestFreq : null  
 }
-
-const shouldUseFFTFallback = (
-  bestOffset: number,
-  bestCorrelation: number
-) => bestOffset === -1 || bestCorrelation < 0.3;
 
 const findNearestNote = (frequency: number) => {  
 
@@ -290,6 +302,317 @@ const findNearestNote = (frequency: number) => {
     note: bestNote,  
     frequency: allFrequencies[bestOctave][bestNote]  
   }  
+}
+
+const runInterval = (
+
+  voice           : VoiceType, 
+  voicesRef       : VoicesRef, 
+  context         : AudioContext,
+  recordedHits    : HitType[],
+  runStartTime    : number,
+  setRecordedHits : Function
+) => {
+
+  const { nextInterval, activeSounds, activeNotes, activeOctaves } = voice
+
+  voice.thisInterval = nextInterval
+  const thisInterval = voice.thisInterval
+
+  // try
+
+  try {
+    if (isTimeFor(thisInterval, context)) {
+      
+      const intervalLength = getIntervalLength(voice)
+      voice.nextInterval += intervalLength
+
+      if (!isRest(voice)) {
+
+        const hit: HitType = {
+          sound     : randomOneFrom(activeSounds) as string,
+          level     : calculateLevel(voice),
+          frequency : 0,
+          detune    : getRangeValue('Detune', voice),
+          note      : +randomOneFrom(activeNotes),
+          octave    : +randomOneFrom(activeOctaves),
+          ...getGainEvents(voice, intervalLength, runStartTime),
+          voiceId   : voice.id,
+          style     : {},
+          key       : ''
+        }
+
+        hit.frequency = allFrequencies[hit.octave!][hit.note!-1]
+        hit.key       = `${voice.id}-${hit.startTime}`
+        
+        const pianoKey = document.getElementById(
+          `timeline-grid-piano-${hit.frequency}`
+        )
+        
+        const whiteKey = document.getElementById(
+          `timeline-grid-piano-16.35`
+        )
+
+        const blackKey = document.getElementById(
+          `timeline-grid-piano-17.32`
+        )
+
+        const rowHeight = pianoKey?.offsetHeight ?? 0
+
+        const hitHeight = (whiteKey!.offsetHeight - blackKey!.offsetHeight) * 0.8
+
+        const top = pianoKey!.offsetTop + (rowHeight - hitHeight) / 2
+
+        hit.style = {
+          top,
+          left: hit.startTime * pixelsPerSecond,
+          width: (hit.endTime - hit.startTime) * pixelsPerSecond,
+          backgroundColor: voicesRef.current.filter(voice => voice.id === hit.voiceId)[0].colour
+        }
+        
+        if (hit.note === 13) {
+          hit.note = 1
+          hit.octave ++
+        }
+
+        playHit(hit, context, runStartTime)
+        
+        recordedHits.push(hit)  
+        Synth.hitsDirty = true
+      }    
+    } 
+  } catch (error) {
+    // console.error(error instanceof Error ? error.message : "Unknown error", error)
+    console.error(voice.id, error)  
+  } finally {
+    if (!voice.isActive) return
+
+    setTimeout(() => {
+      runInterval(voice, voicesRef, context, recordedHits, runStartTime, setRecordedHits)
+    }, (voice.nextInterval - context.currentTime)*1000) 
+  }
+}
+
+const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
+
+const getIntervalLength = (voice: VoiceType) => {
+
+  const { activeIntervals, bpm } = voice
+
+  const interval = randomOneFrom(activeIntervals) || '0.5'
+  const intervalLength  = oneMinute / bpm * parseFloat(interval)
+
+  return intervalLength
+}
+
+const isRest = (voice: VoiceType) => {  
+  const { restChance, activeOctaves, activeNotes, activeSounds } = voice    
+  if (!activeOctaves.length || !activeNotes.length || !activeSounds.length) return true    
+  const diceRoll = Math.random()  
+
+  return diceRoll < restChance / 100  
+}
+
+const randomOneFrom = <T>(array: T[]): T => {
+  return array[Math.floor(Math.random() * array.length)]
+}
+
+
+const calculateLevel = (voice: VoiceType) => {
+
+  const { minLevel, maxLevel } = voice
+
+  const balancedLevel = (
+    (minLevel + Math.random() * (maxLevel - minLevel))/100
+  )
+  
+  return balancedLevel
+}
+
+const getRangeValue = (key: RangeKey, voice: VoiceType) => {
+    
+  const [min, max] = extrema.map(
+    prefix => voice[prefix + key as keyof VoiceType]
+  )
+
+  const rangeValue = (
+    min as number + 
+    (
+      Math.random() * 
+      (max as number - (min as number))
+    )
+  )
+
+  return rangeValue
+}
+
+const getGainEvents = (voice: VoiceType, intervalLength: number, runStartTime: number) => {
+
+  // start
+
+  const offsetTime = getRangeValue('Offset', voice) / 100 * intervalLength
+  const startTime = voice.thisInterval! + offsetTime - runStartTime
+
+  // end
+
+  const noteLength = generateNoteLength(voice, intervalLength)
+  const endTime   = startTime + noteLength
+
+  // peak points
+  
+  const attackPercentage = getRangeValue('Attack', voice)
+  const decayPercentage  = getRangeValue('Decay', voice)
+
+  const attackLength = getFadeLength(attackPercentage , noteLength)
+  const decayLength  = getFadeLength(decayPercentage, noteLength)
+
+  const endOfAttack  = startTime + attackLength
+  const startOfDecay = endTime - decayLength
+
+  const peakPoint = (
+    startTime + noteLength * attackPercentage / 
+    (attackPercentage + decayPercentage)
+  )
+
+  const overlap   = endOfAttack >= startOfDecay
+
+  const peakStart = overlap ? peakPoint : endOfAttack
+  const peakEnd   = overlap ? peakPoint : startOfDecay
+
+  return { startTime, endTime, peakStart, peakEnd }
+}
+
+const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
+  const noteLengthPercentage  = getRangeValue('Length', voice)
+  return intervalLength / 100 * noteLengthPercentage
+}
+
+const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
+
+const playHit = (
+  hit: HitType,
+  context: AudioContext,
+  runStartTime: number,
+  onFinished?: () => void
+) => {
+
+  const { sound } = hit
+
+  let gainNode: GainNode
+
+  if (isWaveform(sound!)) {
+
+    hit.source = setUpSource(context, hit, runStartTime)
+    gainNode = hit.source.gainNode
+
+    hit.source.source.onended = () => {
+      removeSource(hit.source!)
+      onFinished?.()
+    }
+
+  } else {
+
+    gainNode = setUpGainNode(context)
+
+    setUpSample(
+      hit,
+      context,
+      runStartTime + hit.startTime!,
+      gainNode,
+      onFinished
+    )
+  }
+
+  scheduleGainEvents(gainNode, hit, runStartTime)
+}
+
+const isWaveform = (sound: string) => waveforms.includes(sound as string)
+
+
+const setUpSource = (
+  context: AudioContext,
+  hit: HitType,
+  runStartTime: number
+) => {
+
+  const source  = context.createOscillator()
+  const gainNode    = setUpGainNode(context)
+  const { sound, frequency, detune, endTime, startTime } = hit
+
+  source.connect(gainNode);
+  source.start(runStartTime + startTime!);
+  source.type = sound as OscillatorType
+  source.frequency.value = frequency as number
+  source.detune.value = detune as number
+  source.stop(runStartTime + endTime!);
+  return {source, gainNode}
+}
+
+const setUpGainNode = (context: AudioContext) => {
+
+  const gainNode = context.createGain()
+  gainNode.gain.setValueAtTime(0, 0)
+  gainNode.connect(masterCompressor!)  
+
+  return gainNode
+}
+
+const removeSource = (sourceGain: SourceGain) => {
+  const { source, gainNode } = sourceGain
+
+  source.stop()
+  source.disconnect()
+  gainNode.disconnect()
+}
+
+const setUpSample = (
+  hit: HitType,
+  context: AudioContext,
+  time: number,
+  gainNode: GainNode,
+  onFinished?: () => void
+) => {
+
+  const { detune, note, octave } = hit
+
+  let sound = hit.sound
+
+  if (
+    sampleFolders[sound!] &&
+    note !== null && 
+    octave !== null
+  ) {  
+    sound = findNearestSampleInFolder(sound!, octave!, note!) ?? sound  
+  }
+
+  const buf = buffers[sound!]  
+
+  if (!buf?.buffer) {  
+    console.warn('Buffer not ready for:', sound)  
+    return  
+  }  
+  
+  const source = context.createBufferSource()  
+  source.buffer = buf.buffer  
+  source.connect(gainNode)  
+
+  source.detune.value = detune! +
+  (note! - 1 - buf.note!) * 100 +  
+  (octave! - buf.octave!) * 1200
+
+  const sourceGain = { source, gainNode }
+
+  hit.source = sourceGain
+
+  source.start(time)
+  source.stop(time + hit.endTime! - hit.startTime!)
+  
+  source.onended = () => {
+    source.disconnect()
+    gainNode.disconnect()
+    onFinished?.()
+  }
+
 }
 
 const findNearestSampleInFolder = ( 
@@ -324,264 +647,30 @@ const findNearestSampleInFolder = (
   
   return bestKey  
 }
-  
-const loadSamples = (context: AudioContext) => {  
 
-  if (samplesLoading) return  Promise.resolve();
-  samplesLoading = true  
+const scheduleGainEvents = (
 
-  return Promise.all(  
-    Object.entries(samples).map(async ([name, url]) => {  
-
-      try {  
-        const response    = await fetch(url as string)  
-        const arrayBuffer = await response.arrayBuffer()  
-        const decoded     = await context.decodeAudioData(arrayBuffer)  
-
-        const parsed = parseNoteFromKey(name)
-        let detected = null  
-        let nearest
-          
-        if (parsed) {  
-          detected = parsed.frequency  
-          nearest  = parsed  
-        } else {  
-          detected = detectPitch(decoded, context.sampleRate)  
-          nearest  = detected ? findNearestNote(detected) : null  
-        }
-  
-        buffers[name] = {  
-          buffer            : decoded,  
-          detectedFrequency : detected,  
-          nearestFrequency  : nearest?.frequency ?? null,  
-          octave            : nearest?.octave ?? null,  
-          note              : nearest?.note ?? null,  
-        }
-      } catch (e) {  
-
-        console.error('Failed to load sample:', name, e)  
-      }  
-    })  
-  )  
-}
-
-
-const isTimeFor = (timeCode: number, context: AudioContext) => context.currentTime >= timeCode
-
-const getIntervalLength = (voice: VoiceType) => {
-
-  const { activeIntervals, bpm } = voice
-
-  const interval = randomOneFrom(activeIntervals) || '0.5'
-  const intervalLength  = oneMinute / bpm * parseFloat(interval)
-
-  return intervalLength
-}
-
-const isRest = (voice: VoiceType) => {  
-  const { restChance, activeOctaves, activeNotes, activeSounds } = voice    
-  if (!activeOctaves.length || !activeNotes.length || !activeSounds.length) return true    
-  const diceRoll = Math.random()  
-
-  return diceRoll < restChance / 100  
-}
-
-const makeSound = (
-  voice           : VoiceType, 
-  intervalLength  : number, 
-  context         : AudioContext
-) => {
-
-  const { activeSounds, thisInterval } = voice
-
-  const offsetTime = getRangeValue('Offset', voice) / 100 * intervalLength
-
-  try {
-    const randomSound = randomOneFrom(activeSounds) as OscillatorType
-    const level = calculateLevel(voice)
-    voice.offsetInterval = thisInterval! + offsetTime
-
-    if (waveforms.includes(randomSound)) {
-
-      const oscGain = setUpOscillator(context)
-      oscGain.oscillator.type = randomSound
-      oscGain.oscillator.frequency.value = randomOneFrom(voice.activeFrequencies)
-      oscGain.oscillator.detune.value = getRangeValue('Detune', voice)
-      
-      shapeNote(oscGain.gainNode, voice, intervalLength, level)
-      setTimeout(() => removeOscillator(oscGain), (intervalLength+offsetTime)*1000)
-    } else {
-      playSample(randomSound, level, context, voice.offsetInterval, voice)
-    }
-
-  } catch (error) {
-    console.error(error instanceof Error ? error.message : "Unknown error", error)
-  }            
-}
-
-const setUpOscillator = (context: AudioContext) => {
-
-  const oscillator  = context.createOscillator()
-  const gain        = context.createGain()
-
-  oscillator.connect(gain);
-  gain.gain.setValueAtTime(0, 0)
-  gain.connect(masterCompressor!)  
-  oscillator.start(0);
-
-  return {oscillator, gainNode: gain}
-}
-
-const removeOscillator = (oscGain: OscGain) => {
-  const { oscillator, gainNode } = oscGain
-
-  oscillator.stop()
-  oscillator.disconnect()
-  gainNode.disconnect()
-}
-
-const playSample = (  
-
-  name    : string,  
-  level   : number,  
-  context : AudioContext,  
-  time    : number,  
-  voice   : VoiceType
-
-) => {  
-  
-  let targetNote      : number | null = null  
-  let targetOctave    : number | null = null
-  let targetInterval  : number | null = null  
-  
-  if (
-    voice.activeNotes.length > 0 && 
-    voice.activeOctaves.length > 0 && 
-    voice.activeIntervals.length > 0
-  ) {  
-    targetNote     = +randomOneFrom(voice.activeNotes)  
-    targetOctave   = +randomOneFrom(voice.activeOctaves)  
-    targetInterval = +randomOneFrom(voice.activeIntervals)
-  }  
-  
-  // Resolve which buffer to actually play  
-
-  let bufferKey = name  
-
-  if (sampleFolders[name]) {  
-
-    if (targetNote !== null && targetOctave !== null) {  
-      bufferKey = findNearestSampleInFolder(name, targetOctave, targetNote) ?? name  
-    } else {  
-      bufferKey = randomOneFrom(sampleFolders[name])  
-    }  
-  }  
-
-  const buf = buffers[bufferKey]  
-
-  if (!buf?.buffer) {  
-    console.warn('Buffer not ready for:', bufferKey)  
-    return  
-  }  
-  
-  const source = context.createBufferSource()  
-  source.buffer = buf.buffer  
-  const gain = context.createGain()  
-
-  shapeNote(gain, voice, targetInterval!, level)
-  source.connect(gain)  
-  gain.connect(masterCompressor!)  
-  
-  const detune = getRangeValue('Detune', voice)
-
-  source.detune.value = detune +
-  (targetNote! - 1 - buf.note!) * 100 +  
-  (targetOctave! - buf.octave!) * 1200
-    
-  source.start(time)  
-
-  source.onended = () => {  
-    source.disconnect()  
-    gain.disconnect()  
-  }  
-}
-
-const shapeNote = (
-
-  gainNode        : GainNode, 
-  voice           : VoiceType, 
-  intervalLength  : number, 
-  level           : number
+  gainNode: GainNode,
+  hit: HitType,
+  runStartTime: number
 
 ) => {
   
   const gain = gainNode.gain
-  const noteLength = generateNoteLength(voice, intervalLength)
-
-  const thisInterval = voice.offsetInterval!
-  const attackPercentage = getRangeValue('Attack', voice)
-  const decayPercentage  = getRangeValue('Decay', voice)
-
-  const attackLength = getFadeLength(attackPercentage , noteLength)
-  const decayLength  = getFadeLength(decayPercentage, noteLength)
-
-  const endOfAttack  = thisInterval + attackLength
-  const startOfDecay = thisInterval + noteLength - decayLength
-
-  const peakPoint = (
-    thisInterval + noteLength * attackPercentage / 
-    (attackPercentage + decayPercentage)
-  )
-
-  const overlap     = endOfAttack >= startOfDecay
-  const startOfPeak = overlap ? peakPoint : endOfAttack
-  const endOfPeak   = overlap ? peakPoint : startOfDecay
-
-  gain.setValueAtTime(0, thisInterval)
-  gain.linearRampToValueAtTime(level, startOfPeak)
-  gain.setValueAtTime(level, endOfPeak)
-  gain.linearRampToValueAtTime(0, thisInterval + noteLength)
-}
-
-const randomOneFrom = <T>(array: T[]): T => {
-  return array[Math.floor(Math.random() * array.length)]
-}
-
-const calculateLevel = (voice: VoiceType) => {
-
-  const { minLevel, maxLevel } = voice
-
-  const balancedLevel = (
-    (minLevel + Math.random() * (maxLevel - minLevel))/100
-  )
+  const { startTime, endTime, peakStart, peakEnd, level } = hit
   
-  return balancedLevel
+  gain.setValueAtTime(0, startTime! + runStartTime)
+  gain.linearRampToValueAtTime(level!, peakStart! + runStartTime)
+  gain.setValueAtTime(level!, peakEnd! + runStartTime)
+  gain.linearRampToValueAtTime(0, endTime! + runStartTime)
 }
 
 
-const generateNoteLength = (voice: VoiceType, intervalLength: number) => {
-  const noteLengthPercentage  = getRangeValue('Length', voice)
-  return intervalLength / 100 * noteLengthPercentage
-}
+// test helper
 
-const getFadeLength = (percentage: number, noteLength: number) => noteLength * percentage / 100
-
-const getRangeValue = (key: RangeKey, voice: VoiceType) => {
-    
-  const [min, max] = extrema.map(
-    prefix => voice[prefix + key as keyof VoiceType]
-  )
-
-  const rangeValue = (
-    min as number + 
-    (
-      Math.random() * 
-      (max as number - (min as number))
-    )
-  )
-
-  return rangeValue
-}
+const resetSampleState = () => {
+  samplesLoading = false;
+};
 
 export {
   getContext,
@@ -597,5 +686,6 @@ export {
   buffers,
   loadSamples,
   resetSampleState,
-  playSample
+  playHit,
+  removeSource
 }

@@ -1,55 +1,65 @@
-import { updateButton } from "../shared.functions";
+import { reversedNoteNames } from "../../content/data";
 import { VoiceType }    from "../shared.types";
 
 export default function Piano ({
 
   voices,
   i,
-  setVoices
+  handleClick,
+  keys,
+  props,
+  showKeyLabels
 
 } : {
   
-  voices    : VoiceType[]
-  i         : number
-  setVoices : React.Dispatch<React.SetStateAction<VoiceType[]>>
-
+  voices?       : VoiceType[]
+  i?            : number
+  handleClick?  : React.MouseEventHandler<HTMLButtonElement>
+  keys          : number[]
+  props         : { [key: string]: string | object }
+  showKeyLabels : Boolean
 }) {
 
-  const voice = voices[i]
+  const id = props.id
 
-  const whiteKeys = ['1', '3', '5', '6', '8', '10', '12', '13']
-  const blackKeys = ['2', '4', '7', '9', '11']
+  let voice: VoiceType
+  let octaveIndex = 11
 
-  const keys = [
-    ...whiteKeys, 
-    ...blackKeys
-  ].sort((a, b) => +a - +b)
-
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    updateButton(e, 'activeNotes', voices, i, setVoices)
-  }
+  if (voices) voice = voices[i!]
   
   return (
-    <div className="parent">
-      <div className="button-grid keyboard">
+    <div className="button-grid-parent">
+      <div 
+        className="button-grid piano" 
+        {...props}
+      >
         {
-          keys.map(key => {
+          keys.map((key, i) => {
 
-            const colour = blackKeys.includes(key) ? 'black' : 'white'
-            const active = voice.activeNotes.includes(key) ? 'active' : ''
+            const noteName = reversedNoteNames[i % 12]
+            const colour = noteName.includes('b') ? 'black' : 'white'
+            
+            const active = voice?.activeNotes.includes(String(key)) ? 'active' : ''
             const checked = Boolean(active)
 
             const props = {
-              className         : `${active} ${colour} key`,
-              'data-attribute'  : 'Notes',
-              'data-voice'      : i,
-              value             : key,
-              checked           : checked,
-              onClick           : handleClick,
-              id              : `voice-${i}-note-${key}`
+              className : `${active} ${colour} key`,
+              value     : key,
+              checked   : checked,
+              onClick   : handleClick,
+              id        : `${id}-${key}`,
             };
 
-            return <button {...props} key={key} />
+            let label = ''
+
+            if (noteName === 'C' && showKeyLabels) {
+              label = String(octaveIndex)
+              octaveIndex--
+            }
+            
+            return <button {...props} key={key}>
+              {label}
+            </button>
           })
         }
       </div>

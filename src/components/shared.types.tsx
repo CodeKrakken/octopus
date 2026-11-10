@@ -1,4 +1,5 @@
 import { ranges } from "../content/data"
+import { SourceGain } from "../Synth/Synth.types"
 
 type RangeKey = typeof ranges[number]
 
@@ -61,6 +62,24 @@ type VoiceType = {
   maxAttack         : number
   minDecay          : number
   maxDecay          : number
+  colour            : string
+}
+
+type HitType = {
+  sound     : string
+  frequency : number
+  detune    : number
+  note      : number
+  octave    : number
+  startTime : number
+  endTime   : number
+  peakStart : number
+  peakEnd   : number
+  level     : number
+  source?   : SourceGain
+  voiceId   : string
+  style     : {}
+  key       : string
 }
 
 export type {
@@ -70,5 +89,6 @@ export type {
   ActiveButtonGroupKey,
   Slider,
   Group,
-  VoiceType
+  VoiceType,
+  HitType
 }

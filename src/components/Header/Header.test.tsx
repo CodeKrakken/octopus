@@ -11,14 +11,18 @@ describe('Header', () => {
   const mockHandleAddVoice  = jest.fn();  
   const mockHandleStartStop = jest.fn();  
   const mockLoadVoices      = jest.fn();  
+  const mockHandleReplay    = jest.fn();
   
   const header = (state: Boolean) => (  
     <Header  
       handleAddVoice={mockHandleAddVoice}  
-      handleStartStop={mockHandleStartStop}  
-      running={state}  
+      handleImprov={mockHandleStartStop}  
+      improvising={state}  
+      replaying={false}
       voices={[makeVoice()]}  
       loadVoices={mockLoadVoices}  
+      handlePlayback={mockHandleReplay}
+      recordedHits={[]}
     />  
   )  
   

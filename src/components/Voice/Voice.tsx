@@ -4,24 +4,23 @@ import { buttonGroups, sliders }    from '../../content/data'
 import DoubleSlider                 from '../DoubleSlider/DoubleSlider'
 import SingleSlider                 from '../SingleSlider/SingleSlider'
 import Button                       from '../Button/Button'
-import { useState }                 from 'react'
+import DropdownPortal               from '../DropdownPortal/DropdownPortal'
+import { useRef, useState }         from 'react'
 
 export default function Voice({
 
-    i, 
-    voices,  
+    i,
+    voices,
     handleDelete,
     setVoices,
     dataAttribute
+  }: {
 
-  } : {
-
-    i             : number, 
-    setVoices     : React.Dispatch<React.SetStateAction<VoiceType[]>>, 
-    voices        : VoiceType[], 
+    i             : number,
+    setVoices     : React.Dispatch<React.SetStateAction<VoiceType[]>>,
+    voices        : VoiceType[],
     handleDelete  : Function
     dataAttribute : string
-
   }) {
 
   const [hiddenStates, setHiddenStates] = useState<Record<string, boolean>>({  
@@ -31,80 +30,104 @@ export default function Voice({
     sounds    : true  
   })
 
+  const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+
   const deleteButtonProps = {
-    props: { onClick: () => handleDelete(i) },
+    props: { onClick: () => handleDelete(voices[i].id) },
     label: "X"
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {  
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+
     const value = e.currentTarget.value
     setHiddenStates(prev => ({ ...prev, [value]: !prev[value] }))  
   }
 
-  const sliderRows = Array.from(new Set(sliders.map(slider => slider.row)))
-  
+
   return (
-    <div 
-      id="voice"
+    <div
+      className="voice component-border"
       data-voice={i}
       data-attribute={dataAttribute}
     >
-      <div id="sliders">
-        <div className="justified row">
 
-          <TextField 
-            attrName  = {'label'}
-            i         = {i}
-            voices    = {voices}
-            setVoices = {setVoices}
-          />
+      <div className="justified row">
 
-          <Button {...deleteButtonProps} />
-          
+        <TextField
+          attrName  = {'label'}
+          i         = {i}
+          voices    = {voices}
+          setVoices = {setVoices}
+        />
+
+        <Button {...deleteButtonProps} />
+
+      </div>
+
+      <div>
+        <div className="sliders column">
+          {
+            sliders.map((slider: Slider) => {
+
+              const Component =
+                slider.className === 'single'
+                  ? SingleSlider
+                  : DoubleSlider
+
+              const key = `${i}-${slider.attrName}`
+
+              return (
+
+                <div key={key} className="row">
+
+                  <div className="slider-label">
+                    {slider.label}
+                  </div>
+
+                  <div className={`${slider.className} slider`}>
+
+                    <Component
+                      slider    = {slider}
+                      i         = {i}
+                      voices    = {voices}
+                      setVoices = {setVoices}
+                    />
+
+                  </div>
+
+                </div>
+
+              )
+            })
+          }
         </div>
-        
-        {
-          sliderRows.map(row => 
-            <div className="row" key={row}>
-              {
-                sliders.filter(slider => slider.row === row).map((slider: Slider) => {
-                  
-                  const Component = slider.className === 'single' ? SingleSlider : DoubleSlider
-                  return (
-                    <div key={slider.attrName}>
-                      <div className="slider-label">{slider.label}</div>
-                      <div className={`${slider.className} slider`}>
-                        <Component 
-                          slider={slider}
-                          i={i}
-                          voices={voices}
-                          setVoices={setVoices}
-                        />
-                      </div>
-                    </div>
-                  )}
-                )
-              }
-            </div>
-          )
-        }
       </div>
 
       <div className="centred row">
         {
           buttonGroups.map(group => {
 
-            const ComponentToRender = group.component;  
-                        
+            const ComponentToRender = group.component
+
             const props = {
-              className : "group-button",  
+              className : "group-button",
               onClick   : handleClick,
-              value     : group.id
+              value     : group.id,
+              ref       : (element: HTMLButtonElement | null) => {
+                buttonRefs.current[group.id] = element
+              }
             }
 
-            return <>
+            const key = `${i}-${group.id}`
+
+            const portalKey = `${i}-${group.id}-portal`
+
+            return <div key={key}>
 
               <Button
+                key     = {key}
                 props   = {props}
                 label   = {group.label}
                 imgPath = {group.id}
@@ -112,16 +135,22 @@ export default function Voice({
 
               {
                 !hiddenStates[group.id] && ComponentToRender ? (  
-                  
-                  <ComponentToRender   
-                    group     = {group as Group}  
-                    voices    = {voices}  
-                    i         = {i}  
-                    setVoices = {setVoices}  
-                  />  
+
+                  <DropdownPortal
+                    key={portalKey}
+                    anchor={buttonRefs.current[group.id]}
+                  >
+                    <ComponentToRender
+                      group     = {group as Group}
+                      voices    = {voices}
+                      i         = {i}
+                      setVoices = {setVoices}
+                    />
+
+                  </DropdownPortal>
                 ) 
-                  : 
-                <></>
+                  :
+                <></>         
               }
             </>
           })
