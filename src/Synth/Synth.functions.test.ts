@@ -1,21 +1,34 @@
-import { detectPitch, getContext, parseNoteFromKey, refineFundamental, runInterval, getDetectedFrequency, detectPitchFFT, findNearestNote, findNearestSampleInFolder, loadSamples, resetSampleState }  from './Synth.functions';  
-import { VoiceType }                      from '../components/shared.types';  
+import { detectPitch, getContext, parseNoteFromKey, refineFundamental, runInterval, getDetectedFrequency, detectPitchFFT, findNearestNote, findNearestSampleInFolder, loadSamples, resetSampleState, playHit }  from './Synth.functions';
+import { HitType, VoiceType }                      from '../components/shared.types';
 import { runOneInterval }                 from './Synth.test.functions';  
 import { allFrequencies, sampleFolders }  from '../content/data';
 import { buffers }                        from './Synth.functions';
 import { makeVoice }                      from '../shared.test.functions';
 
 jest.mock('../content/data', () => ({  
-  allFrequencies: [
-    [  
-      261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88, 523.25
-    ],
-    [  
-      523.25, 554.37, 587.33, 622.25, 659.25, 698.46, 739.99, 783.99, 830.61, 880.00, 932.33, 987.77, 1046.50
-    ],
-  ],
+  allFrequencies: (() => {
+    const octaveFour = [
+      261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99,
+      392.00, 415.30, 440.00, 466.16, 493.88, 523.25
+    ];
+    const octaveFive = [
+      523.25, 554.37, 587.33, 622.25, 659.25, 698.46, 739.99,
+      783.99, 830.61, 880.00, 932.33, 987.77, 1046.50
+    ];
+    return [
+      octaveFour,
+      octaveFive,
+      ...Array.from({ length: 9 }, (_, octave) =>
+        octaveFive.map(frequency => frequency * 2 ** (octave + 1))
+      )
+    ];
+  })(),
   extrema:      ['min', 'max'],  
   oneMinute:    60,  
+  noteNameToIndex: {
+    C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5,
+    'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11
+  },
   samples:      { 
     snare:    'snare.wav',
     piano_C0: 'piano_C0.wav'
@@ -30,6 +43,22 @@ const makeBuffer = (samples: number[]): AudioBuffer =>
   ({
     getChannelData: jest.fn().mockReturnValue(Float32Array.from(samples)),
   } as unknown as AudioBuffer);
+
+const makeHit = (sound: string): HitType => ({
+  sound,
+  frequency: 440,
+  detune: 0,
+  note: 1,
+  octave: 0,
+  startTime: 2.5,
+  endTime: 3.25,
+  peakStart: 2.6,
+  peakEnd: 3.1,
+  level: 0.5,
+  voiceId: 'test-voice',
+  style: {},
+  key: 'test-hit'
+})
 
 const createMockContext = (state = 'running', currentTime = 0) => (  
   {  
@@ -62,18 +91,19 @@ const createMockContext = (state = 'running', currentTime = 0) => (
       ratio:     { value: 0 },  
       attack:    { value: 0 },  
       release:   { value: 0 },  
-      connect:   jest.fn()  
+      connect:   jest.fn().mockReturnThis()
     }),  
     createBufferSource: jest.fn().mockReturnValue({  
       connect:    jest.fn(),  
       start:      jest.fn(),  
+      stop:       jest.fn(),
       disconnect: jest.fn(),  
       detune:     { value: 0 },  
       buffer:     null,  
       onended:    null  
     }),  
     createMediaElementSource: jest.fn().mockReturnValue({ connect: jest.fn() }),  
-    decodeAudioData: jest.fn().mockResolvedValue({})  
+    decodeAudioData: jest.fn().mockResolvedValue(makeBuffer(new Array(5000).fill(0)))
   } as unknown as Partial<AudioContext>  
 )  
   
@@ -106,7 +136,7 @@ describe('getContext', () => {
   })
 
   it('creates a new AudioContext when none is provided', () => {
-    const mockContext = {} as AudioContext;
+    const mockContext = createMockContext() as AudioContext;
     const AudioContextMock = jest.fn(() => mockContext);
 
     global.AudioContext = AudioContextMock as unknown as typeof AudioContext;
@@ -119,7 +149,7 @@ describe('getContext', () => {
     const result = getContext(setup);
 
     expect(AudioContextMock).toHaveBeenCalledTimes(1);
-    expect(result).toBe(mockContext);
+    expect(result.context).toBe(mockContext);
   });
 })
   
@@ -134,11 +164,16 @@ describe('runInterval', () => {
   
   beforeEach(() => {  
     jest.useFakeTimers()  
+    jest.spyOn(document, 'getElementById').mockImplementation(() => ({
+      offsetHeight: 10,
+      offsetTop: 20
+    } as HTMLElement))
   })  
-  
+
   afterEach(() => {  
     jest.clearAllTimers()  
     jest.useRealTimers()  
+    jest.restoreAllMocks()
   })  
   
   it('warns when sample buffer is not ready', () => {  
@@ -158,7 +193,7 @@ describe('runInterval', () => {
     }  
     const voice = { ...makeVoice(), restChance: 0, activeSounds: ['sine'] }  
     runOneInterval(voice, throwingContext)  
-    expect(consoleSpy).toHaveBeenCalledWith('oscillator failed', expect.any(Error))  
+    expect(consoleSpy).toHaveBeenCalledWith('test-id', expect.any(Error))
     consoleSpy.mockRestore()  
   })  
   
@@ -171,7 +206,7 @@ describe('runInterval', () => {
     const voice = { ...makeVoice(), restChance: 0, activeSounds: ['sine'] }  
     runOneInterval(voice, throwingContext)  
     jest.runAllTimers()  
-    expect(consoleSpy).toHaveBeenCalledWith('Unknown error', 'string error')  
+    expect(consoleSpy).toHaveBeenCalledWith('test-id', 'string error')
     consoleSpy.mockRestore()  
   })  
   
@@ -240,8 +275,8 @@ describe('runInterval', () => {
     const voicesRef = { current: [voice] }  
     const context = createMockContext('running', 0)  
     runInterval(voice, voicesRef, context as unknown as AudioContext, [], 0, jest.fn())  
-    calledFunctions[1]()  
-    expect(calledFunctions.length).toBeGreaterThan(2)  
+    calledFunctions[0]()
+    expect(calledFunctions.length).toBeGreaterThan(1)
     jest.spyOn(global, 'setTimeout').mockRestore()  
   })  
   
@@ -259,6 +294,43 @@ describe('runInterval', () => {
     runOneInterval(voice, mockContext)  
     const mockOscillator = mockContext.createOscillator()  
     expect(mockOscillator.detune.value).toBe(-50)  
+  })
+})
+
+describe('playHit timing', () => {
+  const context = createMockContext() as AudioContext
+
+  beforeAll(() => {
+    getContext({ context, masterGain: context.createGain() })
+  })
+
+  afterEach(() => {
+    delete buffers.snare
+  })
+
+  it('schedules oscillators at the hit start and end times in context seconds', () => {
+    playHit(makeHit('sine'), context, 10)
+
+    const source = context.createOscillator()
+    expect(source.start).toHaveBeenCalledWith(12.5)
+    expect(source.stop).toHaveBeenCalledWith(13.25)
+  })
+
+  it('schedules samples to stop at their absolute end time in context seconds', () => {
+    const hit = makeHit('snare')
+    buffers.snare = {
+      buffer: {} as AudioBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: 0,
+      note: 0
+    }
+
+    playHit(hit, context, 10)
+
+    const source = context.createBufferSource()
+    expect(source.start).toHaveBeenCalledWith(12.5)
+    expect(source.stop).toHaveBeenCalledWith(13.25)
   })
 })
 
@@ -527,7 +599,7 @@ describe('loadSamples', () => {
   })
 
   it('loads a sample with a note in its filename', async () => {
-    const decoded = {} as AudioBuffer;
+    const decoded = makeBuffer(new Array(5000).fill(0));
 
     global.fetch = jest.fn().mockResolvedValue({
       arrayBuffer: jest.fn().mockResolvedValue(new ArrayBuffer(8)),

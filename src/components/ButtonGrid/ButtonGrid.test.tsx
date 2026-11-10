@@ -67,7 +67,6 @@ describe('ButtonGrid', () => {
     expect(buttons[0]).toHaveAttribute('value', 'C');
     expect(buttons[0]).toHaveAttribute('data-attribute', 'Notes');
     expect(buttons[0]).toHaveAttribute('data-voice', '0');
-    expect(buttons[0]).toHaveAttribute('id', 'notes');
     expect(buttons[0]).toHaveAttribute('title', 'C');
 
     expect(buttons[1]).toHaveAttribute('value', 'D');

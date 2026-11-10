@@ -502,7 +502,7 @@ const playHit = (
 
   if (isWaveform(sound!)) {
 
-    hit.source = setUpSource(context, hit)
+    hit.source = setUpSource(context, hit, runStartTime)
     gainNode = hit.source.gainNode
 
     hit.source.source.onended = () => {
@@ -529,18 +529,22 @@ const playHit = (
 const isWaveform = (sound: string) => waveforms.includes(sound as string)
 
 
-const setUpSource = (context: AudioContext, hit: HitType) => {
+const setUpSource = (
+  context: AudioContext,
+  hit: HitType,
+  runStartTime: number
+) => {
 
   const source  = context.createOscillator()
   const gainNode    = setUpGainNode(context)
   const { sound, frequency, detune, endTime, startTime } = hit
 
   source.connect(gainNode);
-  source.start(0);
+  source.start(runStartTime + startTime!);
   source.type = sound as OscillatorType
   source.frequency.value = frequency as number
   source.detune.value = detune as number
-  source.stop((endTime! - startTime!) * 1000)
+  source.stop(runStartTime + endTime!);
   return {source, gainNode}
 }
 
@@ -601,7 +605,7 @@ const setUpSample = (
   hit.source = sourceGain
 
   source.start(time)
-  source.stop((hit.endTime! - hit.startTime!) * 1000)  
+  source.stop(time + hit.endTime! - hit.startTime!)
   
   source.onended = () => {
     source.disconnect()

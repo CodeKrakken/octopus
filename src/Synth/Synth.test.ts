@@ -10,7 +10,17 @@ jest.mock('../content/data', () => ({
   
 jest.mock('./Synth.functions', () => ({  
   runInterval: jest.fn(),  
-  getContext:  jest.fn(() => ({ currentTime: 0 })),  
+  getContext: jest.fn(() => ({
+    context: {
+      currentTime: 0,
+      createGain: jest.fn(() => ({
+        gain: { setValueAtTime: jest.fn() }
+      }))
+    },
+    masterGain: {
+      gain: { setValueAtTime: jest.fn() }
+    }
+  })),
 }));  
   
 const makeVoice = (): VoiceType => ({  
@@ -69,18 +79,21 @@ describe('Synth', () => {
       const running = false;  
       const voicesRef = { current: [voice1, voice2] };  
       const mockContext = createMockContext();  
-      (getContext as jest.Mock).mockReturnValue(mockContext);  
-      const recordedHits: HitType[] = []
-  
-      const args = [voicesRef, mockContext, recordedHits];  
-  
+      const masterGain = { gain: { setValueAtTime: jest.fn() } } as unknown as GainNode
+      (getContext as jest.Mock).mockReturnValue({ context: mockContext, masterGain })
+
       Synth.add(voice1, running, voicesRef);  
       Synth.add(voice2, running, voicesRef);  
+      Synth.resumeContext()
       Synth.start(voicesRef);  
-  
+
       expect(runInterval).toHaveBeenCalledTimes(2);  
-      expect(runInterval).toHaveBeenCalledWith(voice1, ...args);  
-      expect(runInterval).toHaveBeenCalledWith(voice2, ...args);  
+      expect(runInterval).toHaveBeenNthCalledWith(
+        1, voice1, voicesRef, mockContext, Synth.recordedHits, 0, Synth.setRecordedHits
+      );
+      expect(runInterval).toHaveBeenNthCalledWith(
+        2, voice2, voicesRef, mockContext, Synth.recordedHits, 0, Synth.setRecordedHits
+      );
     });  
   });  
 
@@ -99,6 +112,11 @@ describe('Synth', () => {
       const voice2 = makeVoice();  
       const running = false;  
       const voicesRef = { current: [] as VoiceType[] };  
+      (getContext as jest.Mock).mockReturnValue({
+        context: createMockContext(),
+        masterGain: { gain: { setValueAtTime: jest.fn() } }
+      })
+      Synth.resumeContext()
   
       // add  
       Synth.add(voice1, running, voicesRef);  
