@@ -298,9 +298,10 @@ describe('runInterval', () => {
 })
 
 describe('playHit timing', () => {
-  const context = createMockContext() as AudioContext
+  let context: AudioContext
 
-  beforeAll(() => {
+  beforeEach(() => {
+    context = createMockContext() as AudioContext
     getContext({ context, masterGain: context.createGain() })
   })
 
