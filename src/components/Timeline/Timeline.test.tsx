@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import * as React from 'react'
 import { allFrequencies } from '../../content/data'
 import { HitType } from '../shared.types'
 import Timeline from './Timeline'
@@ -69,6 +70,20 @@ describe('Timeline', () => {
     expect(
       Array.from(gridPiano!.querySelectorAll('button')).every(button => button.textContent === '')
     ).toBe(true)
+  })
+
+  it('skips range updates and resize observation when the container ref is unavailable', () => {
+    const unavailableRef = Object.defineProperty({}, 'current', {
+      get: () => null,
+      set: () => {}
+    }) as React.MutableRefObject<HTMLDivElement | null>
+    jest.spyOn(jest.requireActual('react'), 'useRef').mockReturnValue(unavailableRef)
+
+    const { container } = render(<Timeline hits={[makeHit()]} />)
+    fireEvent.scroll(container.querySelector('#timeline-grid-piano-container')!)
+
+    expect(observe).not.toHaveBeenCalled()
+    expect(disconnect).not.toHaveBeenCalled()
   })
 
   it('shows only hits intersecting the visible range and updates that range on scroll and resize', () => {
