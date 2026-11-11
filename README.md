@@ -29,7 +29,6 @@ To use
 ------
 
 - Visit localhost:3000
-- Add at least one voice
 - Preset controls if desired (they can also be edited during play)
 - Press start
 - Use controls to set ranges for all aspects of sound generation
