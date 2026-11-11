@@ -295,6 +295,49 @@ describe('runInterval', () => {
     const mockOscillator = mockContext.createOscillator()  
     expect(mockOscillator.detune.value).toBe(-50)  
   })
+
+  it('wraps note 13 to note 1 in the next octave', () => {
+    const voice = {
+      ...makeVoice(),
+      activeNotes: ['13'],
+      activeOctaves: ['4'],
+    }
+    const recordedHits: HitType[] = []
+
+    runInterval(
+      voice,
+      { current: [voice] },
+      createMockContext('running') as AudioContext,
+      recordedHits,
+      0,
+      jest.fn()
+    )
+
+    expect(recordedHits[0].note).toBe(1)
+    expect(recordedHits[0].octave).toBe(5)
+  })
+
+  it('uses zero row height when the piano key is not found', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const pianoKeyId = `timeline-grid-piano-${allFrequencies[4][0]}`
+    jest.spyOn(document, 'getElementById').mockImplementation(id =>
+      id === pianoKeyId
+        ? null
+        : ({ offsetHeight: 10, offsetTop: 20 } as HTMLElement)
+    )
+    const voice = {
+      ...makeVoice(),
+      activeNotes: ['1'],
+      activeOctaves: ['4'],
+    }
+
+    runOneInterval(voice, createMockContext('running'))
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'test-id',
+      expect.objectContaining({ message: expect.stringContaining('offsetTop') })
+    )
+  })
 })
 
 describe('playHit timing', () => {
@@ -307,6 +350,9 @@ describe('playHit timing', () => {
 
   afterEach(() => {
     delete buffers.snare
+    delete buffers.piano
+    delete buffers.piano_near
+    delete sampleFolders.piano
   })
 
   it('schedules oscillators at the hit start and end times in context seconds', () => {
@@ -315,6 +361,21 @@ describe('playHit timing', () => {
     const source = context.createOscillator()
     expect(source.start).toHaveBeenCalledWith(12.5)
     expect(source.stop).toHaveBeenCalledWith(13.25)
+  })
+
+  it('cleans up an oscillator and calls onFinished when it ends', () => {
+    const hit = makeHit('sine')
+    const onFinished = jest.fn()
+
+    playHit(hit, context, 10, onFinished)
+
+    const { source, gainNode } = hit.source!
+    source.onended?.(new Event('ended'))
+
+    expect(source.stop).toHaveBeenCalledTimes(2)
+    expect(source.disconnect).toHaveBeenCalledTimes(1)
+    expect(gainNode.disconnect).toHaveBeenCalledTimes(1)
+    expect(onFinished).toHaveBeenCalledTimes(1)
   })
 
   it('schedules samples to stop at their absolute end time in context seconds', () => {
@@ -332,6 +393,57 @@ describe('playHit timing', () => {
     const source = context.createBufferSource()
     expect(source.start).toHaveBeenCalledWith(12.5)
     expect(source.stop).toHaveBeenCalledWith(13.25)
+  })
+
+  it('plays the nearest sample in a folder and cleans it up when it ends', () => {
+    const hit = makeHit('piano')
+    const onFinished = jest.fn()
+    const nearestBuffer = {} as AudioBuffer
+
+    sampleFolders.piano = ['piano_near']
+    buffers.piano = {
+      buffer: {} as AudioBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: 0,
+      note: 0
+    }
+    buffers.piano_near = {
+      buffer: nearestBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: 0,
+      note: 1
+    }
+
+    playHit(hit, context, 10, onFinished)
+
+    const { source, gainNode } = hit.source!
+    expect(source.buffer).toBe(nearestBuffer)
+
+    source.onended?.(new Event('ended'))
+
+    expect(source.disconnect).toHaveBeenCalledTimes(1)
+    expect(gainNode.disconnect).toHaveBeenCalledTimes(1)
+    expect(onFinished).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to the original sample when no folder sample is loaded', () => {
+    const hit = makeHit('piano')
+    const originalBuffer = {} as AudioBuffer
+
+    sampleFolders.piano = ['piano_near']
+    buffers.piano = {
+      buffer: originalBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: 0,
+      note: 1
+    }
+
+    playHit(hit, context, 10)
+
+    expect(hit.source!.source.buffer).toBe(originalBuffer)
   })
 })
 
