@@ -1,6 +1,7 @@
 import { Synth } from "../Synth/Synth"
 import { getActiveFrequencies, updateButton, updateVoice } from "./shared.functions"
 import { VoiceType } from "./shared.types"
+import { buffers } from "../Synth/Synth.functions"
 
 
 jest.mock('../content/data', () => ({  
@@ -72,5 +73,63 @@ describe('updateButton', () => {
     updateButton(e, 'activeNotes', voices, 0, setVoices);
     expect(voices[0].activeNotes).toEqual(['1', '2', '3', '4']);
     expect(setVoices).toHaveBeenCalled();
+  });
+
+  it('updates active notes and octaves when adding a pitched sample', () => {
+    const setVoices = jest.fn();
+    const voice = {
+      ...voices[0],
+      activeSounds: [],
+      activeFrequencies: [],
+    } as VoiceType;
+    voices[0] = voice;
+    buffers.piano = {
+      buffer: {} as AudioBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: 2,
+      note: 4,
+    };
+
+    const e = {
+      currentTarget: { value: 'piano' },
+    } as React.MouseEvent<HTMLButtonElement>;
+
+    updateButton(e, 'activeSounds', voices, 0, setVoices);
+
+    expect(voice.activeSounds).toEqual(['piano']);
+    expect(voice.activeNotes).toEqual(['5']);
+    expect(voice.activeOctaves).toEqual(['2']);
+    expect(setVoices).toHaveBeenCalled();
+
+    delete buffers.piano;
+  });
+
+  it('leaves active notes and octaves unchanged for samples without pitch metadata', () => {
+    const setVoices = jest.fn();
+    const voice = {
+      ...voices[0],
+      activeSounds: [],
+      activeFrequencies: [],
+    } as VoiceType;
+    voices[0] = voice;
+    buffers.noPitch = {
+      buffer: {} as AudioBuffer,
+      detectedFrequency: null,
+      nearestFrequency: null,
+      octave: null,
+      note: null,
+    };
+
+    const e = {
+      currentTarget: { value: 'noPitch' },
+    } as React.MouseEvent<HTMLButtonElement>;
+
+    updateButton(e, 'activeSounds', voices, 0, setVoices);
+
+    expect(voice.activeNotes).toEqual(['1', '2', '3']);
+    expect(voice.activeOctaves).toEqual(['0']);
+
+    delete buffers.noPitch;
   });
 })
