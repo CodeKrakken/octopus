@@ -13,12 +13,12 @@ describe('Header', () => {
   const mockLoadVoices      = jest.fn();  
   const mockHandleReplay    = jest.fn();
   
-  const header = (state: Boolean) => (  
+  const header = (state: Boolean, replaying = false) => (
     <Header  
       handleAddVoice={mockHandleAddVoice}  
       handleImprov={mockHandleStartStop}  
       improvising={state}  
-      replaying={false}
+      replaying={replaying}
       voices={[makeVoice()]}  
       loadVoices={mockLoadVoices}  
       handlePlayback={mockHandleReplay}
@@ -40,6 +40,13 @@ describe('Header', () => {
     expect(screen.queryByRole('button', { name: 'S t a r t' })).not.toBeInTheDocument();  
     expect(screen.getByRole('button',   { name: 'S t o p'   })).toBeInTheDocument();  
   });  
+
+  it('displays Stop on the playback button while replaying', () => {
+    render(header(false, true))
+
+    expect(screen.getByRole('button', { name: 'S t o p' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'R e p l a y' })).not.toBeInTheDocument()
+  })
 
   it('enables Load button after Save', () => {
     render(header(false))
