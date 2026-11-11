@@ -418,7 +418,8 @@ describe('playHit timing', () => {
 
     playHit(hit, context, 10, onFinished)
 
-    const { source, gainNode } = hit.source!
+    const source = context.createBufferSource()
+    const { gainNode } = hit.source!
     expect(source.buffer).toBe(nearestBuffer)
 
     source.onended?.(new Event('ended'))
@@ -443,7 +444,8 @@ describe('playHit timing', () => {
 
     playHit(hit, context, 10)
 
-    expect(hit.source!.source.buffer).toBe(originalBuffer)
+    const source = context.createBufferSource()
+    expect(source.buffer).toBe(originalBuffer)
   })
 })
 
